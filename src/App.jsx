@@ -41,7 +41,22 @@ function App() {
 
   if (user) {
     if (profileLoading) return <div style={{textAlign:'center',marginTop:'3rem'}}><OfflineHint />Loading profile...</div>;
-
+    if (!profile && !profileLoading) {
+      return (
+        <div style={{textAlign:'center',marginTop:'3rem',color:'red'}}>
+          <OfflineHint />
+          <div>Failed to load profile. Please check your internet connection or contact support.</div>
+        </div>
+      );
+    }
+    if (profile?.error) {
+      return (
+        <div style={{textAlign:'center',marginTop:'3rem',color:'red'}}>
+          <OfflineHint />
+          <div>Error loading profile: {profile.error.message || 'Unknown error.'}</div>
+        </div>
+      );
+    }
     // Sidebar links and page routing
     let links = [
       { label: 'Dashboard', page: 'dashboard', icon: 'fa fa-home' },

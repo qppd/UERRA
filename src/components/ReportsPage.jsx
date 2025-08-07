@@ -1,39 +1,62 @@
 
-import React from 'react';
-import { Paper, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
 
-const reportRows = [
-  { id: 123, category: 'Fire', status: 'Active', date: '2025-08-07' },
-  { id: 124, category: 'Medical', status: 'Resolved', date: '2025-08-07' },
-];
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../supabaseClient';
+import { Box, Paper, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
 
 const statusColor = status => {
-  if (status === 'Active') return 'warning';
-  if (status === 'Resolved') return 'success';
+  if (status === 'pending') return 'warning';
+  if (status === 'accepted') return 'info';
+  if (status === 'resolved') return 'success';
   return 'default';
 };
 
-const categoryColor = category => {
-  if (category === 'Fire') return 'error';
-  if (category === 'Medical') return 'success';
-  if (category === 'Crime') return 'info';
-  if (category === 'Flood') return 'primary';
-  return 'default';
-};
+function ReportsPage() {
+  const [reports, setReports] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [agencies, setAgencies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-const ReportsPage = () => (
-  <Box sx={{ p: { xs: 1, sm: 2 }, maxWidth: 900, mx: 'auto' }}>
-    <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
-      <Typography variant="h5" fontWeight={600} mb={2} color="primary.main">
-        All Reports
-      </Typography>
-      <Typography variant="body2" color="text.secondary" mb={2}>
-        Reports table or list goes here. (Connect to Supabase for real data.)
-      </Typography>
-      <TableContainer>
+  useEffect(() => {
+    const fetchAll = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const { data: reportsData, error: reportsError } = await supabase.from('reports').select('*');
+        const { data: categoriesData, error: categoriesError } = await supabase.from('categories').select('*');
+        const { data: agenciesData, error: agenciesError } = await supabase.from('agencies').select('*');
+        if (reportsError || categoriesError || agenciesError) throw new Error(reportsError?.message || categoriesError?.message || agenciesError?.message);
+        setReports(reportsData || []);
+        setCategories(categoriesData || []);
+        setAgencies(agenciesData || []);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch reports.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAll();
+  }, []);
+
+  const getCategoryName = (id) => {
+    const cat = categories.find(c => c.id === id);
+    return cat ? cat.name : id;
+  };
+
+  return (
+    <Paper elevation={2} sx={{ p: 3, borderRadius: 3, minHeight: 300 }}>
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+        <Typography variant="h6" color="primary.main">Reports</Typography>
+        {/* You can add a button for adding reports if needed */}
+      </Box>
+      {error && <Typography color="error" mb={2}>{error}</Typography>}
+      {loading ? (
+        <Typography>Loading...</Typography>
+      ) : (
         <Table size="small">
           <TableHead>
-            <TableRow sx={{ background: 'rgba(25,118,210,0.07)' }}>
+            <TableRow>
               <TableCell>ID</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Status</TableCell>
@@ -41,23 +64,27 @@ const ReportsPage = () => (
             </TableRow>
           </TableHead>
           <TableBody>
-            {reportRows.map(row => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>
-                  <Chip label={row.category} color={categoryColor(row.category)} size="small" />
-                </TableCell>
-                <TableCell>
-                  <Chip label={row.status} color={statusColor(row.status)} size="small" variant="outlined" />
-                </TableCell>
-                <TableCell>{row.date}</TableCell>
-              </TableRow>
-            ))}
+            {reports.length === 0 ? (
+              <TableRow><TableCell colSpan={4}>No reports found.</TableCell></TableRow>
+            ) : (
+              reports.map(row => (
+                <TableRow key={row.id}>
+                  <TableCell>{row.id}</TableCell>
+                  <TableCell>
+                    <Chip label={getCategoryName(row.category_id)} size="small" />
+                  </TableCell>
+                  <TableCell>
+                    <Chip label={row.status} color={statusColor(row.status)} size="small" variant="outlined" />
+                  </TableCell>
+                  <TableCell>{row.created_at ? row.created_at.split('T')[0] : ''}</TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
-      </TableContainer>
+      )}
     </Paper>
-  </Box>
-);
+  );
+}
 
 export default ReportsPage;

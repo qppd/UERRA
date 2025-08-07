@@ -7,18 +7,18 @@ import { Grid, Paper, Box } from '@mui/material';
 
 const DashboardHome = () => (
   <Box sx={{ p: { xs: 1, sm: 2 }, maxWidth: 1200, mx: 'auto' }}>
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
+    <Grid container columns={12} spacing={2}>
+      <Grid sx={{ gridColumn: 'span 12' }}>
         <Paper elevation={2} sx={{ p: 2, borderRadius: 3 }}>
           <StatsCards />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid sx={{ gridColumn: { xs: 'span 12', md: 'span 8' } }}>
         <Paper elevation={2} sx={{ p: 2, borderRadius: 3, height: '100%' }}>
           <MapWidget />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={4}>
+      <Grid sx={{ gridColumn: { xs: 'span 12', md: 'span 4' } }}>
         <Paper elevation={2} sx={{ p: 2, borderRadius: 3, mb: 2 }}>
           <ReportsGraph />
         </Paper>
