@@ -247,28 +247,54 @@ const OAuthDebug = () => {
       <Card sx={{ mt: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            Common OAuth Issues & Solutions
+            CRITICAL: Multiple URLs in Supabase Configuration
           </Typography>
           
-          <Typography variant="body2" paragraph>
-            <strong>Error 500 "unexpected_failure":</strong>
-          </Typography>
-          <ul>
-            <li>Check Google OAuth configuration in Supabase Dashboard</li>
-            <li>Verify redirect URLs are properly configured</li>
-            <li>Ensure Google Cloud Console has correct authorized origins</li>
-            <li>Check if the OAuth client is properly configured</li>
-          </ul>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            <Typography variant="body2">
+              <strong>Detected Issue:</strong> Your Supabase configuration contains multiple redirect URLs in a single field, 
+              causing JWT state token corruption. This leads to the 500 Internal Server Error.
+            </Typography>
+          </Alert>
           
           <Typography variant="body2" paragraph>
-            <strong>Steps to fix in Supabase:</strong>
+            <strong>WRONG Configuration in Supabase (causes 500 error):</strong>
+          </Typography>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            <code>
+              Site URL: https://uerra.vercel.app https://uerra.vercel.app/ http://localhost:5173 http://localhost:5173/<br/>
+              Redirect URLs: https://uerra.vercel.app/** https://uerra.vercel.app/** http://localhost:5173/** http://localhost:5174/**
+            </code>
+          </Alert>
+          
+          <Typography variant="body2" paragraph>
+            <strong>CORRECT Configuration in Supabase:</strong>
+          </Typography>
+          <Alert severity="success" sx={{ mb: 2 }}>
+            <code>
+              Site URL: https://uerra.vercel.app<br/>
+              Redirect URLs: https://uerra.vercel.app/**,http://localhost:5173/**,http://localhost:5174/**
+            </code>
+          </Alert>
+          
+          <Typography variant="body2" paragraph>
+            <strong>Steps to fix in Supabase Dashboard:</strong>
           </Typography>
           <ol>
             <li>Go to Authentication → Providers → Google</li>
-            <li>Check that Client ID and Client Secret are correct</li>
-            <li>Verify Site URL and Redirect URLs</li>
-            <li>Ensure the provider is enabled</li>
+            <li><strong>Site URL:</strong> Set to <code>https://uerra.vercel.app</code> (single URL only)</li>
+            <li><strong>Redirect URLs:</strong> Use comma-separated values, no spaces between URLs</li>
+            <li>Save the configuration</li>
+            <li>Test again</li>
           </ol>
+          
+          <Typography variant="body2" paragraph>
+            <strong>Google Cloud Console Configuration:</strong>
+          </Typography>
+          <ul>
+            <li><strong>Authorized JavaScript origins:</strong> Add each URL separately</li>
+            <li><strong>Authorized redirect URIs:</strong> <code>https://bieexexscxkrshdvyuhj.supabase.co/auth/v1/callback</code></li>
+          </ul>
         </CardContent>
       </Card>
     </Box>

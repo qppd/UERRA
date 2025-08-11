@@ -45,32 +45,32 @@ const Login = ({ onLogin, footer }) => {
     setError('');
     setLoading(true);
     try {
-      // Determine the correct redirect URL based on environment
+      // Determine the correct redirect URL - USE ONLY ONE URL
       let redirectTo;
-      const currentOrigin = window.location.origin;
       
       if (window.location.hostname === 'localhost') {
         // Development environment
-        redirectTo = currentOrigin;
+        redirectTo = `http://localhost:${window.location.port}`;
       } else if (window.location.hostname.includes('vercel.app')) {
-        // Vercel deployment - use the actual Vercel URL
-        redirectTo = currentOrigin;
+        // Production environment - use the exact current origin
+        redirectTo = window.location.origin;
       } else {
-        // Fallback to configured production URL
+        // Fallback
         redirectTo = 'https://uerra.vercel.app';
       }
       
       console.log('Environment info:', {
         hostname: window.location.hostname,
-        origin: currentOrigin,
+        port: window.location.port,
+        origin: window.location.origin,
         redirectTo,
-        userAgent: navigator.userAgent.substring(0, 100)
+        href: window.location.href
       });
       
       const { data, error: supaError } = await supabase.auth.signInWithOAuth({ 
         provider: 'google',
         options: {
-          redirectTo: redirectTo,
+          redirectTo: redirectTo, // Single URL only
           queryParams: {
             access_type: 'offline',
             prompt: 'select_account',
