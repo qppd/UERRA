@@ -6,7 +6,6 @@ import Login from './Login';
 import Register from './Register';
 import { useAuthSession, signOut } from './useAuthSession';
 import { useUserProfile, upsertUserProfile } from './useUserProfile';
-import { handleOAuthCallback } from './utils/authUtils';
 
 import UserManagement from './UserManagement';
 import DashboardLayout from './DashboardLayout';
@@ -57,30 +56,21 @@ function App() {
     }
   }, []);
 
-  // Handle OAuth callback on app initialization
+  // Auto-redirect to dashboard when user is authenticated and not in debug mode
   useEffect(() => {
-    const oauthResult = handleOAuthCallback();
-    if (oauthResult) {
-      // OAuth callback detected, the auth session hook will handle the rest
-      console.log('OAuth callback detected');
-      // Clear any debug pages and let auth flow take over
-      if (page !== 'oauth_debug' && page !== 'production_test') {
+    console.log('Auth state effect:', { user: !!user, page, loading });
+    
+    if (!loading) {
+      if (user && page === 'login') {
+        console.log('User authenticated, redirecting to dashboard');
+        setPage('dashboard');
+      } else if (!user && page === 'dashboard') {
+        // If user logs out while on dashboard, go back to login
+        console.log('User logged out, redirecting to login');
         setPage('login');
       }
     }
-  }, []);
-
-  // Auto-redirect to dashboard when user is authenticated and not in debug mode
-  useEffect(() => {
-    if (user && page === 'login') {
-      console.log('User authenticated, redirecting to dashboard');
-      setPage('dashboard');
-    } else if (!user && page === 'dashboard') {
-      // If user logs out while on dashboard, go back to login
-      console.log('User logged out, redirecting to login');
-      setPage('login');
-    }
-  }, [user, page]);
+  }, [user, page, loading]);
 
   const handleLogin = () => {
     console.log('Login successful, setting page to dashboard');

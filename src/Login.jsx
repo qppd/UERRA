@@ -59,32 +59,26 @@ const Login = ({ onLogin, footer }) => {
     setError('');
     setLoading(true);
     try {
-      // Determine the correct redirect URL - USE ONLY ONE URL
+      // Determine the correct redirect URL
       let redirectTo;
       
       if (window.location.hostname === 'localhost') {
         // Development environment
-        redirectTo = `http://localhost:${window.location.port}`;
+        redirectTo = window.location.origin;
       } else if (window.location.hostname.includes('vercel.app')) {
         // Production environment - use the exact current origin
         redirectTo = window.location.origin;
       } else {
         // Fallback
-        redirectTo = 'https://uerra.vercel.app';
+        redirectTo = window.location.origin;
       }
       
-      console.log('Environment info:', {
-        hostname: window.location.hostname,
-        port: window.location.port,
-        origin: window.location.origin,
-        redirectTo,
-        href: window.location.href
-      });
+      console.log('Starting Google OAuth with redirect:', redirectTo);
       
       const { data, error: supaError } = await supabase.auth.signInWithOAuth({ 
         provider: 'google',
         options: {
-          redirectTo: redirectTo, // Single URL only
+          redirectTo: redirectTo,
           queryParams: {
             access_type: 'offline',
             prompt: 'select_account',
@@ -93,16 +87,11 @@ const Login = ({ onLogin, footer }) => {
       });
       
       if (supaError) {
-        console.error('Supabase OAuth error details:', {
-          message: supaError.message,
-          code: supaError.code,
-          status: supaError.status,
-          details: supaError
-        });
+        console.error('Supabase OAuth error:', supaError);
         throw supaError;
       }
       
-      console.log('OAuth initiation successful:', data);
+      console.log('OAuth initiation successful');
       // Don't set loading to false here - let the OAuth flow complete
       // The auth state change will be handled by the useAuthSession hook
     } catch (err) {
