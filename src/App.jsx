@@ -33,11 +33,12 @@ import DatabaseStructureCheck from './components/DatabaseStructureCheck';
 
 import OfflineHint from './components/OfflineHint';
 import DatabaseDebug from './components/DatabaseDebug';
+import SupabaseDebug from './components/SupabaseDebug';
 
 
 
 function App() {
-  const [page, setPage] = useState('login');
+  const [page, setPage] = useState('debug'); // Changed to debug temporarily
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isCreatingProfile, setIsCreatingProfile] = useState(false);
   const { user, loading } = useAuthSession();
@@ -247,7 +248,14 @@ function App() {
   return (
     <>
       <OfflineHint />
-      {page === 'login' ? (
+      {page === 'debug' ? (
+        <div>
+          <SupabaseDebug />
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <button onClick={() => setPage('login')}>Go to Login</button>
+          </div>
+        </div>
+      ) : page === 'login' ? (
         <Login
           onLogin={handleLogin}
           footer={
