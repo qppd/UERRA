@@ -5,9 +5,12 @@ import { Box, Typography, Paper } from '@mui/material';
 import Agencies from './AgencyManagement';
 import Categories from './CategoryManagement';
 import Users from './UsersManagement';
+import EnhancedUsersManagement from './EnhancedUsersManagement';
+import AdvancedAnalyticsLogs from './AdvancedAnalyticsLogs';
+import SystemInfoManagement from './SystemInfoManagement';
 
 export function AdminUsers() {
-  return <Users />;
+  return <EnhancedUsersManagement />;
 }
 
 export function AdminAgencies() {
@@ -19,19 +22,9 @@ export function AdminCategories() {
 }
 
 export function AdminLogsAnalytics() {
-  return (
-    <Paper elevation={2} sx={{ p: 3, borderRadius: 3, minHeight: 300 }}>
-      <Typography variant="h6" color="primary.main" mb={2}>Logs & Analytics</Typography>
-      <Typography color="text.secondary">System logs and analytics will be shown here.</Typography>
-    </Paper>
-  );
+  return <AdvancedAnalyticsLogs />;
 }
 
 export function AdminSystemInfo() {
-  return (
-    <Paper elevation={2} sx={{ p: 3, borderRadius: 3, minHeight: 300 }}>
-      <Typography variant="h6" color="primary.main" mb={2}>System Info</Typography>
-      <Typography color="text.secondary">System update and patch info will be shown here.</Typography>
-    </Paper>
-  );
+  return <SystemInfoManagement />;
 }
