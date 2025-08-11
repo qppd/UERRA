@@ -9,6 +9,16 @@ const Login = ({ onLogin, footer }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [oauthSuccess, setOauthSuccess] = useState(false);
+
+  // Check for OAuth callback success
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.hash.substring(1));
+    if (urlParams.get('access_token')) {
+      setOauthSuccess(true);
+      setError('');
+    }
+  }, []);
 
   const validate = () => {
     if (!email) return 'Email is required.';
@@ -89,6 +99,8 @@ const Login = ({ onLogin, footer }) => {
       }
       
       console.log('OAuth initiation successful:', data);
+      // Don't set loading to false here - let the OAuth flow complete
+      // The auth state change will be handled by the useAuthSession hook
     } catch (err) {
       console.error('Google sign-in error:', err);
       const errorMessage = err.message || 'Google sign-in failed. Please try again.';
@@ -132,6 +144,7 @@ const Login = ({ onLogin, footer }) => {
             size="medium"
           />
           {error && <Typography color="error" mt={1} mb={1} fontSize={14}>{error}</Typography>}
+          {oauthSuccess && <Typography color="success.main" mt={1} mb={1} fontSize={14}>✅ Google sign-in successful! Redirecting...</Typography>}
           <Button
             type="submit"
             variant="contained"

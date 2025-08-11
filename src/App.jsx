@@ -63,8 +63,18 @@ function App() {
     if (oauthResult) {
       // OAuth callback detected, the auth session hook will handle the rest
       console.log('OAuth callback detected');
+      // Clear any debug pages and go to login to let auth flow take over
+      setPage('login');
     }
   }, []);
+
+  // Auto-redirect to dashboard when user is authenticated
+  useEffect(() => {
+    if (user && page === 'login') {
+      console.log('User authenticated, redirecting to dashboard');
+      setPage('dashboard');
+    }
+  }, [user, page]);
 
   const handleLogin = () => setPage('dashboard');
   const handleRegister = () => setPage('dashboard');
