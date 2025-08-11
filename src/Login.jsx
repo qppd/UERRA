@@ -45,28 +45,35 @@ const Login = ({ onLogin, footer }) => {
     setError('');
     setLoading(true);
     try {
-      // Get the correct redirect URL based on environment
+      // Get the current URL without any hash or query parameters
+      const baseUrl = window.location.origin;
       const redirectTo = window.location.hostname === 'localhost' 
-        ? window.location.origin
+        ? baseUrl
         : 'https://uerra.vercel.app';
       
       console.log('OAuth redirect URL:', redirectTo);
+      console.log('Current URL:', window.location.href);
       
-      const { error: supaError } = await supabase.auth.signInWithOAuth({ 
+      const { data, error: supaError } = await supabase.auth.signInWithOAuth({ 
         provider: 'google',
         options: {
           redirectTo: redirectTo,
           queryParams: {
             access_type: 'offline',
-            prompt: 'consent',
+            prompt: 'select_account',
           }
         }
       });
-      if (supaError) throw supaError;
+      
+      if (supaError) {
+        console.error('Supabase OAuth error:', supaError);
+        throw supaError;
+      }
+      
+      console.log('OAuth initiation successful:', data);
     } catch (err) {
       console.error('Google sign-in error:', err);
-      setError(err.message || 'Google sign-in failed.');
-    } finally {
+      setError(err.message || 'Google sign-in failed. Please try again.');
       setLoading(false);
     }
   };
@@ -133,6 +140,19 @@ const Login = ({ onLogin, footer }) => {
           >
             Sign in with Google
           </Button>
+          {process.env.NODE_ENV === 'development' && (
+            <Button
+              type="button"
+              variant="text"
+              color="primary"
+              fullWidth
+              onClick={() => window.location.href = '/?debug=oauth'}
+              sx={{ textTransform: 'none', fontSize: '12px', mt: 1 }}
+              size="small"
+            >
+              Debug OAuth Issues
+            </Button>
+          )}
           {footer && <Box mt={2}>{footer}</Box>}
         </form>
       </Paper>

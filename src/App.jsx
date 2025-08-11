@@ -30,6 +30,7 @@ import EnhancedUsersManagement from './components/EnhancedUsersManagement';
 import AdvancedAnalyticsLogs from './components/AdvancedAnalyticsLogs';
 import SystemInfoManagement from './components/SystemInfoManagement';
 import DatabaseStructureCheck from './components/DatabaseStructureCheck';
+import OAuthDebug from './components/OAuthDebug';
 
 import OfflineHint from './components/OfflineHint';
 import DatabaseDebug from './components/DatabaseDebug';
@@ -44,6 +45,14 @@ function App() {
   const { user, loading } = useAuthSession();
   // Always call the hook, even if user is null
   const { profile, loading: profileLoading, error: profileError } = useUserProfile(user?.id);
+
+  // Check for debug mode
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('debug') === 'oauth') {
+      setPage('oauth_debug');
+    }
+  }, []);
 
   // Handle OAuth callback on app initialization
   useEffect(() => {
@@ -180,6 +189,7 @@ function App() {
       links.push({ label: 'System Management', page: 'admin_info', icon: 'fa fa-info-circle' });
       links.push({ label: 'Database Check', page: 'db_check', icon: 'fa fa-database' });
       links.push({ label: 'Profile Test', page: 'profile_test', icon: 'fa fa-user-check' });
+      links.push({ label: 'OAuth Debug', page: 'oauth_debug', icon: 'fa fa-key' });
     }
     
     links.push({ label: 'Logout', page: 'logout', icon: 'fa fa-sign-out-alt' });
@@ -218,6 +228,7 @@ function App() {
       else if (currentPage === 'admin_info' && profile?.role === 'superadmin') pageContent = <SystemInfoManagement />;
       else if (currentPage === 'db_check' && profile?.role === 'superadmin') pageContent = <DatabaseStructureCheck />;
       else if (currentPage === 'profile_test' && profile?.role === 'superadmin') pageContent = <ProfileTest />;
+      else if (currentPage === 'oauth_debug' && profile?.role === 'superadmin') pageContent = <OAuthDebug />;
       else pageContent = <DashboardHome />; // Default
     }
 
@@ -251,6 +262,13 @@ function App() {
       {page === 'debug' ? (
         <div>
           <SupabaseDebug />
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <button onClick={() => setPage('login')}>Go to Login</button>
+          </div>
+        </div>
+      ) : page === 'oauth_debug' ? (
+        <div>
+          <OAuthDebug />
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
             <button onClick={() => setPage('login')}>Go to Login</button>
           </div>
