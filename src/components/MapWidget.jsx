@@ -26,7 +26,7 @@ import { supabase } from '../supabaseClient';
 import Map, { Marker, Popup, Source, Layer } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const MAPBOX_TOKEN = 'pk.eyJ1Ijoic2FqZWRobSIsImEiOiJjbWUwZTI2bmUwMzRmMmtzOTV3aHIzb3pwIn0.vmkwo0fWsqc9-rJhYRb_2g'; // <-- Replace with your Mapbox token
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1Ijoic2FqZWRobSIsImEiOiJjbWUwZTI2bmUwMzRmMmtzOTV3aHIzb3pwIn0.vmkwo0fWsqc9-rJhYRb_2g'; // Fallback to hardcoded token
 const MAP_CENTER = [122.1, 13.933]; // [lng, lat] for Unisan
 
 const heatmapLayer = {
@@ -121,6 +121,39 @@ const MapWidget = () => {
   // Validate mapStyle and required props
   const mapStyle = "mapbox://styles/mapbox/streets-v11";
   const isMapReady = Array.isArray(MAP_CENTER) && MAP_CENTER.length === 2 && typeof MAPBOX_TOKEN === 'string' && MAPBOX_TOKEN.length > 0;
+  
+  // Debug logging
+  console.log('MapWidget Debug:', {
+    MAPBOX_TOKEN: MAPBOX_TOKEN ? `${MAPBOX_TOKEN.substring(0, 10)}...` : 'undefined',
+    MAP_CENTER,
+    isMapReady,
+    envToken: import.meta.env.VITE_MAPBOX_TOKEN ? `${import.meta.env.VITE_MAPBOX_TOKEN.substring(0, 10)}...` : 'undefined'
+  });
+
+  if (!MAPBOX_TOKEN || MAPBOX_TOKEN === 'undefined' || MAPBOX_TOKEN === 'no-token') {
+    return (
+      <Box>
+        <Typography variant="h6" fontWeight={600} mb={1} color="primary.main">
+          Live Incident Map
+        </Typography>
+        <Box 
+          sx={{ 
+            width: '100%', 
+            height: 260, 
+            borderRadius: 2,
+            bgcolor: 'error.light',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'error.contrastText'
+          }}
+        >
+          <Typography>Mapbox token not configured. Please add VITE_MAPBOX_TOKEN to your .env file.</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <Box>
@@ -136,6 +169,12 @@ const MapWidget = () => {
             getCursor={() => 'grab'}
             touchAction="none"
             onResize={() => {}}
+            onError={(error) => {
+              console.error('Mapbox error:', error);
+            }}
+            onLoad={() => {
+              console.log('Mapbox loaded successfully');
+            }}
           >
             {/* Pins for today's reports */}
             {todayReports.map(r => {

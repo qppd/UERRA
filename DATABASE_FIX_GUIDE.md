@@ -1,12 +1,49 @@
 # Database Structure Fix
 
-If you're encountering issues with the "Create Profile" button, it's likely due to missing columns in the users table.
+If you're encountering database-related issues, this guide will help you fix common problems.
 
-## Steps to Fix:
+## Common Issues:
 
-### 1. Run the Users Table Fix
-Execute the following SQL in your Supabase SQL Editor:
+### Issue 1: "column categories.color does not exist"
+This happens when the categories table is missing the color column.
 
+**Fix:**
+```sql
+-- Add color column to categories table if it doesn't exist
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM information_schema.columns 
+        WHERE table_name = 'categories' 
+        AND column_name = 'color' 
+        AND table_schema = 'public'
+    ) THEN
+        ALTER TABLE public.categories 
+        ADD COLUMN color TEXT DEFAULT '#007bff';
+        
+        -- Update existing categories with appropriate colors
+        UPDATE public.categories 
+        SET color = CASE 
+            WHEN name = 'Fire Emergency' THEN '#ff4757'
+            WHEN name = 'Medical Emergency' THEN '#2ed573'
+            WHEN name = 'Crime/Security' THEN '#3742fa'
+            WHEN name = 'Natural Disaster' THEN '#ffa502'
+            WHEN name = 'Road Accident' THEN '#ff6b6b'
+            ELSE '#007bff'
+        END;
+        
+        RAISE NOTICE 'Color column added to categories table successfully';
+    ELSE
+        RAISE NOTICE 'Color column already exists in categories table';
+    END IF;
+END $$;
+```
+
+### Issue 2: Missing columns in users table
+This happens when the users table is missing required columns.
+
+**Fix:**
 ```sql
 -- Add missing columns to users table if they don't exist
 ALTER TABLE public.users 

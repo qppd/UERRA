@@ -22,7 +22,9 @@ import {
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CloseIcon from '@mui/icons-material/Close';
+import SecurityIcon from '@mui/icons-material/Security';
 import { supabase } from '../supabaseClient';
+import CitizenReportService from '../services/CitizenReportService';
 
 const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
   const [formData, setFormData] = useState({
@@ -40,13 +42,44 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [locationLoading, setLocationLoading] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+  const [roleChecked, setRoleChecked] = useState(false);
+
+  // Check user role when dialog opens
+  useEffect(() => {
+    if (open && user) {
+      checkUserRole();
+    }
+  }, [open, user]);
 
   useEffect(() => {
-    if (open) {
+    if (open && roleChecked) {
       fetchCategories();
       resetForm();
     }
-  }, [open]);
+  }, [open, roleChecked]);
+
+  const checkUserRole = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+      
+      setUserRole(data.role);
+      setRoleChecked(true);
+
+      if (data.role !== 'citizen') {
+        setError('Only citizens are authorized to submit emergency reports');
+      }
+    } catch (error) {
+      setError('Failed to verify user permissions');
+      console.error('Role check error:', error);
+    }
+  };
 
   const fetchCategories = async () => {
     try {
@@ -170,8 +203,15 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
   };
 
   const handleSubmit = async () => {
+    // Basic validation
     if (!formData.category_id || !formData.description) {
       setError('Please fill in all required fields');
+      return;
+    }
+
+    // Check description length
+    if (formData.description.trim().length < 10) {
+      setError('Description must be at least 10 characters long');
       return;
     }
 
@@ -179,54 +219,22 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
     setError('');
 
     try {
-      let photoUrl = null;
-      
-      if (photoFile) {
-        photoUrl = await uploadPhoto();
+      // Use the CitizenReportService for secure report submission
+      const result = await CitizenReportService.submitReport(
+        formData, 
+        user, 
+        photoFile
+      );
+
+      if (result.success) {
+        // Call the callback to refresh reports
+        if (onReportSubmitted) {
+          onReportSubmitted();
+        }
+        onClose();
+      } else {
+        setError(result.error || 'Failed to submit report');
       }
-
-      // Prepare location data for PostGIS
-      let locationPoint = null;
-      if (formData.location) {
-        locationPoint = `POINT(${formData.location.lng} ${formData.location.lat})`;
-      }
-
-      const reportData = {
-        user_id: user.id,
-        category_id: formData.category_id,
-        title: formData.title || null,
-        description: formData.description,
-        priority: formData.priority,
-        address: formData.address || null,
-        location: locationPoint,
-        photo_url: photoUrl,
-        status: 'pending'
-      };
-
-      const { error: insertError } = await supabase
-        .from('reports')
-        .insert([reportData]);
-
-      if (insertError) throw insertError;
-
-      // Create initial report update
-      const { error: updateError } = await supabase
-        .from('report_updates')
-        .insert([{
-          report_id: (await supabase.from('reports').select('id').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single()).data.id,
-          user_id: user.id,
-          status: 'pending',
-          notes: 'Report submitted'
-        }]);
-
-      if (updateError) console.warn('Failed to create initial update:', updateError);
-
-      // Call the callback to refresh reports
-      if (onReportSubmitted) {
-        onReportSubmitted();
-      }
-
-      onClose();
     } catch (error) {
       setError(error.message || 'Failed to submit report');
       console.error('Error submitting report:', error);
@@ -237,15 +245,47 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6" fontWeight={600}>Report Emergency</Typography>
+      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 600 }}>
+        Report Emergency
         <IconButton onClick={onClose} size="small">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
       <DialogContent dividers>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {/* Role verification and security notice */}
+        {!roleChecked ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4 }}>
+            <CircularProgress size={24} />
+            <Typography sx={{ ml: 2 }}>Verifying user permissions...</Typography>
+          </Box>
+        ) : userRole !== 'citizen' ? (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <SecurityIcon />
+              <Typography variant="h6">Access Restricted</Typography>
+            </Box>
+            <Typography>
+              Only citizens are authorized to submit emergency reports. Your current role is: <strong>{userRole}</strong>
+            </Typography>
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              If you believe this is an error, please contact your system administrator.
+            </Typography>
+          </Alert>
+        ) : (
+          <>
+            {/* Security notice for citizens */}
+            <Alert severity="info" sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <SecurityIcon />
+                <Typography variant="subtitle2">Citizen Emergency Reporting</Typography>
+              </Box>
+              <Typography variant="body2">
+                This form is exclusively for emergency reporting by Unisan citizens. All submissions are logged and verified.
+              </Typography>
+            </Alert>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {error && (
             <Alert severity="error" onClose={() => setError('')}>
               {error}
@@ -311,6 +351,8 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
             fullWidth
             required
             placeholder="Describe the emergency situation in detail..."
+            helperText={`${formData.description.length}/1000 characters (minimum 10 required)`}
+            error={formData.description.length > 0 && formData.description.trim().length < 10}
           />
 
           {/* Priority */}
@@ -419,7 +461,9 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
               Photos help responders understand the situation better (Max 5MB)
             </Typography>
           </Box>
-        </Box>
+            </Box>
+          </>
+        )}
       </DialogContent>
 
       <DialogActions sx={{ p: 3 }}>
@@ -429,7 +473,7 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
         <Button
           variant="contained"
           onClick={handleSubmit}
-          disabled={loading || !formData.category_id || !formData.description}
+          disabled={loading || !formData.category_id || !formData.description || formData.description.trim().length < 10 || userRole !== 'citizen'}
           startIcon={loading ? <CircularProgress size={20} /> : null}
           sx={{ minWidth: 120 }}
         >
