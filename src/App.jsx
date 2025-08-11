@@ -1,11 +1,12 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Login from './Login';
 import Register from './Register';
 import { useAuthSession, signOut } from './useAuthSession';
 import { useUserProfile, upsertUserProfile } from './useUserProfile';
+import { handleOAuthCallback } from './utils/authUtils';
 
 import UserManagement from './UserManagement';
 import DashboardLayout from './DashboardLayout';
@@ -42,6 +43,15 @@ function App() {
   const { user, loading } = useAuthSession();
   // Always call the hook, even if user is null
   const { profile, loading: profileLoading, error: profileError } = useUserProfile(user?.id);
+
+  // Handle OAuth callback on app initialization
+  useEffect(() => {
+    const oauthResult = handleOAuthCallback();
+    if (oauthResult) {
+      // OAuth callback detected, the auth session hook will handle the rest
+      console.log('OAuth callback detected');
+    }
+  }, []);
 
   const handleLogin = () => setPage('dashboard');
   const handleRegister = () => setPage('dashboard');

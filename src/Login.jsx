@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { supabase } from './supabaseClient';
 import { Box, Paper, Typography, TextField, Button, Divider, CircularProgress, Avatar } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
+import { getOAuthOptions } from './utils/authUtils';
 
 const Login = ({ onLogin, footer }) => {
   const [email, setEmail] = useState('');
@@ -45,7 +46,10 @@ const Login = ({ onLogin, footer }) => {
     setError('');
     setLoading(true);
     try {
-      const { error: supaError } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+      const { error: supaError } = await supabase.auth.signInWithOAuth({ 
+        provider: 'google',
+        options: getOAuthOptions()
+      });
       if (supaError) throw supaError;
     } catch (err) {
       setError(err.message || 'Google sign-in failed.');

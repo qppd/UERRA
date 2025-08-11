@@ -4,6 +4,7 @@ import { supabase } from './supabaseClient';
 import { upsertUserProfile } from './useUserProfile';
 import { Box, Paper, Typography, TextField, Button, Divider, CircularProgress, Avatar } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
+import { getOAuthOptions } from './utils/authUtils';
 
 const Register = ({ onRegister, footer }) => {
   const [email, setEmail] = useState('');
@@ -56,7 +57,10 @@ const Register = ({ onRegister, footer }) => {
     setError('');
     setLoading(true);
     try {
-      const { error: supaError } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+      const { error: supaError } = await supabase.auth.signInWithOAuth({ 
+        provider: 'google',
+        options: getOAuthOptions()
+      });
       if (supaError) throw supaError;
     } catch (err) {
       setError(err.message || 'Google sign-up failed.');
