@@ -44,8 +44,10 @@ const Register = ({ onRegister, footer }) => {
           agency_id: null,
         });
       }
-      onRegister && onRegister(data.user);
+      console.log('Registration successful:', data.user?.email);
+      // Don't call onRegister immediately - let useAuthSession handle the state change
     } catch (err) {
+      console.error('Registration error:', err);
       setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);

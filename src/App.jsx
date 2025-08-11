@@ -40,7 +40,7 @@ import SupabaseDebug from './components/SupabaseDebug';
 
 
 function App() {
-  const [page, setPage] = useState('login'); // Changed back to login
+  const [page, setPage] = useState('login');
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isCreatingProfile, setIsCreatingProfile] = useState(false);
   const { user, loading } = useAuthSession();
@@ -63,21 +63,34 @@ function App() {
     if (oauthResult) {
       // OAuth callback detected, the auth session hook will handle the rest
       console.log('OAuth callback detected');
-      // Clear any debug pages and go to login to let auth flow take over
-      setPage('login');
+      // Clear any debug pages and let auth flow take over
+      if (page !== 'oauth_debug' && page !== 'production_test') {
+        setPage('login');
+      }
     }
   }, []);
 
-  // Auto-redirect to dashboard when user is authenticated
+  // Auto-redirect to dashboard when user is authenticated and not in debug mode
   useEffect(() => {
     if (user && page === 'login') {
       console.log('User authenticated, redirecting to dashboard');
       setPage('dashboard');
+    } else if (!user && page === 'dashboard') {
+      // If user logs out while on dashboard, go back to login
+      console.log('User logged out, redirecting to login');
+      setPage('login');
     }
   }, [user, page]);
 
-  const handleLogin = () => setPage('dashboard');
-  const handleRegister = () => setPage('dashboard');
+  const handleLogin = () => {
+    console.log('Login successful, setting page to dashboard');
+    setPage('dashboard');
+  };
+  
+  const handleRegister = () => {
+    console.log('Registration successful, setting page to dashboard');
+    setPage('dashboard');
+  };
 
   // Handle creating a default profile if user exists but no profile found
   const handleCreateDefaultProfile = async () => {

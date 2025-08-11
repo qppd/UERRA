@@ -7,17 +7,36 @@ export function useAuthSession() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const currentSession = supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user || null);
-      setLoading(false);
-    });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user || null);
-    });
+    // Get initial session
+    const getInitialSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Error getting session:', error);
+        }
+        setSession(session);
+        setUser(session?.user || null);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error in getInitialSession:', error);
+        setLoading(false);
+      }
+    };
+
+    getInitialSession();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
+        setSession(session);
+        setUser(session?.user || null);
+        setLoading(false);
+      }
+    );
+
     return () => {
-      listener.subscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 

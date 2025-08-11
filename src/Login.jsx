@@ -43,8 +43,12 @@ const Login = ({ onLogin, footer }) => {
         password,
       });
       if (supaError) throw supaError;
-      onLogin && onLogin(data.user);
+      
+      console.log('Email login successful:', data.user?.email);
+      // Don't call onLogin immediately - let useAuthSession handle the state change
+      // onLogin will be called by the useEffect in App.jsx when user state changes
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
