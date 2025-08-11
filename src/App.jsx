@@ -38,7 +38,7 @@ import SupabaseDebug from './components/SupabaseDebug';
 
 
 function App() {
-  const [page, setPage] = useState('debug'); // Changed to debug temporarily
+  const [page, setPage] = useState('login'); // Changed back to login
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isCreatingProfile, setIsCreatingProfile] = useState(false);
   const { user, loading } = useAuthSession();

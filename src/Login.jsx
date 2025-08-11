@@ -45,14 +45,26 @@ const Login = ({ onLogin, footer }) => {
     setError('');
     setLoading(true);
     try {
+      // Get the correct redirect URL based on environment
+      const redirectTo = window.location.hostname === 'localhost' 
+        ? window.location.origin
+        : 'https://uerra.vercel.app';
+      
+      console.log('OAuth redirect URL:', redirectTo);
+      
       const { error: supaError } = await supabase.auth.signInWithOAuth({ 
         provider: 'google',
         options: {
-          redirectTo: 'https://uerra.vercel.app'
+          redirectTo: redirectTo,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
         }
       });
       if (supaError) throw supaError;
     } catch (err) {
+      console.error('Google sign-in error:', err);
       setError(err.message || 'Google sign-in failed.');
     } finally {
       setLoading(false);
