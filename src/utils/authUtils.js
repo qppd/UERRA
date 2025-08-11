@@ -7,11 +7,17 @@
  * @returns {string} The redirect URL
  */
 export const getRedirectUrl = () => {
-  // In production, use the current origin
-  // In development, use localhost with the correct port
-  if (import.meta.env.DEV) {
+  // For production (Vercel), use the specific domain
+  if (window.location.hostname === 'uerra.vercel.app') {
+    return 'https://uerra.vercel.app';
+  }
+  
+  // For development, use localhost
+  if (import.meta.env.DEV || window.location.hostname === 'localhost') {
     return `${window.location.origin}`;
   }
+  
+  // Fallback to current origin
   return window.location.origin;
 };
 
