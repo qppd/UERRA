@@ -31,6 +31,7 @@ import AdvancedAnalyticsLogs from './components/AdvancedAnalyticsLogs';
 import SystemInfoManagement from './components/SystemInfoManagement';
 import DatabaseStructureCheck from './components/DatabaseStructureCheck';
 import OAuthDebug from './components/OAuthDebug';
+import ProductionOAuthTest from './components/ProductionOAuthTest';
 
 import OfflineHint from './components/OfflineHint';
 import DatabaseDebug from './components/DatabaseDebug';
@@ -51,6 +52,8 @@ function App() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') === 'oauth') {
       setPage('oauth_debug');
+    } else if (urlParams.get('test') === 'production') {
+      setPage('production_test');
     }
   }, []);
 
@@ -269,6 +272,13 @@ function App() {
       ) : page === 'oauth_debug' ? (
         <div>
           <OAuthDebug />
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <button onClick={() => setPage('login')}>Go to Login</button>
+          </div>
+        </div>
+      ) : page === 'production_test' ? (
+        <div>
+          <ProductionOAuthTest />
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
             <button onClick={() => setPage('login')}>Go to Login</button>
           </div>

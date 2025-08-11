@@ -21,6 +21,45 @@ const OAuthDebug = () => {
     setLogs(prev => [...prev, { message, type, timestamp }]);
   };
 
+  const testSupabaseProviderConfig = async () => {
+    addLog('Testing Supabase provider configuration...', 'info');
+    
+    try {
+      // Try to get the OAuth URL directly
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'none', // Don't actually redirect, just test the config
+          },
+          skipBrowserRedirect: true // This should prevent actual redirect
+        }
+      });
+
+      if (error) {
+        addLog(`Provider config error: ${error.message}`, 'error');
+        
+        // Specific error analysis
+        if (error.message.includes('Provider not found')) {
+          addLog('Google provider is not enabled in Supabase Dashboard', 'error');
+        } else if (error.message.includes('Invalid redirect URL')) {
+          addLog('Redirect URL is not configured correctly in Supabase', 'error');
+        } else if (error.code === 500) {
+          addLog('Server error - likely OAuth credentials issue in Supabase', 'error');
+        }
+      } else {
+        addLog('Provider configuration appears correct', 'success');
+        if (data?.url) {
+          addLog(`OAuth URL generated: ${data.url}`, 'info');
+        }
+      }
+    } catch (err) {
+      addLog(`Provider test failed: ${err.message}`, 'error');
+    }
+  };
+
   const testOAuthConfig = async () => {
     addLog('Testing OAuth configuration...', 'info');
     
@@ -47,6 +86,12 @@ const OAuthDebug = () => {
     addLog(`Testing Google OAuth with redirect: ${redirectUrl}`, 'info');
     
     try {
+      // First, check if we can connect to Supabase
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        addLog(`Session check failed: ${sessionError.message}`, 'error');
+      }
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -61,13 +106,22 @@ const OAuthDebug = () => {
       if (error) {
         addLog(`OAuth error: ${error.message}`, 'error');
         addLog(`Error code: ${error.code || 'N/A'}`, 'error');
-        addLog(`Error details: ${JSON.stringify(error, null, 2)}`, 'error');
+        addLog(`Error status: ${error.status || 'N/A'}`, 'error');
+        
+        // Enhanced error details for production debugging
+        if (error.code === 500) {
+          addLog('Error 500 suggests configuration issue between Supabase and Google', 'error');
+          addLog('Check: 1) Google OAuth credentials 2) Redirect URLs 3) Supabase provider settings', 'info');
+        }
+        
+        addLog(`Full error object: ${JSON.stringify(error, null, 2)}`, 'error');
       } else {
         addLog('OAuth initiation successful', 'success');
-        addLog(`OAuth data: ${JSON.stringify(data, null, 2)}`, 'info');
+        addLog(`OAuth response: ${JSON.stringify(data, null, 2)}`, 'info');
       }
     } catch (err) {
       addLog(`OAuth test failed: ${err.message}`, 'error');
+      addLog(`Error stack: ${err.stack}`, 'error');
     }
   };
 
@@ -87,13 +141,22 @@ const OAuthDebug = () => {
         <Typography variant="h6" gutterBottom>
           Configuration Test
         </Typography>
-        <Button 
-          variant="contained" 
-          onClick={testOAuthConfig}
-          sx={{ mb: 2 }}
-        >
-          Test Configuration
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <Button 
+            variant="contained" 
+            onClick={testOAuthConfig}
+          >
+            Test Basic Config
+          </Button>
+          
+          <Button 
+            variant="contained" 
+            color="secondary"
+            onClick={testSupabaseProviderConfig}
+          >
+            Test Provider Config
+          </Button>
+        </Box>
         
         <Divider sx={{ my: 2 }} />
         
@@ -124,7 +187,15 @@ const OAuthDebug = () => {
             color="secondary"
             onClick={() => testGoogleOAuth('https://uerra.vercel.app')}
           >
-            Test with Vercel URL
+            Test with Production URL
+          </Button>
+          
+          <Button 
+            variant="contained" 
+            color="warning"
+            onClick={() => testGoogleOAuth(`${window.location.origin}/auth/callback`)}
+          >
+            Test with Callback Path
           </Button>
           
           <Button 
@@ -134,6 +205,12 @@ const OAuthDebug = () => {
             Test Custom URL
           </Button>
         </Box>
+
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          <strong>Current Environment:</strong> {window.location.hostname === 'localhost' ? 'Development' : 'Production'}<br/>
+          <strong>Current URL:</strong> {window.location.href}<br/>
+          <strong>Supabase URL:</strong> {import.meta.env.VITE_SUPABASE_URL}
+        </Typography>
       </Paper>
 
       <Paper sx={{ p: 3 }}>

@@ -45,14 +45,27 @@ const Login = ({ onLogin, footer }) => {
     setError('');
     setLoading(true);
     try {
-      // Get the current URL without any hash or query parameters
-      const baseUrl = window.location.origin;
-      const redirectTo = window.location.hostname === 'localhost' 
-        ? baseUrl
-        : 'https://uerra.vercel.app';
+      // Determine the correct redirect URL based on environment
+      let redirectTo;
+      const currentOrigin = window.location.origin;
       
-      console.log('OAuth redirect URL:', redirectTo);
-      console.log('Current URL:', window.location.href);
+      if (window.location.hostname === 'localhost') {
+        // Development environment
+        redirectTo = currentOrigin;
+      } else if (window.location.hostname.includes('vercel.app')) {
+        // Vercel deployment - use the actual Vercel URL
+        redirectTo = currentOrigin;
+      } else {
+        // Fallback to configured production URL
+        redirectTo = 'https://uerra.vercel.app';
+      }
+      
+      console.log('Environment info:', {
+        hostname: window.location.hostname,
+        origin: currentOrigin,
+        redirectTo,
+        userAgent: navigator.userAgent.substring(0, 100)
+      });
       
       const { data, error: supaError } = await supabase.auth.signInWithOAuth({ 
         provider: 'google',
@@ -66,14 +79,20 @@ const Login = ({ onLogin, footer }) => {
       });
       
       if (supaError) {
-        console.error('Supabase OAuth error:', supaError);
+        console.error('Supabase OAuth error details:', {
+          message: supaError.message,
+          code: supaError.code,
+          status: supaError.status,
+          details: supaError
+        });
         throw supaError;
       }
       
       console.log('OAuth initiation successful:', data);
     } catch (err) {
       console.error('Google sign-in error:', err);
-      setError(err.message || 'Google sign-in failed. Please try again.');
+      const errorMessage = err.message || 'Google sign-in failed. Please try again.';
+      setError(`${errorMessage} (Code: ${err.code || 'unknown'})`);
       setLoading(false);
     }
   };
@@ -141,17 +160,30 @@ const Login = ({ onLogin, footer }) => {
             Sign in with Google
           </Button>
           {process.env.NODE_ENV === 'development' && (
-            <Button
-              type="button"
-              variant="text"
-              color="primary"
-              fullWidth
-              onClick={() => window.location.href = '/?debug=oauth'}
-              sx={{ textTransform: 'none', fontSize: '12px', mt: 1 }}
-              size="small"
-            >
-              Debug OAuth Issues
-            </Button>
+            <>
+              <Button
+                type="button"
+                variant="text"
+                color="primary"
+                fullWidth
+                onClick={() => window.location.href = '/?debug=oauth'}
+                sx={{ textTransform: 'none', fontSize: '12px', mt: 1 }}
+                size="small"
+              >
+                Debug OAuth Issues
+              </Button>
+              <Button
+                type="button"
+                variant="text"
+                color="secondary"
+                fullWidth
+                onClick={() => window.location.href = '/?test=production'}
+                sx={{ textTransform: 'none', fontSize: '12px' }}
+                size="small"
+              >
+                Production OAuth Test
+              </Button>
+            </>
           )}
           {footer && <Box mt={2}>{footer}</Box>}
         </form>
