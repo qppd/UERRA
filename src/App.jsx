@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import Login from './Login';
 import Register from './Register';
 import { useAuthSession, signOut } from './useAuthSession';
+import { handleLogout } from './utils/logoutUtils';
 import { useUserProfile, upsertUserProfile } from './useUserProfile';
 
 import UserManagement from './UserManagement';
@@ -25,6 +26,7 @@ import {
   AdminSystemInfo
 } from './components/AdminPanel';
 import EnhancedUsersManagement from './components/EnhancedUsersManagement';
+import LogoutDebugPanel from './components/LogoutDebugPanel';
 
 import OfflineHint from './components/OfflineHint';
 
@@ -216,10 +218,31 @@ function App() {
       else pageContent = <DashboardHome />; // Default
     }
 
+    // Enhanced logout handler
+    const handleLogoutClick = async () => {
+      try {
+        console.log('Logout initiated from sidebar...');
+        
+        // Optional: Show confirmation dialog
+        const confirmLogout = window.confirm('Are you sure you want to logout?');
+        
+        if (confirmLogout) {
+          await handleLogout();
+        }
+      } catch (error) {
+        console.error('Error during logout:', error);
+        
+        // Force logout even if there's an error
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/';
+      }
+    };
+
     // Sidebar navigation handler
     const handleSidebarClick = (page) => {
       if (page === 'logout') {
-        signOut();
+        handleLogoutClick();
       } else {
         setCurrentPage(page);
       }
