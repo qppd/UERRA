@@ -14,6 +14,59 @@ html, body {
   box-sizing: border-box;
 }
 
+/* Map responsive utilities */
+.map-container {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.map-container .mapboxgl-map {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+}
+
+.map-container .mapboxgl-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: pan-x pan-y !important;
+  max-width: 100% !important;
+}
+
+.map-container .mapboxgl-canvas-container {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Full width utilities */
+.full-width-map .MuiGrid-item {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex-basis: 100% !important;
+}
+
+/* Mobile map optimizations */
+@media (max-width: 768px) {
+  .map-container {
+    min-height: 300px !important;
+  }
+  
+  .map-container .mapboxgl-ctrl-bottom-right {
+    bottom: 10px !important;
+    right: 10px !important;
+  }
+  
+  .map-container .mapboxgl-ctrl-bottom-left {
+    bottom: 10px !important;
+    left: 10px !important;
+  }
+}
+
 /* Responsive table container */
 .responsive-table-container {
   width: 100%;

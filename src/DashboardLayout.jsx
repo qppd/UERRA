@@ -437,13 +437,7 @@ const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
               md: '24px',
               lg: '32px'
             },
-            maxWidth: { 
-              xs: '100%', 
-              sm: '100%', 
-              md: '100%', 
-              lg: 1200,
-              xl: 1400 
-            },
+            maxWidth: '100%',
             mx: 'auto', 
             width: '100%',
             transition: 'all 0.3s ease',
