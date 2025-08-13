@@ -48,6 +48,9 @@ function Sidebar({ links, open, onClose, currentPage, onNav, user, isCollapsed, 
   
   const sidebarWidth = isCollapsed ? 80 : 280;
   
+  // Determine if this is a temporary drawer (mobile) or permanent drawer (desktop)
+  const isTemporary = open !== undefined;
+  
   const sidebarStyles = {
     '& .MuiDrawer-paper': {
       width: sidebarWidth,
@@ -68,10 +71,14 @@ function Sidebar({ links, open, onClose, currentPage, onNav, user, isCollapsed, 
 
   return (
     <Drawer
-      variant={open ? 'temporary' : 'permanent'}
-      open={open}
+      variant={isTemporary ? 'temporary' : 'permanent'}
+      open={isTemporary ? open : true}
       onClose={onClose}
-      ModalProps={{ keepMounted: true }}
+      ModalProps={{ 
+        keepMounted: true,
+        // Close sidebar when clicking outside (backdrop click) - only for temporary variant
+        onBackdropClick: isTemporary ? onClose : undefined
+      }}
       sx={sidebarStyles}
     >
       {/* Header with UERRA branding and user profile */}
@@ -93,8 +100,8 @@ function Sidebar({ links, open, onClose, currentPage, onNav, user, isCollapsed, 
         />
       </Box>
 
-      {/* User Profile Section */}
-      {!isCollapsed && user && (
+      {/* User Profile Section - Show on both mobile and desktop when expanded */}
+      {(!isCollapsed || isTemporary) && user && (
         <Box sx={{ 
           p: 2, 
           borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
@@ -204,13 +211,13 @@ function Sidebar({ links, open, onClose, currentPage, onNav, user, isCollapsed, 
 
       {/* Bottom Section with Dark Mode Toggle */}
       <Box sx={{ 
-        p: isCollapsed ? 1 : 2, 
+        p: isCollapsed && !isTemporary ? 1 : 2, 
         borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
         background: isDark 
           ? 'rgba(255,255,255,0.02)' 
           : 'rgba(0,0,0,0.02)'
       }}>
-        {!isCollapsed ? (
+        {(!isCollapsed || isTemporary) ? (
           <FormControlLabel
             control={
               <Switch
@@ -259,8 +266,8 @@ function Sidebar({ links, open, onClose, currentPage, onNav, user, isCollapsed, 
         )}
       </Box>
 
-      {/* Collapse Toggle Button */}
-      {!open && (
+      {/* Collapse Toggle Button - Only show on desktop permanent sidebar */}
+      {!isTemporary && (
         <IconButton
           onClick={onToggleCollapsed}
           sx={{
@@ -339,10 +346,40 @@ const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
     }
   };
 
+  // Navigation handler that closes sidebar on mobile after navigation
+  const handleNavigation = (page) => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+    if (onNav) {
+      onNav(page);
+    }
+  };
+
   // Sync dark mode state with theme
   useEffect(() => {
     setDarkMode(theme.palette.mode === 'dark');
   }, [theme.palette.mode]);
+
+  // Auto-close mobile sidebar when screen size changes from mobile to desktop
+  useEffect(() => {
+    if (!isMobile && sidebarOpen) {
+      setSidebarOpen(false);
+    }
+  }, [isMobile, sidebarOpen]);
+
+  // Additional window resize listener for extra reliability
+  useEffect(() => {
+    const handleResize = () => {
+      const isNowMobile = window.innerWidth < theme.breakpoints.values.md;
+      if (!isNowMobile && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarOpen, theme.breakpoints.values.md]);
 
   const currentDrawerWidth = isCollapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH_EXPANDED;
 
@@ -350,12 +387,13 @@ const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
       {/* Sidebar */}
       {isMobile ? (
+        /* Mobile: Temporary drawer that opens/closes with hamburger menu */
         <Sidebar 
           links={links} 
           open={sidebarOpen} 
           onClose={handleSidebarClose} 
           currentPage={currentPage} 
-          onNav={p => { setSidebarOpen(false); onNav?.(p); }}
+          onNav={handleNavigation}
           user={user}
           isCollapsed={false}
           onToggleCollapsed={() => {}}
@@ -363,9 +401,10 @@ const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
           onToggleDarkMode={handleToggleDarkMode}
         />
       ) : (
+        /* Desktop: Permanent drawer that can be collapsed/expanded */
         <Sidebar 
           links={links} 
-          open={false} 
+          open={undefined} // undefined for permanent variant
           onClose={null} 
           currentPage={currentPage} 
           onNav={onNav}
@@ -380,7 +419,7 @@ const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
       {/* Main Content */}
       <Box sx={{ 
         flex: 1, 
-        ml: { md: `${currentDrawerWidth}px` }, 
+        ml: { xs: 0, md: `${currentDrawerWidth}px` }, // No margin on mobile, proper margin on desktop
         display: 'flex', 
         flexDirection: 'column', 
         minHeight: '100vh',
