@@ -126,20 +126,24 @@ const CitizenDashboard = ({ user }) => {
             startIcon={<PhoneIcon />}
             onClick={() => setOpenHotlines(true)}
             sx={{ 
-              borderColor: 'rgba(255,255,255,0.5)', 
+              borderColor: 'rgba(255,255,255,0.7)', 
               color: 'white',
               '&:hover': { 
                 borderColor: 'white', 
-                bgcolor: 'rgba(255,255,255,0.1)' 
+                bgcolor: 'rgba(255,255,255,0.15)',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
               },
               fontWeight: 600,
               px: { xs: 2, sm: 3 },
               py: { xs: 1, sm: 1.5 },
               fontSize: { xs: '0.875rem', sm: '1rem' },
-              width: { xs: '100%', sm: 'auto' }
+              width: { xs: '100%', sm: 'auto' },
+              borderWidth: 2,
+              transition: 'all 0.2s ease-in-out'
             }}
           >
-            Emergency Hotlines
+            🚨 Emergency Hotlines
           </Button>
         </Box>
       </Paper>

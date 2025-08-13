@@ -18,6 +18,7 @@ import CitizenDashboard from './components/CitizenDashboard';
 import AgencyDashboard from './components/AgencyDashboard';
 import MyReports from './components/MyReports';
 import EmergencyTips from './components/EmergencyTips';
+import EmergencyHotlinesPage from './components/EmergencyHotlinesPage';
 import {
   AdminUsers,
   AdminAgencies,
@@ -191,6 +192,7 @@ function App() {
       if (currentPage === 'dashboard') pageContent = <CitizenDashboard user={user} />;
       else if (currentPage === 'myreports') pageContent = <MyReports user={user} />;
       else if (currentPage === 'tips') pageContent = <EmergencyTips />;
+      else if (currentPage === 'hotlines') pageContent = <EmergencyHotlinesPage />;
       else pageContent = <CitizenDashboard user={user} />; // Default to citizen dashboard
     } else if (profile?.role === 'agency') {
       // Agency-specific pages
@@ -291,6 +293,9 @@ function App() {
           }
         />
       )}
+      
+      {/* Debug panel for logout testing (development only) */}
+      <LogoutDebugPanel />
     </>
   );
 }
