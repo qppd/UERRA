@@ -1,6 +1,25 @@
 
-import React, { useState } from 'react';
-import { Drawer, List, ListItemButton, ListItemIcon, ListItemText, AppBar, Toolbar, IconButton, Typography, Box, Avatar, Divider, useTheme, useMediaQuery, Fade } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { 
+  Drawer, 
+  List, 
+  ListItemButton, 
+  ListItemIcon, 
+  ListItemText, 
+  AppBar, 
+  Toolbar, 
+  IconButton, 
+  Typography, 
+  Box, 
+  Avatar, 
+  Divider, 
+  useTheme, 
+  useMediaQuery, 
+  Fade,
+  Switch,
+  FormControlLabel,
+  Collapse
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -8,6 +27,11 @@ import GroupIcon from '@mui/icons-material/Group';
 import BusinessIcon from '@mui/icons-material/Business';
 import HistoryIcon from '@mui/icons-material/History';
 import LogoutIcon from '@mui/icons-material/Logout';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import UerraLogo from './components/UerraLogo';
 
 const iconMap = {
   'fa fa-home': <HomeIcon />,
@@ -18,50 +42,248 @@ const iconMap = {
   'fa fa-sign-out-alt': <LogoutIcon />,
 };
 
-function Sidebar({ links, open, onClose, currentPage, onNav }) {
+function Sidebar({ links, open, onClose, currentPage, onNav, user, isCollapsed, onToggleCollapsed, darkMode, onToggleDarkMode }) {
   const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+  
+  const sidebarWidth = isCollapsed ? 80 : 280;
+  
+  const sidebarStyles = {
+    '& .MuiDrawer-paper': {
+      width: sidebarWidth,
+      boxSizing: 'border-box',
+      background: isDark 
+        ? 'linear-gradient(145deg, #2d3748 0%, #1a202c 100%)'
+        : 'linear-gradient(145deg, #ffffff 0%, #f7fafc 100%)',
+      color: isDark ? '#ffffff' : '#2d3748',
+      borderRadius: isCollapsed ? '0 20px 20px 0' : '0 24px 24px 0',
+      border: 'none',
+      boxShadow: isDark 
+        ? '4px 0 20px rgba(0, 0, 0, 0.3)' 
+        : '4px 0 20px rgba(0, 0, 0, 0.1)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      overflow: 'hidden',
+    },
+  };
+
   return (
     <Drawer
       variant={open ? 'temporary' : 'permanent'}
       open={open}
       onClose={onClose}
       ModalProps={{ keepMounted: true }}
-      sx={{
-        '& .MuiDrawer-paper': {
-          width: 240,
-          boxSizing: 'border-box',
-          background: `linear-gradient(160deg, ${theme.palette.grey[900]} 70%, ${theme.palette.primary.main} 100%)`,
-          color: '#fff',
-        },
-      }}
+      sx={sidebarStyles}
     >
-      <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Avatar sx={{ bgcolor: theme.palette.primary.main, mr: 1 }}>U</Avatar>
-        <Typography variant="h6" fontWeight={700} sx={{ flex: 1 }}>UERRA</Typography>
+      {/* Header with UERRA branding and user profile */}
+      <Box sx={{ 
+        p: isCollapsed ? 1.5 : 3, 
+        display: 'flex', 
+        flexDirection: 'column',
+        alignItems: 'center', 
+        gap: 1,
+        borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+        minHeight: isCollapsed ? 80 : 120,
+        transition: 'all 0.3s ease',
+        justifyContent: 'center'
+      }}>
+        <UerraLogo 
+          size={isCollapsed ? 'small' : 'medium'}
+          showText={!isCollapsed}
+          collapsed={isCollapsed}
+        />
       </Box>
-      <Divider sx={{ borderColor: 'rgba(255,255,255,0.12)' }} />
-      <List>
+
+      {/* User Profile Section */}
+      {!isCollapsed && user && (
+        <Box sx={{ 
+          p: 2, 
+          borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+          background: isDark 
+            ? 'rgba(255,255,255,0.02)' 
+            : 'rgba(0,0,0,0.02)'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Avatar 
+              sx={{ 
+                width: 36, 
+                height: 36,
+                bgcolor: theme.palette.secondary.main,
+                fontSize: '0.9rem'
+              }}
+            >
+              {user.email?.[0]?.toUpperCase() || '?'}
+            </Avatar>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography 
+                variant="body2" 
+                fontWeight={600}
+                sx={{ 
+                  color: isDark ? '#ffffff' : '#2d3748',
+                  fontSize: '0.9rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                {user.user_metadata?.full_name || user.email?.split('@')[0] || 'User'}
+              </Typography>
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
+                  fontSize: '0.75rem',
+                  textTransform: 'capitalize'
+                }}
+              >
+                {user.user_metadata?.role || 'Citizen'}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+      )}
+
+      {/* Navigation Menu */}
+      <List sx={{ flex: 1, p: isCollapsed ? 1 : 2 }}>
         {links.map(link => (
           <ListItemButton
             key={link.label}
             selected={currentPage === link.page}
             onClick={() => onNav(link.page)}
             sx={{
-              color: currentPage === link.page ? theme.palette.primary.main : '#fff',
-              borderRadius: 2,
-              mx: 1,
+              borderRadius: 3,
+              mx: 0,
               my: 0.5,
-              background: currentPage === link.page ? 'rgba(255,255,255,0.08)' : 'none',
-              '&:hover': { background: 'rgba(25,118,210,0.15)' },
+              minHeight: 48,
+              px: isCollapsed ? 1 : 2,
+              justifyContent: isCollapsed ? 'center' : 'flex-start',
+              background: currentPage === link.page 
+                ? `linear-gradient(135deg, ${theme.palette.primary.main}15, ${theme.palette.primary.main}25)`
+                : 'transparent',
+              border: currentPage === link.page 
+                ? `2px solid ${theme.palette.primary.main}40`
+                : '2px solid transparent',
+              color: currentPage === link.page 
+                ? theme.palette.primary.main 
+                : (isDark ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.7)'),
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+              '&:hover': { 
+                background: currentPage === link.page
+                  ? `linear-gradient(135deg, ${theme.palette.primary.main}20, ${theme.palette.primary.main}30)`
+                  : (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'),
+                transform: 'translateX(4px)',
+                color: currentPage === link.page 
+                  ? theme.palette.primary.main 
+                  : (isDark ? '#ffffff' : '#2d3748'),
+              },
             }}
           >
-            <ListItemIcon sx={{ color: 'inherit', minWidth: 36 }}>
+            <ListItemIcon 
+              sx={{ 
+                color: 'inherit', 
+                minWidth: isCollapsed ? 'auto' : 40,
+                mr: isCollapsed ? 0 : 1,
+                '& svg': {
+                  fontSize: '1.3rem'
+                }
+              }}
+            >
               {iconMap[link.icon] || <HomeIcon />}
             </ListItemIcon>
-            <ListItemText primary={link.label} />
+            {!isCollapsed && (
+              <ListItemText 
+                primary={link.label}
+                primaryTypographyProps={{
+                  fontSize: '0.9rem',
+                  fontWeight: currentPage === link.page ? 600 : 500,
+                }}
+              />
+            )}
           </ListItemButton>
         ))}
       </List>
+
+      {/* Bottom Section with Dark Mode Toggle */}
+      <Box sx={{ 
+        p: isCollapsed ? 1 : 2, 
+        borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+        background: isDark 
+          ? 'rgba(255,255,255,0.02)' 
+          : 'rgba(0,0,0,0.02)'
+      }}>
+        {!isCollapsed ? (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={darkMode}
+                onChange={onToggleDarkMode}
+                size="small"
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': {
+                    color: theme.palette.primary.main,
+                    '& + .MuiSwitch-track': {
+                      backgroundColor: theme.palette.primary.main,
+                    },
+                  },
+                }}
+              />
+            }
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {darkMode ? <DarkModeIcon sx={{ fontSize: '1rem' }} /> : <LightModeIcon sx={{ fontSize: '1rem' }} />}
+                <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
+                  {darkMode ? 'Dark Mode' : 'Light Mode'}
+                </Typography>
+              </Box>
+            }
+            sx={{
+              margin: 0,
+              '& .MuiFormControlLabel-label': {
+                color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)',
+              }
+            }}
+          />
+        ) : (
+          <IconButton
+            onClick={onToggleDarkMode}
+            sx={{
+              color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)',
+              width: '100%',
+              borderRadius: 2,
+              '&:hover': {
+                background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+              }
+            }}
+          >
+            {darkMode ? <DarkModeIcon /> : <LightModeIcon />}
+          </IconButton>
+        )}
+      </Box>
+
+      {/* Collapse Toggle Button */}
+      {!open && (
+        <IconButton
+          onClick={onToggleCollapsed}
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            right: isCollapsed ? -15 : -15,
+            transform: 'translateY(-50%)',
+            bgcolor: theme.palette.primary.main,
+            color: 'white',
+            width: 30,
+            height: 30,
+            boxShadow: '0 4px 12px rgba(211, 47, 47, 0.3)',
+            zIndex: 1,
+            '&:hover': {
+              bgcolor: theme.palette.primary.dark,
+              transform: 'translateY(-50%) scale(1.1)',
+            },
+            transition: 'all 0.2s ease'
+          }}
+        >
+          {isCollapsed ? <KeyboardArrowRightIcon sx={{ fontSize: '1rem' }} /> : <KeyboardArrowLeftIcon sx={{ fontSize: '1rem' }} />}
+        </IconButton>
+      )}
     </Drawer>
   );
 }
@@ -96,30 +318,109 @@ function Footer() {
 }
 
 
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH_EXPANDED = 280;
+const DRAWER_WIDTH_COLLAPSED = 80;
 
 const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [darkMode, setDarkMode] = useState(theme.palette.mode === 'dark');
 
   const handleHamburger = () => setSidebarOpen(true);
   const handleSidebarClose = () => setSidebarOpen(false);
+  const handleToggleCollapsed = () => setIsCollapsed(!isCollapsed);
+  const handleToggleDarkMode = () => {
+    // Use the global theme toggle function
+    if (window.toggleTheme) {
+      window.toggleTheme();
+      setDarkMode(!darkMode);
+    }
+  };
+
+  // Sync dark mode state with theme
+  useEffect(() => {
+    setDarkMode(theme.palette.mode === 'dark');
+  }, [theme.palette.mode]);
+
+  const currentDrawerWidth = isCollapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH_EXPANDED;
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
       {/* Sidebar */}
       {isMobile ? (
-        <Sidebar links={links} open={sidebarOpen} onClose={handleSidebarClose} currentPage={currentPage} onNav={p => { setSidebarOpen(false); onNav?.(p); }} />
+        <Sidebar 
+          links={links} 
+          open={sidebarOpen} 
+          onClose={handleSidebarClose} 
+          currentPage={currentPage} 
+          onNav={p => { setSidebarOpen(false); onNav?.(p); }}
+          user={user}
+          isCollapsed={false}
+          onToggleCollapsed={() => {}}
+          darkMode={darkMode}
+          onToggleDarkMode={handleToggleDarkMode}
+        />
       ) : (
-        <Sidebar links={links} open={false} onClose={null} currentPage={currentPage} onNav={onNav} />
+        <Sidebar 
+          links={links} 
+          open={false} 
+          onClose={null} 
+          currentPage={currentPage} 
+          onNav={onNav}
+          user={user}
+          isCollapsed={isCollapsed}
+          onToggleCollapsed={handleToggleCollapsed}
+          darkMode={darkMode}
+          onToggleDarkMode={handleToggleDarkMode}
+        />
       )}
+      
       {/* Main Content */}
-      <Box sx={{ flex: 1, ml: { md: `${DRAWER_WIDTH}px` }, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Box sx={{ 
+        flex: 1, 
+        ml: { md: `${currentDrawerWidth}px` }, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        minHeight: '100vh',
+        transition: 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        width: { xs: '100%', md: `calc(100% - ${currentDrawerWidth}px)` },
+        overflow: 'hidden' // Prevent horizontal overflow
+      }}>
         <Navbar user={user} onHamburger={isMobile ? handleHamburger : null} />
         <Fade in>
-          <Box component="main" sx={{ flex: 1, p: { xs: 1, sm: 2, md: 3 }, maxWidth: 1400, mx: 'auto', width: '100%' }}>
-            {children}
+          <Box component="main" sx={{ 
+            flex: 1, 
+            p: { 
+              xs: '8px', 
+              sm: '16px', 
+              md: '24px',
+              lg: '32px'
+            },
+            maxWidth: { 
+              xs: '100%', 
+              sm: '100%', 
+              md: '100%', 
+              lg: 1200,
+              xl: 1400 
+            },
+            mx: 'auto', 
+            width: '100%',
+            transition: 'all 0.3s ease',
+            overflowX: 'hidden', // Prevent horizontal scrolling
+            overflowY: 'auto',   // Allow vertical scrolling when needed
+            boxSizing: 'border-box'
+          }}>
+            <Box sx={{
+              width: '100%',
+              minHeight: 'calc(100vh - 140px)', // Account for navbar and footer
+              display: 'flex',
+              flexDirection: 'column',
+              gap: { xs: 1, sm: 2, md: 3 }
+            }}>
+              {children}
+            </Box>
           </Box>
         </Fade>
         <Footer />

@@ -162,25 +162,51 @@ const MyReports = ({ user }) => {
   const filteredReports = filterReports();
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 2 }, maxWidth: 1200, mx: 'auto' }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5" fontWeight={700} color="primary.main">
+    <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={{ xs: 2, sm: 3 }} sx={{
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: { xs: 2, sm: 0 }
+      }}>
+        <Typography variant="h5" fontWeight={700} color="primary.main" sx={{
+          fontSize: { xs: '1.25rem', sm: '1.5rem' }
+        }}>
           My Reports
         </Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => setReportFormOpen(true)}
-          sx={{ borderRadius: 2 }}
+          sx={{ 
+            borderRadius: 2,
+            fontSize: { xs: '0.875rem', sm: '1rem' },
+            px: { xs: 2, sm: 3 },
+            width: { xs: '100%', sm: 'auto' }
+          }}
         >
           New Report
         </Button>
       </Box>
 
-      <Paper elevation={2} sx={{ borderRadius: 3, overflow: 'hidden' }}>
+      <Paper elevation={2} sx={{ 
+        borderRadius: { xs: 2, md: 3 }, 
+        overflow: 'hidden',
+        width: '100%'
+      }}>
         {/* Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)} sx={{ px: 2 }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', overflowX: 'auto' }}>
+          <Tabs 
+            value={tabValue} 
+            onChange={(e, newValue) => setTabValue(newValue)} 
+            sx={{ 
+              px: { xs: 1, sm: 2 },
+              '& .MuiTab-root': {
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                minWidth: { xs: 60, sm: 120 }
+              }
+            }}
+            variant="scrollable"
+            scrollButtons="auto"
+          >
             <Tab label={`All (${reports.length})`} />
             <Tab label={`Active (${reports.filter(r => ['pending', 'acknowledged', 'in_progress'].includes(r.status)).length})`} />
             <Tab label={`Resolved (${reports.filter(r => r.status === 'resolved').length})`} />
@@ -189,16 +215,32 @@ const MyReports = ({ user }) => {
         </Box>
 
         {/* Reports Table */}
-        <TableContainer sx={{ maxHeight: 600 }}>
+        <TableContainer sx={{ 
+          maxHeight: 600, 
+          overflowX: 'auto',
+          '& .MuiTable-root': {
+            minWidth: { xs: 600, sm: 800 }
+          }
+        }}>
           {loading ? (
             <Box sx={{ p: 4, textAlign: 'center' }}>
-              <Typography color="text.secondary">Loading your reports...</Typography>
+              <Typography color="text.secondary" sx={{
+                fontSize: { xs: '0.875rem', sm: '1rem' }
+              }}>
+                Loading your reports...
+              </Typography>
             </Box>
           ) : filteredReports.length === 0 ? (
-            <Box sx={{ p: 4, textAlign: 'center' }}>
+            <Box sx={{ p: { xs: 2, sm: 4 }, textAlign: 'center' }}>
               <Alert severity="info" sx={{ maxWidth: 400, mx: 'auto' }}>
-                <Typography variant="h6" mb={1}>No reports found</Typography>
-                <Typography variant="body2" mb={2}>
+                <Typography variant="h6" mb={1} sx={{
+                  fontSize: { xs: '1rem', sm: '1.25rem' }
+                }}>
+                  No reports found
+                </Typography>
+                <Typography variant="body2" mb={2} sx={{
+                  fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                }}>
                   {tabValue === 0 
                     ? "You haven't submitted any reports yet."
                     : "No reports found for this status."}
@@ -208,6 +250,9 @@ const MyReports = ({ user }) => {
                   size="small"
                   startIcon={<AddIcon />}
                   onClick={() => setReportFormOpen(true)}
+                  sx={{
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}
                 >
                   Submit Your First Report
                 </Button>
@@ -217,12 +262,44 @@ const MyReports = ({ user }) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 600 }}>Emergency Type</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Priority</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
-                  <TableCell align="center" sx={{ fontWeight: 600 }}>Actions</TableCell>
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
+                    Emergency Type
+                  </TableCell>
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    display: { xs: 'none', sm: 'table-cell' }
+                  }}>
+                    Description
+                  </TableCell>
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
+                    Status
+                  </TableCell>
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    display: { xs: 'none', md: 'table-cell' }
+                  }}>
+                    Priority
+                  </TableCell>
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
+                    Date
+                  </TableCell>
+                  <TableCell align="center" sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -232,19 +309,24 @@ const MyReports = ({ user }) => {
                       <Box display="flex" alignItems="center" gap={1}>
                         <Box
                           sx={{
-                            width: 12,
-                            height: 12,
+                            width: { xs: 10, sm: 12 },
+                            height: { xs: 10, sm: 12 },
                             borderRadius: '50%',
                             bgcolor: report.categories?.color || '#007bff'
                           }}
                         />
-                        <Typography variant="body2" fontWeight={500}>
+                        <Typography variant="body2" fontWeight={500} sx={{
+                          fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                        }}>
                           {report.categories?.name || 'Unknown'}
                         </Typography>
                       </Box>
                     </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" noWrap sx={{ maxWidth: 200 }}>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                      <Typography variant="body2" noWrap sx={{ 
+                        maxWidth: { sm: 150, md: 200 },
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                      }}>
                         {report.title || report.description}
                       </Typography>
                     </TableCell>

@@ -232,31 +232,46 @@ function EnhancedReportsPage({ user }) {
   const currentReports = getFilteredReports(tabFilters[currentTab].value);
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 2 }, maxWidth: 1400, mx: 'auto' }}>
+    <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
       {/* Header */}
-      <Box mb={3}>
-        <Typography variant="h4" fontWeight={700} color="primary.main">
+      <Box mb={{ xs: 2, sm: 3 }}>
+        <Typography variant="h4" fontWeight={700} color="primary.main" sx={{
+          fontSize: { xs: '1.75rem', sm: '2rem', md: '2.125rem' }
+        }}>
           Reports Management
         </Typography>
-        <Typography variant="subtitle1" color="text.secondary">
+        <Typography variant="subtitle1" color="text.secondary" sx={{
+          fontSize: { xs: '0.875rem', sm: '1rem' }
+        }}>
           {userProfile?.role === 'agency' ? 'Your assigned reports' : 'All emergency reports'}
         </Typography>
       </Box>
 
       {/* Stats Cards */}
-      <Grid container spacing={2} mb={3}>
-        <Grid item xs={12} sm={6} md={2.4}>
+      <Grid container spacing={{ xs: 1, sm: 2 }} mb={{ xs: 2, sm: 3 }} sx={{ width: '100%', m: 0 }}>
+        <Grid item xs={6} sm={6} md={2.4}>
           <Card>
-            <CardContent sx={{ p: 2 }}>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Avatar sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}>
-                  <AssignmentIcon />
+            <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
+              <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 2 }} sx={{
+                flexDirection: { xs: 'column', sm: 'row' },
+                textAlign: { xs: 'center', sm: 'left' }
+              }}>
+                <Avatar sx={{ 
+                  bgcolor: 'primary.main', 
+                  width: { xs: 32, sm: 40 }, 
+                  height: { xs: 32, sm: 40 }
+                }}>
+                  <AssignmentIcon sx={{ fontSize: { xs: '1rem', sm: '1.5rem' } }} />
                 </Avatar>
                 <Box>
-                  <Typography variant="h5" fontWeight={700}>
+                  <Typography variant="h5" fontWeight={700} sx={{
+                    fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                  }}>
                     {stats.total}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
                     Total
                   </Typography>
                 </Box>
@@ -265,18 +280,29 @@ function EnhancedReportsPage({ user }) {
           </Card>
         </Grid>
         
-        <Grid item xs={12} sm={6} md={2.4}>
+        <Grid item xs={6} sm={6} md={2.4}>
           <Card>
-            <CardContent sx={{ p: 2 }}>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Avatar sx={{ bgcolor: 'warning.main', width: 40, height: 40 }}>
-                  <ScheduleIcon />
+            <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
+              <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 2 }} sx={{
+                flexDirection: { xs: 'column', sm: 'row' },
+                textAlign: { xs: 'center', sm: 'left' }
+              }}>
+                <Avatar sx={{ 
+                  bgcolor: 'warning.main', 
+                  width: { xs: 32, sm: 40 }, 
+                  height: { xs: 32, sm: 40 }
+                }}>
+                  <ScheduleIcon sx={{ fontSize: { xs: '1rem', sm: '1.5rem' } }} />
                 </Avatar>
                 <Box>
-                  <Typography variant="h5" fontWeight={700}>
+                  <Typography variant="h5" fontWeight={700} sx={{
+                    fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                  }}>
                     {stats.pending}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
                     Pending
                   </Typography>
                 </Box>
@@ -285,18 +311,29 @@ function EnhancedReportsPage({ user }) {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={2.4}>
+        <Grid item xs={6} sm={6} md={2.4}>
           <Card>
-            <CardContent sx={{ p: 2 }}>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Avatar sx={{ bgcolor: 'info.main', width: 40, height: 40 }}>
-                  <PeopleIcon />
+            <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
+              <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 2 }} sx={{
+                flexDirection: { xs: 'column', sm: 'row' },
+                textAlign: { xs: 'center', sm: 'left' }
+              }}>
+                <Avatar sx={{ 
+                  bgcolor: 'info.main', 
+                  width: { xs: 32, sm: 40 }, 
+                  height: { xs: 32, sm: 40 }
+                }}>
+                  <PeopleIcon sx={{ fontSize: { xs: '1rem', sm: '1.5rem' } }} />
                 </Avatar>
                 <Box>
-                  <Typography variant="h5" fontWeight={700}>
+                  <Typography variant="h5" fontWeight={700} sx={{
+                    fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                  }}>
                     {stats.acknowledged}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
                     Acknowledged
                   </Typography>
                 </Box>
@@ -305,18 +342,29 @@ function EnhancedReportsPage({ user }) {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={2.4}>
+        <Grid item xs={6} sm={6} md={2.4}>
           <Card>
-            <CardContent sx={{ p: 2 }}>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Avatar sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}>
-                  <EditIcon />
+            <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
+              <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 2 }} sx={{
+                flexDirection: { xs: 'column', sm: 'row' },
+                textAlign: { xs: 'center', sm: 'left' }
+              }}>
+                <Avatar sx={{ 
+                  bgcolor: 'primary.main', 
+                  width: { xs: 32, sm: 40 }, 
+                  height: { xs: 32, sm: 40 }
+                }}>
+                  <EditIcon sx={{ fontSize: { xs: '1rem', sm: '1.5rem' } }} />
                 </Avatar>
                 <Box>
-                  <Typography variant="h5" fontWeight={700}>
+                  <Typography variant="h5" fontWeight={700} sx={{
+                    fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                  }}>
                     {stats.inProgress}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
                     In Progress
                   </Typography>
                 </Box>
@@ -325,18 +373,29 @@ function EnhancedReportsPage({ user }) {
           </Card>
         </Grid>
 
-        <Grid item xs={12} sm={6} md={2.4}>
+        <Grid item xs={6} sm={6} md={2.4}>
           <Card>
-            <CardContent sx={{ p: 2 }}>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Avatar sx={{ bgcolor: 'success.main', width: 40, height: 40 }}>
-                  <CheckCircleIcon />
+            <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
+              <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 2 }} sx={{
+                flexDirection: { xs: 'column', sm: 'row' },
+                textAlign: { xs: 'center', sm: 'left' }
+              }}>
+                <Avatar sx={{ 
+                  bgcolor: 'success.main', 
+                  width: { xs: 32, sm: 40 }, 
+                  height: { xs: 32, sm: 40 }
+                }}>
+                  <CheckCircleIcon sx={{ fontSize: { xs: '1rem', sm: '1.5rem' } }} />
                 </Avatar>
                 <Box>
-                  <Typography variant="h5" fontWeight={700}>
+                  <Typography variant="h5" fontWeight={700} sx={{
+                    fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                  }}>
                     {stats.resolved}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
                     Resolved
                   </Typography>
                 </Box>
@@ -347,14 +406,20 @@ function EnhancedReportsPage({ user }) {
       </Grid>
 
       {/* Reports Table */}
-      <Paper elevation={2} sx={{ borderRadius: 3 }}>
+      <Paper elevation={2} sx={{ borderRadius: { xs: 2, md: 3 }, width: '100%', overflow: 'hidden' }}>
         {/* Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', overflowX: 'auto' }}>
           <Tabs 
             value={currentTab} 
             onChange={(e, newValue) => setCurrentTab(newValue)}
             variant="scrollable"
             scrollButtons="auto"
+            sx={{
+              '& .MuiTab-root': {
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                minWidth: { xs: 80, sm: 120 }
+              }
+            }}
           >
             {tabFilters.map((tab, index) => (
               <Tab 

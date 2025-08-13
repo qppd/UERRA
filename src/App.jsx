@@ -17,7 +17,6 @@ import CitizenDashboard from './components/CitizenDashboard';
 import AgencyDashboard from './components/AgencyDashboard';
 import MyReports from './components/MyReports';
 import EmergencyTips from './components/EmergencyTips';
-import ProfileTest from './components/ProfileTest';
 import {
   AdminUsers,
   AdminAgencies,
@@ -26,15 +25,8 @@ import {
   AdminSystemInfo
 } from './components/AdminPanel';
 import EnhancedUsersManagement from './components/EnhancedUsersManagement';
-import AdvancedAnalyticsLogs from './components/AdvancedAnalyticsLogs';
-import SystemInfoManagement from './components/SystemInfoManagement';
-import DatabaseStructureCheck from './components/DatabaseStructureCheck';
-import OAuthDebug from './components/OAuthDebug';
-import ProductionOAuthTest from './components/ProductionOAuthTest';
 
 import OfflineHint from './components/OfflineHint';
-import DatabaseDebug from './components/DatabaseDebug';
-import SupabaseDebug from './components/SupabaseDebug';
 
 
 
@@ -48,37 +40,26 @@ function App() {
 
   // Check for debug mode
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('debug') === 'oauth') {
-      setPage('oauth_debug');
-    } else if (urlParams.get('test') === 'production') {
-      setPage('production_test');
-    }
+    // Removed debug mode functionality
   }, []);
 
   // Auto-redirect to dashboard when user is authenticated and not in debug mode
   useEffect(() => {
-    console.log('Auth state effect:', { user: !!user, page, loading });
-    
     if (!loading) {
       if (user && page === 'login') {
-        console.log('User authenticated, redirecting to dashboard');
         setPage('dashboard');
       } else if (!user && page === 'dashboard') {
         // If user logs out while on dashboard, go back to login
-        console.log('User logged out, redirecting to login');
         setPage('login');
       }
     }
   }, [user, page, loading]);
 
   const handleLogin = () => {
-    console.log('Login successful, setting page to dashboard');
     setPage('dashboard');
   };
   
   const handleRegister = () => {
-    console.log('Registration successful, setting page to dashboard');
     setPage('dashboard');
   };
 
@@ -87,8 +68,6 @@ function App() {
     if (!user) return;
     setIsCreatingProfile(true);
     try {
-      console.log('Creating profile for user:', { id: user.id, email: user.email });
-      
       const { data, error } = await upsertUserProfile({
         id: user.id,
         email: user.email,
@@ -96,21 +75,16 @@ function App() {
         agency_id: null,
       });
       
-      console.log('Profile creation result:', { data, error });
-      
       if (error) {
-        console.error('Database error:', error);
         throw error;
       }
       
-      console.log('Profile created successfully, reloading page...');
       // Force a reload to get the new profile
       setTimeout(() => {
         window.location.reload();
       }, 1000);
       
     } catch (error) {
-      console.error('Error creating profile:', error);
       alert(`Failed to create profile: ${error.message || 'Unknown error'}. Please try again or contact support.`);
       setIsCreatingProfile(false);
     }
@@ -203,9 +177,6 @@ function App() {
       links.push({ label: 'Categories', page: 'admin_category', icon: 'fa fa-list' });
       links.push({ label: 'Advanced Analytics', page: 'admin_logs', icon: 'fa fa-chart-bar' });
       links.push({ label: 'System Management', page: 'admin_info', icon: 'fa fa-info-circle' });
-      links.push({ label: 'Database Check', page: 'db_check', icon: 'fa fa-database' });
-      links.push({ label: 'Profile Test', page: 'profile_test', icon: 'fa fa-user-check' });
-      links.push({ label: 'OAuth Debug', page: 'oauth_debug', icon: 'fa fa-key' });
     }
     
     links.push({ label: 'Logout', page: 'logout', icon: 'fa fa-sign-out-alt' });
@@ -231,7 +202,7 @@ function App() {
       else if (currentPage === 'reports') pageContent = <EnhancedReportsPage user={user} />;
       else if (currentPage === 'agencies') pageContent = <AdminAgencies />;
       else if (currentPage === 'categories') pageContent = <AdminCategories />;
-      else if (currentPage === 'analytics') pageContent = <AdvancedAnalyticsLogs />;
+      else if (currentPage === 'analytics') pageContent = <div style={{padding:'2rem'}}>Analytics coming soon...</div>;
       else pageContent = <DashboardHome />; // Default to admin dashboard
     } else {
       // SuperAdmin and other admin pages
@@ -240,11 +211,8 @@ function App() {
       else if (currentPage === 'admin_user' && profile?.role === 'superadmin') pageContent = <EnhancedUsersManagement />;
       else if (currentPage === 'admin_agency' && profile?.role === 'superadmin') pageContent = <AdminAgencies />;
       else if (currentPage === 'admin_category' && profile?.role === 'superadmin') pageContent = <AdminCategories />;
-      else if (currentPage === 'admin_logs' && profile?.role === 'superadmin') pageContent = <AdvancedAnalyticsLogs />;
-      else if (currentPage === 'admin_info' && profile?.role === 'superadmin') pageContent = <SystemInfoManagement />;
-      else if (currentPage === 'db_check' && profile?.role === 'superadmin') pageContent = <DatabaseStructureCheck />;
-      else if (currentPage === 'profile_test' && profile?.role === 'superadmin') pageContent = <ProfileTest />;
-      else if (currentPage === 'oauth_debug' && profile?.role === 'superadmin') pageContent = <OAuthDebug />;
+      else if (currentPage === 'admin_logs' && profile?.role === 'superadmin') pageContent = <div style={{padding:'2rem'}}>System logs coming soon...</div>;
+      else if (currentPage === 'admin_info' && profile?.role === 'superadmin') pageContent = <div style={{padding:'2rem'}}>System information coming soon...</div>;
       else pageContent = <DashboardHome />; // Default
     }
 
@@ -275,28 +243,7 @@ function App() {
   return (
     <>
       <OfflineHint />
-      {page === 'debug' ? (
-        <div>
-          <SupabaseDebug />
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <button onClick={() => setPage('login')}>Go to Login</button>
-          </div>
-        </div>
-      ) : page === 'oauth_debug' ? (
-        <div>
-          <OAuthDebug />
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <button onClick={() => setPage('login')}>Go to Login</button>
-          </div>
-        </div>
-      ) : page === 'production_test' ? (
-        <div>
-          <ProductionOAuthTest />
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <button onClick={() => setPage('login')}>Go to Login</button>
-          </div>
-        </div>
-      ) : page === 'login' ? (
+      {page === 'login' ? (
         <Login
           onLogin={handleLogin}
           footer={
@@ -321,7 +268,6 @@ function App() {
           }
         />
       )}
-      <DatabaseDebug />
     </>
   );
 }

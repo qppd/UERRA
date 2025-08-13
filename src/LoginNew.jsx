@@ -17,56 +17,11 @@ const Login = ({ onLogin, footer }) => {
 
   // Check for OAuth callback success
   React.useEffect(() => {
-    const handleOAuthCallback = async () => {
-      const urlParams = new URLSearchParams(window.location.hash.substring(1));
-      const accessToken = urlParams.get('access_token');
-      const error = urlParams.get('error');
-      
-      if (error) {
-        setError(`Authentication failed: ${error}`);
-        setLoading(false);
-        return;
-      }
-      
-      if (accessToken) {
-        console.log('OAuth callback detected, processing...');
-        setOauthSuccess(true);
-        setError('');
-        setLoading(true);
-        
-        try {
-          // Get the current session to ensure Supabase has processed the OAuth tokens
-          const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-          
-          if (sessionError) {
-            throw sessionError;
-          }
-          
-          if (session?.user) {
-            console.log('OAuth authentication successful:', session.user.email);
-            // Clean the URL
-            window.history.replaceState(null, null, window.location.pathname);
-            // The useAuthSession hook will handle the redirect to dashboard
-          } else {
-            // If no session yet, wait a bit and try again
-            setTimeout(async () => {
-              const { data: { session: retrySession } } = await supabase.auth.getSession();
-              if (retrySession?.user) {
-                console.log('OAuth authentication successful on retry:', retrySession.user.email);
-                window.history.replaceState(null, null, window.location.pathname);
-              }
-              setLoading(false);
-            }, 1000);
-          }
-        } catch (err) {
-          console.error('OAuth callback error:', err);
-          setError('Authentication failed. Please try again.');
-          setLoading(false);
-        }
-      }
-    };
-    
-    handleOAuthCallback();
+    const urlParams = new URLSearchParams(window.location.hash.substring(1));
+    if (urlParams.get('access_token')) {
+      setOauthSuccess(true);
+      setError('');
+    }
   }, []);
 
   const validate = () => {
@@ -105,16 +60,13 @@ const Login = ({ onLogin, footer }) => {
   const handleGoogleLogin = async () => {
     setError('');
     setLoading(true);
-    
     try {
-      console.log('Initiating Google OAuth...');
-      
       // Determine the correct redirect URL
       let redirectTo;
       
       if (window.location.hostname === 'localhost') {
         // Development environment
-        redirectTo = 'http://localhost:5173';
+        redirectTo = window.location.origin;
       } else if (window.location.hostname.includes('vercel.app')) {
         // Production environment - use the exact current origin
         redirectTo = window.location.origin;
@@ -122,8 +74,6 @@ const Login = ({ onLogin, footer }) => {
         // Fallback
         redirectTo = window.location.origin;
       }
-      
-      console.log('Redirect URL:', redirectTo);
       
       const { data, error: supaError } = await supabase.auth.signInWithOAuth({ 
         provider: 'google',
@@ -140,12 +90,9 @@ const Login = ({ onLogin, footer }) => {
         throw supaError;
       }
       
-      console.log('OAuth initiated successfully');
       // Don't set loading to false here - let the OAuth flow complete
       // The auth state change will be handled by the useAuthSession hook
-      
     } catch (err) {
-      console.error('Google OAuth error:', err);
       const errorMessage = err.message || 'Google sign-in failed. Please try again.';
       setError(`${errorMessage} (Code: ${err.code || 'unknown'})`);
       setLoading(false);

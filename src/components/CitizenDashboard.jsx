@@ -76,14 +76,33 @@ const CitizenDashboard = ({ user }) => {
   };
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 2 }, maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
       {/* Emergency Actions */}
-      <Paper elevation={2} sx={{ p: 3, mb: 3, borderRadius: 3, background: 'linear-gradient(135deg, #ff4757 0%, #ff3838 100%)', color: 'white' }}>
-        <Typography variant="h5" fontWeight={700} mb={2}>Emergency Response</Typography>
-        <Typography variant="body1" mb={3} sx={{ opacity: 0.9 }}>
+      <Paper elevation={2} sx={{ 
+        p: { xs: 2, sm: 3, md: 4 }, 
+        mb: { xs: 2, sm: 3 }, 
+        borderRadius: { xs: 2, md: 3 }, 
+        background: 'linear-gradient(135deg, #ff4757 0%, #ff3838 100%)', 
+        color: 'white',
+        width: '100%'
+      }}>
+        <Typography variant="h5" fontWeight={700} mb={2} sx={{
+          fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
+        }}>
+          Emergency Response
+        </Typography>
+        <Typography variant="body1" mb={3} sx={{ 
+          opacity: 0.9,
+          fontSize: { xs: '0.875rem', sm: '1rem' }
+        }}>
           Report emergencies quickly and get help from local authorities
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: { xs: 1, sm: 2 }, 
+          flexWrap: 'wrap',
+          flexDirection: { xs: 'column', sm: 'row' }
+        }}>
           <Button
             variant="contained"
             size="large"
@@ -93,7 +112,10 @@ const CitizenDashboard = ({ user }) => {
               bgcolor: 'rgba(255,255,255,0.2)', 
               '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' },
               fontWeight: 600,
-              px: 3
+              px: { xs: 2, sm: 3 },
+              py: { xs: 1, sm: 1.5 },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              width: { xs: '100%', sm: 'auto' }
             }}
           >
             Report Emergency
@@ -111,7 +133,10 @@ const CitizenDashboard = ({ user }) => {
                 bgcolor: 'rgba(255,255,255,0.1)' 
               },
               fontWeight: 600,
-              px: 3
+              px: { xs: 2, sm: 3 },
+              py: { xs: 1, sm: 1.5 },
+              fontSize: { xs: '0.875rem', sm: '1rem' },
+              width: { xs: '100%', sm: 'auto' }
             }}
           >
             Emergency Hotlines
@@ -119,18 +144,31 @@ const CitizenDashboard = ({ user }) => {
         </Box>
       </Paper>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ width: '100%', m: 0 }}>
         {/* Recent Reports */}
-        <Grid item xs={12} md={8}>
-          <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-              <Typography variant="h6" fontWeight={600} color="primary.main">
+        <Grid item xs={12} lg={8}>
+          <Paper elevation={2} sx={{ 
+            p: { xs: 2, sm: 3 }, 
+            borderRadius: { xs: 2, md: 3 },
+            width: '100%'
+          }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} sx={{
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: { xs: 1, sm: 0 }
+            }}>
+              <Typography variant="h6" fontWeight={600} color="primary.main" sx={{
+                fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              }}>
                 Recent Reports
               </Typography>
               <Button 
                 size="small" 
                 onClick={() => setOpenReportDialog(true)}
                 startIcon={<AddIcon />}
+                sx={{
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  px: { xs: 1.5, sm: 2 }
+                }}
               >
                 New Report
               </Button>
@@ -138,17 +176,24 @@ const CitizenDashboard = ({ user }) => {
 
             {recentReports.length === 0 ? (
               <Alert severity="info" sx={{ borderRadius: 2 }}>
-                <Typography variant="body2">
+                <Typography variant="body2" sx={{
+                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                }}>
                   You haven't submitted any reports yet. Click "Report Emergency" to submit your first report.
                 </Typography>
               </Alert>
             ) : (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2 } }}>
                 {recentReports.map((report) => (
                   <Card key={report.id} variant="outlined" sx={{ borderRadius: 2 }}>
-                    <CardContent sx={{ pb: 1 }}>
-                      <Box display="flex" justifyContent="space-between" alignItems="start" mb={1}>
-                        <Typography variant="subtitle1" fontWeight={500}>
+                    <CardContent sx={{ pb: 1, p: { xs: 1.5, sm: 2 } }}>
+                      <Box display="flex" justifyContent="space-between" alignItems="start" mb={1} sx={{
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        gap: { xs: 1, sm: 0 }
+                      }}>
+                        <Typography variant="subtitle1" fontWeight={500} sx={{
+                          fontSize: { xs: '0.95rem', sm: '1rem' }
+                        }}>
                           {report.title || 'Emergency Report'}
                         </Typography>
                         <Chip
@@ -156,12 +201,22 @@ const CitizenDashboard = ({ user }) => {
                           color={getStatusColor(report.status)}
                           size="small"
                           variant="outlined"
+                          sx={{
+                            fontSize: { xs: '0.7rem', sm: '0.8125rem' },
+                            alignSelf: { xs: 'flex-start', sm: 'flex-end' }
+                          }}
                         />
                       </Box>
-                      <Typography variant="body2" color="text.secondary" mb={1}>
+                      <Typography variant="body2" color="text.secondary" mb={1} sx={{
+                        fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                      }}>
                         {report.description}
                       </Typography>
-                      <Box display="flex" alignItems="center" gap={2}>
+                      <Box display="flex" alignItems="center" gap={2} sx={{
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        alignItems: { xs: 'flex-start', sm: 'center' },
+                        gap: { xs: 1, sm: 2 }
+                      }}>
                         <Box display="flex" alignItems="center" gap={0.5}>
                           <Chip
                             label={report.categories?.name || 'Unknown'}
@@ -169,13 +224,16 @@ const CitizenDashboard = ({ user }) => {
                             sx={{ 
                               bgcolor: report.categories?.color || '#007bff',
                               color: 'white',
-                              fontWeight: 500
+                              fontWeight: 500,
+                              fontSize: { xs: '0.7rem', sm: '0.8125rem' }
                             }}
                           />
                         </Box>
                         <Box display="flex" alignItems="center" gap={0.5}>
                           <AccessTimeIcon fontSize="small" color="action" />
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" color="text.secondary" sx={{
+                            fontSize: { xs: '0.7rem', sm: '0.75rem' }
+                          }}>
                             {formatDate(report.created_at)}
                           </Typography>
                         </Box>
@@ -189,24 +247,40 @@ const CitizenDashboard = ({ user }) => {
         </Grid>
 
         {/* Emergency Tips */}
-        <Grid item xs={12} md={4}>
-          <Paper elevation={2} sx={{ p: 3, borderRadius: 3 }}>
-            <Typography variant="h6" fontWeight={600} color="primary.main" mb={2}>
+        <Grid item xs={12} lg={4}>
+          <Paper elevation={2} sx={{ 
+            p: { xs: 2, sm: 3 }, 
+            borderRadius: { xs: 2, md: 3 },
+            width: '100%'
+          }}>
+            <Typography variant="h6" fontWeight={600} color="primary.main" mb={2} sx={{
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}>
               Emergency Tips
             </Typography>
             
             {loading ? (
-              <Typography variant="body2" color="text.secondary">Loading tips...</Typography>
+              <Typography variant="body2" color="text.secondary" sx={{
+                fontSize: { xs: '0.875rem', sm: '1rem' }
+              }}>
+                Loading tips...
+              </Typography>
             ) : (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 1.5, sm: 2 } }}>
                 {emergencyTips.map((category, index) => (
                   <Card key={index} variant="outlined" sx={{ borderRadius: 2 }}>
-                    <CardContent sx={{ pb: 2 }}>
-                      <Typography variant="subtitle2" fontWeight={600} mb={1} sx={{ color: category.color }}>
+                    <CardContent sx={{ pb: 2, p: { xs: 1.5, sm: 2 } }}>
+                      <Typography variant="subtitle2" fontWeight={600} mb={1} sx={{ 
+                        color: category.color,
+                        fontSize: { xs: '0.85rem', sm: '0.875rem' }
+                      }}>
                         {category.name}
                       </Typography>
                       {category.emergency_tips?.slice(0, 2).map((tip, tipIndex) => (
-                        <Typography key={tipIndex} variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                        <Typography key={tipIndex} variant="body2" color="text.secondary" sx={{ 
+                          mb: 0.5,
+                          fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                        }}>
                           • {tip}
                         </Typography>
                       ))}
@@ -220,10 +294,22 @@ const CitizenDashboard = ({ user }) => {
       </Grid>
 
       {/* Location Access Notice */}
-      <Paper elevation={1} sx={{ p: 2, mt: 3, borderRadius: 2, bgcolor: 'info.light', color: 'info.contrastText' }}>
-        <Box display="flex" alignItems="center" gap={1}>
-          <LocationOnIcon />
-          <Typography variant="body2">
+      <Paper elevation={1} sx={{ 
+        p: { xs: 1.5, sm: 2 }, 
+        mt: { xs: 2, sm: 3 }, 
+        borderRadius: 2, 
+        bgcolor: 'info.light', 
+        color: 'info.contrastText',
+        width: '100%'
+      }}>
+        <Box display="flex" alignItems="center" gap={1} sx={{
+          flexDirection: { xs: 'column', sm: 'row' },
+          textAlign: { xs: 'center', sm: 'left' }
+        }}>
+          <LocationOnIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }} />
+          <Typography variant="body2" sx={{
+            fontSize: { xs: '0.8rem', sm: '0.875rem' }
+          }}>
             <strong>Location Services:</strong> For faster emergency response, please allow location access when submitting reports.
           </Typography>
         </Box>

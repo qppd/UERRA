@@ -45,45 +45,120 @@ function ReportsPage() {
   };
 
   return (
-    <Paper elevation={2} sx={{ p: 3, borderRadius: 3, minHeight: 300 }}>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h6" color="primary.main">Reports</Typography>
-        {/* You can add a button for adding reports if needed */}
-      </Box>
-      {error && <Typography color="error" mb={2}>{error}</Typography>}
-      {loading ? (
-        <Typography>Loading...</Typography>
-      ) : (
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Date</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {reports.length === 0 ? (
-              <TableRow><TableCell colSpan={4}>No reports found.</TableCell></TableRow>
-            ) : (
-              reports.map(row => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>
-                    <Chip label={getCategoryName(row.category_id)} size="small" />
+    <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
+      <Paper elevation={2} sx={{ 
+        p: { xs: 1.5, sm: 2, md: 3 }, 
+        borderRadius: { xs: 2, md: 3 }, 
+        minHeight: 300,
+        width: '100%'
+      }}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} sx={{
+          flexDirection: { xs: 'column', sm: 'row' },
+          gap: { xs: 1, sm: 0 }
+        }}>
+          <Typography variant="h6" color="primary.main" sx={{
+            fontSize: { xs: '1.1rem', sm: '1.25rem' }
+          }}>
+            Reports
+          </Typography>
+          {/* You can add a button for adding reports if needed */}
+        </Box>
+        {error && <Typography color="error" mb={2}>{error}</Typography>}
+        {loading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          <TableContainer sx={{ 
+            width: '100%', 
+            overflowX: 'auto',
+            '& .MuiTable-root': {
+              minWidth: { xs: 300, sm: 600 }
+            }
+          }}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
+                    ID
                   </TableCell>
-                  <TableCell>
-                    <Chip label={row.status} color={statusColor(row.status)} size="small" variant="outlined" />
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
+                    Category
                   </TableCell>
-                  <TableCell>{row.created_at ? row.created_at.split('T')[0] : ''}</TableCell>
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}>
+                    Status
+                  </TableCell>
+                  <TableCell sx={{ 
+                    fontWeight: 600,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                    display: { xs: 'none', sm: 'table-cell' }
+                  }}>
+                    Date
+                  </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      )}
-    </Paper>
+              </TableHead>
+              <TableBody>
+                {reports.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} sx={{ textAlign: 'center', py: 4 }}>
+                      No reports found.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  reports.map(row => (
+                    <TableRow key={row.id}>
+                      <TableCell sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
+                        {row.id}
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={getCategoryName(row.category_id)} 
+                          size="small" 
+                          sx={{ 
+                            fontSize: { xs: '0.7rem', sm: '0.8125rem' },
+                            maxWidth: { xs: '80px', sm: 'none' },
+                            '& .MuiChip-label': {
+                              px: { xs: 1, sm: 1.5 }
+                            }
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={row.status} 
+                          color={statusColor(row.status)} 
+                          size="small" 
+                          variant="outlined"
+                          sx={{ 
+                            fontSize: { xs: '0.7rem', sm: '0.8125rem' },
+                            '& .MuiChip-label': {
+                              px: { xs: 1, sm: 1.5 }
+                            }
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ 
+                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                        display: { xs: 'none', sm: 'table-cell' }
+                      }}>
+                        {row.created_at ? row.created_at.split('T')[0] : ''}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Paper>
+    </Box>
   );
 }
 

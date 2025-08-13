@@ -121,14 +121,6 @@ const MapWidget = () => {
   // Validate mapStyle and required props
   const mapStyle = "mapbox://styles/mapbox/streets-v11";
   const isMapReady = Array.isArray(MAP_CENTER) && MAP_CENTER.length === 2 && typeof MAPBOX_TOKEN === 'string' && MAPBOX_TOKEN.length > 0;
-  
-  // Debug logging
-  console.log('MapWidget Debug:', {
-    MAPBOX_TOKEN: MAPBOX_TOKEN ? `${MAPBOX_TOKEN.substring(0, 10)}...` : 'undefined',
-    MAP_CENTER,
-    isMapReady,
-    envToken: import.meta.env.VITE_MAPBOX_TOKEN ? `${import.meta.env.VITE_MAPBOX_TOKEN.substring(0, 10)}...` : 'undefined'
-  });
 
   if (!MAPBOX_TOKEN || MAPBOX_TOKEN === 'undefined' || MAPBOX_TOKEN === 'no-token') {
     return (
@@ -156,26 +148,41 @@ const MapWidget = () => {
 
   return (
     <ErrorBoundary>
-      <Box>
-        <Typography variant="h6" fontWeight={600} mb={1} color="primary.main">
+      <Box sx={{ width: '100%', height: '100%' }}>
+        <Typography 
+          variant="h6" 
+          fontWeight={600} 
+          mb={1} 
+          color="primary.main"
+          sx={{
+            fontSize: { xs: '1rem', sm: '1.25rem' }
+          }}
+        >
           Live Incident Map
         </Typography>
         {isMapReady ? (
-          <Map
-            initialViewState={{ longitude: MAP_CENTER[0], latitude: MAP_CENTER[1], zoom: 12 }}
-            style={{ width: '100%', height: 260, borderRadius: 10 }}
-            mapStyle={mapStyle}
-            mapboxAccessToken={MAPBOX_TOKEN}
-            getCursor={() => 'grab'}
-            touchAction="none"
-            onResize={() => {}}
-            onError={(error) => {
-              console.error('Mapbox error:', error);
-            }}
-            onLoad={() => {
-              console.log('Mapbox loaded successfully');
-            }}
-          >
+          <Box sx={{ 
+            width: '100%', 
+            height: { xs: 300, sm: 350, md: 400 }, 
+            borderRadius: { xs: 2, md: 3 },
+            overflow: 'hidden',
+            position: 'relative'
+          }}>
+            <Map
+              initialViewState={{ longitude: MAP_CENTER[0], latitude: MAP_CENTER[1], zoom: 12 }}
+              style={{ width: '100%', height: '100%' }}
+              mapStyle={mapStyle}
+              mapboxAccessToken={MAPBOX_TOKEN}
+              getCursor={() => 'grab'}
+              touchAction="none"
+              onResize={() => {}}
+              onError={(error) => {
+                // Map error occurred
+              }}
+              onLoad={() => {
+                // Map loaded successfully
+              }}
+            >
             {/* Pins for today's reports */}
             {todayReports.map(r => {
               const coords = getLatLng(r.location);
@@ -214,9 +221,18 @@ const MapWidget = () => {
                 <Layer {...heatmapLayer} />
               </Source>
             )}
-          </Map>
+            </Map>
+          </Box>
         ) : (
-          <div style={{color:'red',padding:'1em'}}>Map cannot be loaded: Invalid configuration.</div>
+          <Box sx={{ 
+            p: 2, 
+            textAlign: 'center', 
+            color: 'error.main',
+            backgroundColor: 'error.light',
+            borderRadius: 2
+          }}>
+            <Typography>Map cannot be loaded: Invalid configuration.</Typography>
+          </Box>
         )}
       </Box>
     </ErrorBoundary>

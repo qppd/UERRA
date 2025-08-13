@@ -80,14 +80,68 @@ const StatsCards = () => {
   ];
 
   return (
-    <Box display="flex" gap={2} flexWrap="wrap" justifyContent="center">
+    <Box 
+      display="grid"
+      gridTemplateColumns={{ 
+        xs: 'repeat(2, 1fr)', 
+        sm: 'repeat(2, 1fr)', 
+        md: 'repeat(4, 1fr)' 
+      }}
+      gap={{ xs: 1, sm: 2 }}
+      width="100%"
+    >
       {cards.map(s => (
-        <Paper key={s.label} elevation={1} sx={{ p: 2, minWidth: 160, flex: 1, maxWidth: 220, borderRadius: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', borderBottom: `3px solid ${theme.palette[s.color.split('.')[0]][s.color.split('.')[1]]}` }}>
-          <Avatar sx={{ bgcolor: theme.palette[s.color.split('.')[0]][s.color.split('.')[1]], width: 48, height: 48, mb: 1 }}>
+        <Paper 
+          key={s.label} 
+          elevation={1} 
+          sx={{ 
+            p: { xs: 1.5, sm: 2 }, 
+            borderRadius: { xs: 2, md: 3 }, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center',
+            borderBottom: `3px solid ${theme.palette[s.color.split('.')[0]][s.color.split('.')[1]]}`,
+            minHeight: { xs: 120, sm: 140 },
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: 3
+            }
+          }}
+        >
+          <Avatar sx={{ 
+            bgcolor: theme.palette[s.color.split('.')[0]][s.color.split('.')[1]], 
+            width: { xs: 36, sm: 48 }, 
+            height: { xs: 36, sm: 48 }, 
+            mb: 1,
+            '& svg': {
+              fontSize: { xs: '1.2rem', sm: '1.5rem' }
+            }
+          }}>
             {s.icon}
           </Avatar>
-          <Typography variant="h5" fontWeight={700} color="text.primary">{s.value}</Typography>
-          <Typography variant="body2" color="text.secondary">{s.label}</Typography>
+          <Typography 
+            variant="h5" 
+            fontWeight={700} 
+            color="text.primary"
+            sx={{
+              fontSize: { xs: '1.25rem', sm: '1.5rem' },
+              textAlign: 'center'
+            }}
+          >
+            {s.value}
+          </Typography>
+          <Typography 
+            variant="body2" 
+            color="text.secondary"
+            sx={{
+              fontSize: { xs: '0.75rem', sm: '0.875rem' },
+              textAlign: 'center',
+              lineHeight: 1.2
+            }}
+          >
+            {s.label}
+          </Typography>
         </Paper>
       ))}
     </Box>
