@@ -59,7 +59,7 @@ const Login = ({ onLogin, footer }) => {
             }, 1000);
           }
         } catch (err) {
-          console.error('OAuth callback error:', err);
+          console.error('OAuth callback error: ', err);
           setError('Authentication failed. Please try again.');
           setLoading(false);
         }
