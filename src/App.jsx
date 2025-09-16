@@ -272,14 +272,7 @@ function App() {
       {page === 'login' ? (
         <Login
           onLogin={handleLogin}
-          footer={
-            <div className="login-footer-alt">
-              <span style={{color:'#555'}}>Don&apos;t have an account?</span>{' '}
-              <button type="button" className="switch-btn" onClick={()=>setPage('register')}>
-                Register
-              </button>
-            </div>
-          }
+          onNavigateToRegister={() => setPage('register')}
         />
       ) : (
         <Register

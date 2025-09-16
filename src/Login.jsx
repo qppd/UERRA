@@ -7,7 +7,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-const Login = ({ onLogin, footer }) => {
+const Login = ({ onLogin, onNavigateToRegister, footer }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -297,7 +297,7 @@ const Login = ({ onLogin, footer }) => {
             </p>
             <button 
               className="auth-btn-primary auth-btn-register"
-              onClick={() => window.location.href = '/register'}
+              onClick={onNavigateToRegister}
               style={{ maxWidth: '200px' }}
             >
               Create Account
