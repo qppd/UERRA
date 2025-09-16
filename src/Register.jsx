@@ -38,9 +38,17 @@ const Register = ({ onRegister, footer }) => {
     }
     setLoading(true);
     try {
+      // Get the correct redirect URL for email verification
+      const redirectTo = window.location.hostname === 'localhost' 
+        ? window.location.origin
+        : window.location.origin;
+      
       const { data, error: supaError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: redirectTo,
+        }
       });
       if (supaError) throw supaError;
       if (data.user) {
