@@ -3,8 +3,6 @@ import { supabase } from './supabaseClient';
 import { upsertUserProfile } from './useUserProfile';
 import './UerraAuth.css';
 import { CircularProgress } from '@mui/material';
-import GoogleIcon from '@mui/icons-material/Google';
-import GitHubIcon from '@mui/icons-material/GitHub';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
@@ -57,61 +55,6 @@ const Register = ({ onRegister, footer }) => {
       // Don't call onRegister immediately - let useAuthSession handle the state change
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleRegister = async () => {
-    setError('');
-    setLoading(true);
-    try {
-      // Get the correct redirect URL based on environment
-      const redirectTo = window.location.hostname === 'localhost' 
-        ? window.location.origin
-        : window.location.origin;
-      
-      const { error: supaError } = await supabase.auth.signInWithOAuth({ 
-        provider: 'google',
-        options: {
-          redirectTo: redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          }
-        }
-      });
-      if (supaError) throw supaError;
-    } catch (err) {
-      console.error('Google sign-up error:', err);
-      setError(err.message || 'Google sign-up failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGitHubRegister = async () => {
-    setError('');
-    setLoading(true);
-    try {
-      const redirectTo = window.location.hostname === 'localhost' 
-        ? window.location.origin
-        : window.location.origin;
-      
-      const { error: supaError } = await supabase.auth.signInWithOAuth({ 
-        provider: 'github',
-        options: {
-          redirectTo: redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          }
-        }
-      });
-      if (supaError) throw supaError;
-    } catch (err) {
-      console.error('GitHub sign-up error:', err);
-      setError(err.message || 'GitHub sign-up failed.');
     } finally {
       setLoading(false);
     }
@@ -224,30 +167,6 @@ const Register = ({ onRegister, footer }) => {
               ) : (
                 'REGISTER'
               )}
-            </button>
-            
-            <div className="auth-divider">
-              <span>OR</span>
-            </div>
-            
-            <button
-              type="button"
-              className="auth-oauth-btn google"
-              onClick={handleGoogleRegister}
-              disabled={loading}
-            >
-              <GoogleIcon fontSize="small" />
-              Sign up with Google
-            </button>
-            
-            <button
-              type="button"
-              className="auth-oauth-btn github"
-              onClick={handleGitHubRegister}
-              disabled={loading}
-            >
-              <GitHubIcon fontSize="small" />
-              Sign up with GitHub
             </button>
             
             <div className="auth-footer">
