@@ -31,35 +31,35 @@ A **real-time, cross-platform emergency reporting system** for Unisan citizens a
 
 | Role | Capabilities | Dashboard Features |
 |------|-------------|-------------------|
-| **🧍 Citizens** | Submit reports, track status, emergency tips | Report emergency, view my reports, emergency hotlines |
-| **🏢 Agencies** | Manage assigned reports, equipment suggestions | Live map, report management, status updates |
-| **🏛️ Municipal Admin** | Oversee all reports, manage categories | Analytics, agency management, report oversight |
-| **⚡ Super Admin** | Full system access, user management | Complete system control, advanced analytics |
+| **🧍 Citizens** | Submit reports (citizen-only), track status, emergency tips | Report emergency, view my reports, emergency hotlines |
+| **🏢 Agencies** | View/accept assigned reports, update status, equipment suggestions | Live map, assigned reports, update status, equipment guide |
+| **🏛️ Municipal Admin** | Oversee all reports, manage agencies/categories | Analytics, agency & category management, report oversight |
+| **⚡ Super Admin** | Full system access, user/agency/category management | Complete system control, advanced analytics |
 
 ### ✨ Core Features
 
-- 📱 **Real-time Emergency Reporting** with photo upload and GPS location
-- 🗺️ **Live Map Integration** with Mapbox for location services
-- 🔄 **Intelligent Auto-routing** (Fire→BFP, Medical→Hospital, Crime→PNP, etc.)
-- 📊 **Analytics Dashboard** with reports statistics and trends
-- 🔐 **Enhanced Authentication** with Email/Password, Google OAuth, and GitHub OAuth
-- 💬 **Real-time Updates** using Supabase realtime subscriptions
-- 📞 **Emergency Hotlines** quick access for all agencies
-- 💡 **Context-aware Tips** emergency guidelines by category
-- 📈 **Equipment Suggestions** for responders based on emergency type
+- 📱 **Real-time Emergency Reporting** (citizen-only, with photo upload & GPS)
+- 🗺️ **Live Map Integration** (agency dashboard, Mapbox or OSM)
+- 🔄 **Auto-routing** by category (Fire→BFP, Medical→Hospital/RHU, Crime→PNP, etc.)
+- 📊 **Analytics Dashboard** (admin: reports, users, agencies)
+- 🔐 **Role-based Authentication** (Email/Password, Google OAuth)
+- 💬 **Realtime Updates** (Supabase subscriptions for reports)
+- 📞 **Emergency Hotlines** (quick access, call/copy logic)
+- 💡 **Emergency Tips** (category-based, dynamic)
+- �️ **Equipment Suggestions** (agency dashboard, per category)
 
 ### 🎨 UI/UX Enhancements
 
-- **📱 Mobile-First Responsive Design** optimized for all screen sizes
-- **👁️ Password Visibility Toggles** with eye icons for better user experience
-- **⚡ Loading States & Progress Indicators** during authentication and data operations
-- **✅ Real-time Form Validation** with instant feedback for email and password requirements
-- **🎯 Smart OAuth Integration** with environment-aware redirect handling
-- **🛡️ Enhanced Error Handling** with user-friendly error messages and recovery options
-- **🔄 Auto Profile Creation** seamless onboarding for new users
-- **📧 Email Verification Flow** with clear instructions and status updates
-- **🖼️ Modern Authentication UI** with dual-panel layout and branded styling
-- **⚠️ Offline Detection** with network status indicators
+- **📱 Mobile-First Responsive Design** (all dashboards, dialogs, tables)
+- **👁️ Password Visibility Toggles** (login/register)
+- **⚡ Loading States & Progress Indicators** (auth, data, report submission)
+- **✅ Real-time Form Validation** (register, report form)
+- **🎯 Smart OAuth Integration** (Google, environment-aware)
+- **🛡️ Enhanced Error Handling** (auth, report, admin)
+- **🔄 Auto Profile Creation** (first login, citizen default)
+- **📧 Email Verification Flow** (register, login)
+- **🖼️ Modern Auth UI** (dual-panel, branding)
+- **⚠️ Offline Detection** (network status, OfflineHint)
 
 ---
 
@@ -610,88 +610,48 @@ Intelligent recommendations based on emergency type:
 ```
 uniapp/
 ├── src/
-│   ├── components/           # React components
-│   │   ├── AdminPanel.jsx     # Super admin controls
-│   │   ├── AgencyDashboard.jsx # Agency emergency dashboard
-│   │   ├── CitizenDashboard.jsx # Citizen reporting interface
-│   │   ├── DashboardHome.jsx   # Overview dashboard
-│   │   ├── EnhancedReportsPage.jsx # Advanced report management
-│   │   ├── EnhancedUsersManagement.jsx # User management interface
-│   │   ├── MapWidget.jsx       # Interactive map component
-│   │   ├── ReportFormDialog.jsx # Emergency report form
-│   │   ├── EmergencyTips.jsx   # Emergency guidelines
-│   │   ├── EmergencyHotlinesPage.jsx # Quick contact interface
-│   │   ├── LogoutDebugPanel.jsx # Authentication debugging
-│   │   ├── OfflineHint.jsx     # Network status indicator
-│   │   └── ...               # Additional UI components
-│   ├── services/            # Business logic
-│   │   └── CitizenReportService.js # Report submission logic
-│   ├── utils/               # Utility functions
-│   │   ├── authUtils.js     # Authentication helpers
-│   │   └── logoutUtils.js   # Enhanced logout handling
-│   ├── App.jsx              # Main application with role-based routing
-│   ├── DashboardLayout.jsx  # Responsive layout wrapper
-│   ├── Login.jsx            # Enhanced authentication form with OAuth
-│   ├── Register.jsx         # User registration with validation
-│   ├── useAuthSession.js    # Authentication state management
-│   ├── useUserProfile.js    # Profile management hooks
-│   ├── supabaseClient.js    # Supabase configuration
-│   ├── UerraAuth.css        # Authentication-specific styling
-│   ├── ResponsiveGlobal.css # Mobile-first responsive styles
-│   └── DashboardLayout.css  # Dashboard-specific styling
-├── public/                  # Static assets
-├── database-schema.sql      # Complete database setup
-├── storage-policies.sql     # Storage security policies
-├── fix-*.sql               # Database migration scripts
-└── package.json            # Dependencies and scripts
+│   ├── components/           # All UI components (dashboards, dialogs, admin, etc.)
+│   ├── services/             # Business logic (e.g., CitizenReportService.js)
+│   ├── utils/                # Utility functions (auth, location, logout)
+│   ├── App.jsx               # Main app, role-based routing
+│   ├── DashboardLayout.jsx   # Sidebar, navbar, responsive layout
+│   ├── Login.jsx, Register.jsx # Auth forms
+│   ├── useAuthSession.js     # Auth state hook
+│   ├── useUserProfile.js     # User profile hook & upsert
+│   ├── supabaseClient.js     # Supabase config
+│   └── ...                   # Styles, assets, etc.
+├── public/                   # Static assets (icons, images)
+├── database-schema.sql       # DB setup
+├── storage-policies.sql      # Storage security
+├── fix-*.sql                 # Migration scripts
+├── package.json              # Dependencies/scripts
+└── ...
 ```
 
-### 🔄 Enhanced Authentication Architecture
+### 🔄 Role-Based Dashboard Routing
 
-```mermaid
-graph TD
-    A[User Login Attempt] --> B{Authentication Method}
-    B -->|Email/Password| C[Supabase Auth]
-    B -->|Google OAuth| D[Google Provider]
-    B -->|GitHub OAuth| E[GitHub Provider]
-    
-    C --> F[Email Verification Check]
-    D --> G[OAuth Callback Handler]
-    E --> G
-    
-    F --> H{Profile Exists?}
-    G --> H
-    
-    H -->|No| I[Auto Create Citizen Profile]
-    H -->|Yes| J[Load User Profile]
-    
-    I --> K[Role-based Dashboard]
-    J --> K
-    
-    K --> L{User Role}
-    L -->|Citizen| M[Citizen Dashboard]
-    L -->|Agency| N[Agency Dashboard]
-    L -->|Admin| O[Admin Dashboard]
-    L -->|SuperAdmin| P[Super Admin Panel]
-```
+* **Citizen:** Can submit/view reports, see tips, hotlines. Only citizens can submit reports (enforced in UI & backend).
+* **Agency:** Sees assigned reports, can update status, view map, get equipment suggestions.
+* **Admin:** Manages agencies, categories, users, and sees analytics.
+* **Super Admin:** Full access to all data, users, agencies, categories, and system settings.
+
+Auto profile creation for new users (citizen by default). Role-based sidebar and dashboard content.
 
 ### 🔐 Enhanced Security Implementation
 
 #### Row Level Security (RLS)
-- **Users**: Can only view/edit their own profile
-- **Reports**: Citizens see only their reports, agencies see assigned reports
-- **Agencies**: Read-only access for all authenticated users
-- **Categories**: Read-only access for all authenticated users
+- **Users:** Can only view/edit their own profile
+- **Reports:** Citizens see only their reports; agencies see assigned reports (by agency_id)
+- **Agencies/Categories:** Read-only for all authenticated users
 
 #### Authentication Flow Features
-1. **Multiple Login Methods**: Email/password + Google OAuth + GitHub OAuth
-2. **Smart Session Management**: Supabase JWT tokens with automatic refresh
-3. **Enhanced Role-based Access**: Dynamic dashboard content based on user role
-4. **Auto Profile Creation**: Intelligent citizen profile setup on first login
-5. **Email Verification**: Security-first account verification process
-6. **OAuth Callback Handling**: Robust redirect management for production/development
-7. **Loading States**: User-friendly progress indicators throughout auth flow
-8. **Error Handling**: Comprehensive error messages and recovery options
+1. **Multiple Login Methods:** Email/password + Google OAuth
+2. **Session Management:** Supabase JWT tokens, auto refresh
+3. **Role-based Access:** Dynamic dashboard, sidebar, and permissions
+4. **Auto Profile Creation:** Citizen by default, on first login
+5. **Email Verification:** Required for new accounts
+6. **OAuth Callback Handling:** Environment-aware redirects
+7. **Loading/Error States:** User-friendly feedback throughout
 
 #### Security Enhancements
 - **Environment-aware Redirects**: Dynamic OAuth redirect URLs for different environments
@@ -747,29 +707,23 @@ graph TD
 ### 🧪 Development Scripts
 
 ```bash
-# Development server with hot reload
+# Start dev server (hot reload)
 npm run dev
-
-# Production build
+# Build for production
 npm run build
-
-# Preview production build locally
+# Preview production build
 npm run preview
-
-# Run ESLint code analysis
+# Lint code
 npm run lint
-
-# Start development with specific port
-npm run dev -- --port 3000
 ```
 
 ### 🔧 Configuration Files
 
 | File | Purpose | Key Settings |
 |------|---------|--------------|
-| `vite.config.js` | Build configuration | React plugin, dev server settings |
-| `eslint.config.js` | Code quality rules | React hooks, code standards |
-| `package.json` | Dependencies | React 19, Supabase, Material-UI |
+| `vite.config.js` | Build config | React, dev server |
+| `eslint.config.js` | Lint rules | React, code style |
+| `package.json` | Dependencies | React, Supabase, MUI |
 
 ---
 
