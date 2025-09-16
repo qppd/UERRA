@@ -29,6 +29,12 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1Ijoic2FqZWRobSIsImEiOiJjbWUwZTI2bmUwMzRmMmtzOTV3aHIzb3pwIn0.vmkwo0fWsqc9-rJhYRb_2g'; // Fallback to hardcoded token
 const MAP_CENTER = [121.99, 13.86]; // [lng, lat] for Unisan municipality center
 
+// Unisan municipality bounds - restrict map movement to this area
+const UNISAN_BOUNDS = [
+  [121.93, 13.80], // Southwest corner [lng, lat]
+  [122.06, 13.93]  // Northeast corner [lng, lat]
+];
+
 // Status to color mapping
 const STATUS_COLORS = {
   'pending': '#ef4444',        // Red - Not Yet Under Control
@@ -307,8 +313,9 @@ const MapWidget = () => {
               zoom: 14
             }}
             style={{ width: '100%', height: '100%' }}
-            mapStyle="mapbox://styles/mapbox/streets-v12"
+            mapStyle="mapbox://styles/mapbox/basic-v9"
             mapboxAccessToken={MAPBOX_TOKEN}
+            maxBounds={UNISAN_BOUNDS}
             getCursor={() => 'grab'}
             touchAction="pan-x pan-y"
             attributionControl={false}
@@ -411,6 +418,25 @@ const MapWidget = () => {
 
             {/* Barangay Labels */}
             <Source id="unisan-barangays" type="geojson" data={UNISAN_BARANGAYS_GEOJSON}>
+              {/* Barangay Pin Markers Layer */}
+              <Layer
+                id="barangay-pins"
+                type="circle"
+                paint={{
+                  'circle-radius': {
+                    'base': 1.2,
+                    'stops': [[12, 4], [14, 6], [16, 8]]
+                  },
+                  'circle-color': '#dc2626',
+                  'circle-stroke-color': '#ffffff',
+                  'circle-stroke-width': 2,
+                  'circle-opacity': {
+                    'base': 1,
+                    'stops': [[11, 0], [12, 0.8], [16, 1]]
+                  }
+                }}
+              />
+              
               <Layer
                 id="barangay-labels"
                 type="symbol"
@@ -423,7 +449,7 @@ const MapWidget = () => {
                   },
                   'text-transform': 'none',
                   'text-letter-spacing': 0.05,
-                  'text-offset': [0, 0.5],
+                  'text-offset': [0, 1.2],
                   'text-anchor': 'top',
                   'text-max-width': 8,
                   'text-line-height': 1.2
