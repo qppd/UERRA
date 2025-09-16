@@ -27,7 +27,7 @@ import Map, { Marker, Popup, Source, Layer } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1Ijoic2FqZWRobSIsImEiOiJjbWUwZTI2bmUwMzRmMmtzOTV3aHIzb3pwIn0.vmkwo0fWsqc9-rJhYRb_2g'; // Fallback to hardcoded token
-const MAP_CENTER = [122.1, 13.933]; // [lng, lat] for Unisan
+const MAP_CENTER = [121.99, 13.86]; // [lng, lat] for Unisan municipality center
 
 // Status to color mapping
 const STATUS_COLORS = {
@@ -40,13 +40,13 @@ const STATUS_COLORS = {
 
 // Sample pins for demonstration
 const SAMPLE_PINS = [
-  { id: 'sample-1', longitude: 122.1, latitude: 13.933, status: 'pending', category: 'Fire', description: 'House fire on Main Street' },
-  { id: 'sample-2', longitude: 122.102, latitude: 13.935, status: 'acknowledged', category: 'Medical', description: 'Medical emergency at clinic' },
-  { id: 'sample-3', longitude: 122.098, latitude: 13.931, status: 'in_progress', category: 'Crime', description: 'Robbery report' },
-  { id: 'sample-4', longitude: 122.105, latitude: 13.938, status: 'resolved', category: 'Disaster', description: 'Flood monitoring' },
-  { id: 'sample-5', longitude: 122.095, latitude: 13.928, status: 'cancelled', category: 'Other', description: 'False alarm' },
-  { id: 'sample-6', longitude: 122.108, latitude: 13.940, status: 'pending', category: 'Fire', description: 'Brush fire near highway' },
-  { id: 'sample-7', longitude: 122.092, latitude: 13.925, status: 'in_progress', category: 'Medical', description: 'Ambulance dispatch' }
+  { id: 'sample-1', longitude: 121.99, latitude: 13.86, status: 'pending', category: 'Fire', description: 'House fire on Main Street' },
+  { id: 'sample-2', longitude: 121.995, latitude: 13.865, status: 'acknowledged', category: 'Medical', description: 'Medical emergency at clinic' },
+  { id: 'sample-3', longitude: 121.985, latitude: 13.855, status: 'in_progress', category: 'Crime', description: 'Robbery report' },
+  { id: 'sample-4', longitude: 122.005, latitude: 13.870, status: 'resolved', category: 'Disaster', description: 'Flood monitoring' },
+  { id: 'sample-5', longitude: 121.975, latitude: 13.850, status: 'cancelled', category: 'Other', description: 'False alarm' },
+  { id: 'sample-6', longitude: 122.010, latitude: 13.875, status: 'pending', category: 'Fire', description: 'Brush fire near highway' },
+  { id: 'sample-7', longitude: 121.980, latitude: 13.845, status: 'in_progress', category: 'Medical', description: 'Ambulance dispatch' }
 ];
 
 // Custom marker component
@@ -237,7 +237,7 @@ const MapWidget = () => {
             initialViewState={{ 
               longitude: MAP_CENTER[0], 
               latitude: MAP_CENTER[1], 
-              zoom: 12
+              zoom: 13
             }}
             style={{ width: '100%', height: '100%' }}
             mapStyle="mapbox://styles/mapbox/dark-v11"
