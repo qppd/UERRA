@@ -277,10 +277,6 @@ function App() {
           onRegister={handleRegister}
           footer={
             <div className="login-footer-alt">
-              <span style={{color:'#555'}}>Already have an account?</span>{' '}
-              <button type="button" className="switch-btn" onClick={()=>setPage('login')}>
-                Login
-              </button>
             </div>
           }
         />
