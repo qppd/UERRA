@@ -42,7 +42,7 @@ const iconMap = {
   'fa fa-sign-out-alt': <LogoutIcon />,
 };
 
-function Sidebar({ links, open, onClose, currentPage, onNav, user, isCollapsed, onToggleCollapsed, darkMode, onToggleDarkMode }) {
+function Sidebar({ links, open, onClose, currentPage, onNav, user, profile, isCollapsed, onToggleCollapsed, darkMode, onToggleDarkMode }) {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
   
@@ -142,7 +142,7 @@ function Sidebar({ links, open, onClose, currentPage, onNav, user, isCollapsed, 
                   textTransform: 'capitalize'
                 }}
               >
-                {user.user_metadata?.role || 'Citizen'}
+                {profile?.role || 'Citizen'}
               </Typography>
             </Box>
           </Box>
@@ -328,7 +328,7 @@ function Footer() {
 const DRAWER_WIDTH_EXPANDED = 280;
 const DRAWER_WIDTH_COLLAPSED = 80;
 
-const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
+const DashboardLayout = ({ user, profile, links, children, currentPage, onNav }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -395,6 +395,7 @@ const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
           currentPage={currentPage} 
           onNav={handleNavigation}
           user={user}
+          profile={profile}
           isCollapsed={false}
           onToggleCollapsed={() => {}}
           darkMode={darkMode}
@@ -409,6 +410,7 @@ const DashboardLayout = ({ user, links, children, currentPage, onNav }) => {
           currentPage={currentPage} 
           onNav={onNav}
           user={user}
+          profile={profile}
           isCollapsed={isCollapsed}
           onToggleCollapsed={handleToggleCollapsed}
           darkMode={darkMode}

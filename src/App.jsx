@@ -255,6 +255,7 @@ function App() {
         <OfflineHint />
         <DashboardLayout
           user={user}
+          profile={profile}
           links={links}
           currentPage={currentPage}
           onNav={handleSidebarClick}
