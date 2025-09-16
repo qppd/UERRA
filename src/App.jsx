@@ -8,11 +8,9 @@ import { useAuthSession, signOut } from './useAuthSession';
 import { handleLogout } from './utils/logoutUtils';
 import { useUserProfile, upsertUserProfile } from './useUserProfile';
 
-import UserManagement from './UserManagement';
 import DashboardLayout from './DashboardLayout';
 
 import DashboardHome from './components/DashboardHome';
-import ReportsPage from './components/ReportsPage';
 import EnhancedReportsPage from './components/EnhancedReportsPage';
 import CitizenDashboard from './components/CitizenDashboard';
 import AgencyDashboard from './components/AgencyDashboard';

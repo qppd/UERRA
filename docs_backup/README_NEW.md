@@ -1,4 +1,4 @@
-﻿[![UERRA Logo](public/vite.svg)](https://github.com/qppd/UERRA)
+[![UERRA Logo](public/vite.svg)](https://github.com/qppd/UERRA)
 
 # UERRA - Unisan Emergency Reporting and Response App
 
@@ -11,48 +11,48 @@ A **real-time, cross-platform emergency reporting system** for Unisan citizens a
 
 ---
 
-## ðŸ“‘ Table of Contents
+## 📑 Table of Contents
 
-- [ðŸŽ¯ Overview & Features](#-overview--features)
-- [âš¡ Quick Start Guide](#-quick-start-guide)
-- [ðŸ”§ Complete Setup Guide](#-complete-setup-guide)
-- [ðŸ“± User Guides](#-user-guides)
-- [ðŸ› ï¸ Development & Technical](#ï¸-development--technical)
-- [â— Troubleshooting](#-troubleshooting)
-- [ðŸš€ Deployment & Production](#-deployment--production)
-- [ðŸ“ˆ Features by Role](#-features-by-role)
-- [ðŸ¤ Contributing & Support](#-contributing--support)
+- [🎯 Overview & Features](#-overview--features)
+- [⚡ Quick Start Guide](#-quick-start-guide)
+- [🔧 Complete Setup Guide](#-complete-setup-guide)
+- [📱 User Guides](#-user-guides)
+- [🛠️ Development & Technical](#️-development--technical)
+- [❗ Troubleshooting](#-troubleshooting)
+- [🚀 Deployment & Production](#-deployment--production)
+- [📈 Features by Role](#-features-by-role)
+- [🤝 Contributing & Support](#-contributing--support)
 
 ---
 
-## ðŸŽ¯ Overview & Features
+## 🎯 Overview & Features
 
-### ðŸ‘¥ User Roles
+### 👥 User Roles
 
 | Role | Capabilities | Dashboard Features |
 |------|-------------|-------------------|
-| **ðŸ§ Citizens** | Submit reports, track status, emergency tips | Report emergency, view my reports, emergency hotlines |
-| **ðŸ¢ Agencies** | Manage assigned reports, equipment suggestions | Live map, report management, status updates |
-| **ðŸ›ï¸ Municipal Admin** | Oversee all reports, manage categories | Analytics, agency management, report oversight |
-| **âš¡ Super Admin** | Full system access, user management | Complete system control, advanced analytics |
+| **🧍 Citizens** | Submit reports, track status, emergency tips | Report emergency, view my reports, emergency hotlines |
+| **🏢 Agencies** | Manage assigned reports, equipment suggestions | Live map, report management, status updates |
+| **🏛️ Municipal Admin** | Oversee all reports, manage categories | Analytics, agency management, report oversight |
+| **⚡ Super Admin** | Full system access, user management | Complete system control, advanced analytics |
 
-### âœ¨ Core Features
+### ✨ Core Features
 
-- ðŸ“± **Real-time Emergency Reporting** with photo upload and GPS location
-- ðŸ—ºï¸ **Live Map Integration** with Mapbox for location services
-- ðŸ”” **Intelligent Auto-routing** (Fireâ†’BFP, Medicalâ†’Hospital, Crimeâ†’PNP, etc.)
-- ðŸ“Š **Analytics Dashboard** with reports statistics and trends
-- ðŸ” **Role-based Security** with Supabase Row-Level Security
-- ðŸ’¬ **Real-time Updates** using Supabase realtime subscriptions
-- ðŸ“ž **Emergency Hotlines** quick access for all agencies
-- ðŸ’¡ **Context-aware Tips** emergency guidelines by category
-- ðŸ“ˆ **Equipment Suggestions** for responders based on emergency type
+- 📱 **Real-time Emergency Reporting** with photo upload and GPS location
+- 🗺️ **Live Map Integration** with Mapbox for location services
+- 🔔 **Intelligent Auto-routing** (Fire→BFP, Medical→Hospital, Crime→PNP, etc.)
+- 📊 **Analytics Dashboard** with reports statistics and trends
+- 🔐 **Role-based Security** with Supabase Row-Level Security
+- 💬 **Real-time Updates** using Supabase realtime subscriptions
+- 📞 **Emergency Hotlines** quick access for all agencies
+- 💡 **Context-aware Tips** emergency guidelines by category
+- 📈 **Equipment Suggestions** for responders based on emergency type
 
 ---
 
-## âš¡ Quick Start Guide
+## ⚡ Quick Start Guide
 
-### ðŸš€ Get Running in 5 Minutes
+### 🚀 Get Running in 5 Minutes
 
 ```bash
 # 1. Clone and install
@@ -71,9 +71,9 @@ cp .env.example .env
 npm run dev
 ```
 
-**ðŸŽ‰ That's it!** Open http://localhost:5173 and start reporting emergencies.
+**🎉 That's it!** Open http://localhost:5173 and start reporting emergencies.
 
-### ðŸ“‹ Prerequisites Checklist
+### 📋 Prerequisites Checklist
 
 - [x] Node.js 18+ installed
 - [x] Supabase account created
@@ -82,10 +82,10 @@ npm run dev
 
 ---
 
-## ðŸ”§ Complete Setup Guide
+## 🔧 Complete Setup Guide
 
 <details>
-<summary><strong>ðŸ“¦ Installation & Dependencies</strong></summary>
+<summary><strong>📦 Installation & Dependencies</strong></summary>
 
 ### Prerequisites
 - **Node.js** (v18+ recommended) - [Download here](https://nodejs.org/)
@@ -110,7 +110,7 @@ npm run dev
 </details>
 
 <details>
-<summary><strong>ðŸ—„ï¸ Database Configuration</strong></summary>
+<summary><strong>🗄️ Database Configuration</strong></summary>
 
 ### Step 1: Create Supabase Project
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
@@ -150,7 +150,7 @@ ORDER BY ordinal_position;
 </details>
 
 <details>
-<summary><strong>ðŸ—ƒï¸ Storage Setup</strong></summary>
+<summary><strong>🗃️ Storage Setup</strong></summary>
 
 ### Configure Supabase Storage for Photo Uploads
 
@@ -159,7 +159,7 @@ ORDER BY ordinal_position;
 2. Click **"Create bucket"**
 3. Configure:
    - **Name**: `photos`
-   - **Public bucket**: âœ… Enable
+   - **Public bucket**: ✅ Enable
    - **File size limit**: 5MB
    - **Allowed MIME types**: `image/*`
 
@@ -188,18 +188,18 @@ USING (auth.uid()::text = (storage.foldername(name))[1]);
 #### Step 3: Test Photo Upload
 1. Register/login to your app
 2. Submit a test emergency report with photo
-3. Check Storage â†’ photos bucket for uploaded file
+3. Check Storage → photos bucket for uploaded file
 
 </details>
 
 <details>
-<summary><strong>ðŸ”‘ OAuth Configuration</strong></summary>
+<summary><strong>🔑 OAuth Configuration</strong></summary>
 
 ### Google OAuth Setup
 
 #### Step 1: Google Cloud Console
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Navigate to **APIs & Services** â†’ **Credentials**
+2. Navigate to **APIs & Services** → **Credentials**
 3. Create **OAuth 2.0 Client ID** (if none exists)
 
 #### Configure Authorized Origins:
@@ -218,7 +218,7 @@ https://YOUR_SUPABASE_URL.supabase.co/auth/v1/callback
 ```
 
 #### Step 2: Supabase Configuration
-1. Go to **Authentication** â†’ **Providers** â†’ **Google**
+1. Go to **Authentication** → **Providers** → **Google**
 2. Enable the provider: Toggle **ON**
 3. Enter **Client ID** and **Client Secret** from Google Console
 4. Configure **Site URL**: `https://yourdomain.vercel.app`
@@ -239,7 +239,7 @@ VITE_MAPBOX_TOKEN=pk.your_mapbox_token_here
 </details>
 
 <details>
-<summary><strong>ðŸŒ Environment Configuration</strong></summary>
+<summary><strong>🌍 Environment Configuration</strong></summary>
 
 ### Create Environment File
 
@@ -266,24 +266,24 @@ VITE_DEBUG_MODE=true
 ### Get Your Supabase Credentials:
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
 2. Select your project
-3. Go to **Settings** â†’ **API**
+3. Go to **Settings** → **API**
 4. Copy **Project URL** and **anon/public key**
 
 ### Get Mapbox Token (Optional):
 1. Create account at [Mapbox](https://www.mapbox.com/)
-2. Go to **Account** â†’ **Access Tokens**
+2. Go to **Account** → **Access Tokens**
 3. Copy default public token or create new one
 
 </details>
 
 ---
 
-## ðŸ“± User Guides
+## 📱 User Guides
 
 <details>
-<summary><strong>ðŸ§ Citizen User Guide</strong></summary>
+<summary><strong>🧍 Citizen User Guide</strong></summary>
 
-### ðŸ†˜ Emergency Reporting Made Simple
+### 🆘 Emergency Reporting Made Simple
 
 #### Getting Started
 1. **Create Account**: Register with email/password or Google OAuth
@@ -292,14 +292,14 @@ VITE_DEBUG_MODE=true
 
 #### How to Report an Emergency
 
-##### ðŸš¨ When to Use UERRA
+##### 🚨 When to Use UERRA
 - **Fire emergencies** (house fires, forest fires)
 - **Medical emergencies** (accidents, health crises)  
 - **Crime incidents** (theft, violence, suspicious activity)
 - **Natural disasters** (floods, landslides, severe weather)
 - **Road accidents** (vehicle crashes, blocked roads)
 
-##### ðŸ“ Step-by-Step Reporting
+##### 📝 Step-by-Step Reporting
 1. **Click "Report Emergency"** on your dashboard
 2. **Select Emergency Type**: Choose from available categories
 3. **Emergency Tips Display**: Read safety guidelines that appear
@@ -316,7 +316,7 @@ VITE_DEBUG_MODE=true
    - Supported: JPG, PNG, WebP
 7. **Submit Report**: Review and submit
 
-#### ðŸ“‹ Track Your Reports (My Reports)
+#### 📋 Track Your Reports (My Reports)
 - **All Reports**: Complete history of submissions
 - **Active Reports**: Currently being handled
 - **Resolved Reports**: Completed cases
@@ -326,7 +326,7 @@ VITE_DEBUG_MODE=true
   - Photo evidence
   - Emergency tips specific to your report type
 
-#### ðŸ’¡ Emergency Tips
+#### 💡 Emergency Tips
 Access category-specific safety guidelines:
 - **Fire Safety**: Stay low, avoid elevators, call for help
 - **Medical Emergencies**: First aid basics, when to move victim
@@ -334,7 +334,7 @@ Access category-specific safety guidelines:
 - **Natural Disasters**: Preparation and response guidelines
 - **Road Accidents**: Scene safety, first aid priorities
 
-#### ðŸ“ž Emergency Hotlines
+#### 📞 Emergency Hotlines
 Quick access to all emergency contacts:
 - **PNP (Police)**: Crime, security incidents
 - **BFP (Fire)**: Fire emergencies, rescue operations  
@@ -345,7 +345,7 @@ Quick access to all emergency contacts:
 </details>
 
 <details>
-<summary><strong>ðŸ¢ Agency User Guide</strong></summary>
+<summary><strong>🏢 Agency User Guide</strong></summary>
 
 ### Agency Dashboard Overview
 - **Statistics Cards**: Total assigned, pending, in progress, resolved reports
@@ -356,7 +356,7 @@ Quick access to all emergency contacts:
 ### Report Management Workflow
 1. **New Report Notification**: Receive alerts for new assignments
 2. **Accept Report**: Acknowledge and begin response
-3. **Update Status**: Progress through stages (Pending â†’ In Progress â†’ Resolved)
+3. **Update Status**: Progress through stages (Pending → In Progress → Resolved)
 4. **Add Notes**: Communicate updates to citizens and other responders
 5. **Equipment Checklist**: Review suggested equipment for response
 
@@ -369,7 +369,7 @@ Quick access to all emergency contacts:
 </details>
 
 <details>
-<summary><strong>ðŸ›ï¸ Admin User Guide</strong></summary>
+<summary><strong>🏛️ Admin User Guide</strong></summary>
 
 ### Municipal Admin Capabilities
 - **Reports Overview**: Monitor all emergency reports across agencies
@@ -388,10 +388,10 @@ Quick access to all emergency contacts:
 
 ---
 
-## ðŸ› ï¸ Development & Technical
+## 🛠️ Development & Technical
 
 <details>
-<summary><strong>ðŸ—ï¸ Architecture & Tech Stack</strong></summary>
+<summary><strong>🏗️ Architecture & Tech Stack</strong></summary>
 
 ### Frontend Architecture
 - **Framework**: React 18+ with Vite build tool
@@ -421,16 +421,16 @@ report_updates: id, report_id, status, notes, created_at, user_id
 
 ### Auto-Routing Engine
 Smart report distribution based on emergency category:
-- **Fire Emergency** â†’ BFP (Bureau of Fire Protection)
-- **Medical Emergency** â†’ Hospital + RHU (Rural Health Unit)
-- **Crime/Security** â†’ PNP (Philippine National Police)
-- **Natural Disaster** â†’ MDRMMO (Municipal Disaster Risk Reduction Management Office)
-- **Road Accident** â†’ PNP + Hospital (dual assignment)
+- **Fire Emergency** → BFP (Bureau of Fire Protection)
+- **Medical Emergency** → Hospital + RHU (Rural Health Unit)
+- **Crime/Security** → PNP (Philippine National Police)
+- **Natural Disaster** → MDRMMO (Municipal Disaster Risk Reduction Management Office)
+- **Road Accident** → PNP + Hospital (dual assignment)
 
 </details>
 
 <details>
-<summary><strong>ðŸ“± Responsive Design Implementation</strong></summary>
+<summary><strong>📱 Responsive Design Implementation</strong></summary>
 
 ### Mobile-First Approach
 - **Breakpoints**: xs (0px), sm (600px), md (960px), lg (1280px), xl (1920px)
@@ -453,7 +453,7 @@ Smart report distribution based on emergency category:
 </details>
 
 <details>
-<summary><strong>ðŸ” Security Features</strong></summary>
+<summary><strong>🔐 Security Features</strong></summary>
 
 ### Authentication & Authorization
 - **Multi-factor Options**: Email/password, Google OAuth
@@ -477,10 +477,10 @@ Smart report distribution based on emergency category:
 
 ---
 
-## â— Troubleshooting
+## ❗ Troubleshooting
 
 <details>
-<summary><strong>ðŸš¨ Common Issues & Quick Fixes</strong></summary>
+<summary><strong>🚨 Common Issues & Quick Fixes</strong></summary>
 
 ### "Create Profile" Button Not Working
 **Symptoms**: Clicking create profile shows loading but doesn't proceed
@@ -524,7 +524,7 @@ npm run dev
 </details>
 
 <details>
-<summary><strong>ðŸ—„ï¸ Database Issues</strong></summary>
+<summary><strong>🗄️ Database Issues</strong></summary>
 
 ### Column Does Not Exist Errors
 
@@ -581,7 +581,7 @@ ORDER BY ordinal_position;
 
 ### Reset Database (Nuclear Option)
 ```sql
--- âš ï¸ WARNING: This deletes ALL data
+-- ⚠️ WARNING: This deletes ALL data
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 -- Then re-run database-schema.sql
@@ -590,7 +590,7 @@ CREATE SCHEMA public;
 </details>
 
 <details>
-<summary><strong>ðŸ”‘ Authentication Issues</strong></summary>
+<summary><strong>🔑 Authentication Issues</strong></summary>
 
 ### OAuth 500 "unexpected_failure" Error
 
@@ -598,7 +598,7 @@ CREATE SCHEMA public;
 
 #### Fix in Google Cloud Console:
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. **APIs & Services** â†’ **Credentials** â†’ **OAuth 2.0 Client ID**
+2. **APIs & Services** → **Credentials** → **OAuth 2.0 Client ID**
 3. **Authorized JavaScript origins**:
    ```
    http://localhost:5173
@@ -612,24 +612,24 @@ CREATE SCHEMA public;
    ```
 
 #### Fix in Supabase Dashboard:
-1. **Authentication** â†’ **Providers** â†’ **Google**
+1. **Authentication** → **Providers** → **Google**
 2. **Site URL**: `https://yourdomain.vercel.app` (single URL only)
 3. **Redirect URLs**: `http://localhost:5173/**,https://yourdomain.vercel.app/**`
 
 ### Email Verification Not Working
 
 #### Enable Email Confirmations:
-1. **Supabase Dashboard** â†’ **Authentication** â†’ **Settings**
+1. **Supabase Dashboard** → **Authentication** → **Settings**
 2. **User Management**:
-   - âœ… Enable email confirmations: **ON**
-   - âœ… Enable email change confirmations: **ON**
+   - ✅ Enable email confirmations: **ON**
+   - ✅ Enable email change confirmations: **ON**
 
 #### Configure Site URL:
 - Development: `http://localhost:5173`
 - Production: `https://yourdomain.vercel.app`
 
 #### Custom Email Templates:
-1. **Authentication** â†’ **Email Templates**
+1. **Authentication** → **Email Templates**
 2. Customize **Confirm signup** template with your branding
 
 ### Logout 403 Forbidden Error
@@ -645,7 +645,7 @@ CREATE SCHEMA public;
 </details>
 
 <details>
-<summary><strong>ðŸŽ¨ UI/UX Issues</strong></summary>
+<summary><strong>🎨 UI/UX Issues</strong></summary>
 
 ### Sidebar Not Closing on Mobile
 
@@ -675,10 +675,10 @@ CREATE SCHEMA public;
 
 ---
 
-## ðŸš€ Deployment & Production
+## 🚀 Deployment & Production
 
 <details>
-<summary><strong>ðŸŒ Vercel Deployment</strong></summary>
+<summary><strong>🌐 Vercel Deployment</strong></summary>
 
 ### Automated Deployment
 1. **Connect Repository**: Link your GitHub repo to Vercel
@@ -709,7 +709,7 @@ npx vercel --prod
 </details>
 
 <details>
-<summary><strong>âš™ï¸ Production Configuration</strong></summary>
+<summary><strong>⚙️ Production Configuration</strong></summary>
 
 ### Supabase Production Settings
 1. **Disable Email Confirmations** (if desired for faster testing)
@@ -733,10 +733,10 @@ npx vercel --prod
 
 ---
 
-## ðŸ“ˆ Features by Role
+## 📈 Features by Role
 
 <details>
-<summary><strong>ðŸ§ Citizen Features (Complete âœ…)</strong></summary>
+<summary><strong>🧍 Citizen Features (Complete ✅)</strong></summary>
 
 ### Dashboard Features
 - [x] Emergency action buttons (Report Emergency, Emergency Hotlines)
@@ -771,7 +771,7 @@ npx vercel --prod
 </details>
 
 <details>
-<summary><strong>ðŸ¢ Agency Features (Complete âœ…)</strong></summary>
+<summary><strong>🏢 Agency Features (Complete ✅)</strong></summary>
 
 ### Agency Dashboard
 - [x] Statistics cards (Total Assigned, Pending, In Progress, Resolved)
@@ -795,7 +795,7 @@ npx vercel --prod
 </details>
 
 <details>
-<summary><strong>ðŸ›ï¸ Municipal Admin Features (Complete âœ…)</strong></summary>
+<summary><strong>🏛️ Municipal Admin Features (Complete ✅)</strong></summary>
 
 ### Administrative Dashboard
 - [x] System-wide analytics and overview charts
@@ -818,7 +818,7 @@ npx vercel --prod
 </details>
 
 <details>
-<summary><strong>âš¡ Super Admin Features (Complete âœ…)</strong></summary>
+<summary><strong>⚡ Super Admin Features (Complete ✅)</strong></summary>
 
 ### Enhanced User Management
 - [x] Advanced user table with role-based filtering
@@ -844,10 +844,10 @@ npx vercel --prod
 
 ---
 
-## ðŸ¤ Contributing & Support
+## 🤝 Contributing & Support
 
 <details>
-<summary><strong>ðŸ’» Development Guidelines</strong></summary>
+<summary><strong>💻 Development Guidelines</strong></summary>
 
 ### Code Standards
 - **ESLint**: Follow configured linting rules
@@ -868,17 +868,17 @@ npx vercel --prod
 ### Project Structure
 ```
 src/
-â”œâ”€â”€ components/          # Reusable UI components
-â”œâ”€â”€ services/           # Business logic and API calls
-â”œâ”€â”€ utils/              # Utility functions
-â”œâ”€â”€ assets/             # Images, icons, static files
-â””â”€â”€ App.jsx            # Main application component
+├── components/          # Reusable UI components
+├── services/           # Business logic and API calls
+├── utils/              # Utility functions
+├── assets/             # Images, icons, static files
+└── App.jsx            # Main application component
 ```
 
 </details>
 
 <details>
-<summary><strong>ðŸ› Bug Reports & Feature Requests</strong></summary>
+<summary><strong>🐛 Bug Reports & Feature Requests</strong></summary>
 
 ### Reporting Bugs
 1. **Check Existing Issues**: Search for similar problems
@@ -906,7 +906,7 @@ src/
 </details>
 
 <details>
-<summary><strong>ðŸ“ž Support & Contact</strong></summary>
+<summary><strong>📞 Support & Contact</strong></summary>
 
 ### Technical Support
 - **GitHub Issues**: For bugs and feature requests
@@ -928,23 +928,23 @@ src/
 
 ---
 
-## ðŸ›£ï¸ Roadmap & Future Features
+## 🛣️ Roadmap & Future Features
 
-### ðŸ“± Phase 2: Mobile App
+### 📱 Phase 2: Mobile App
 - [ ] React Native mobile application
 - [ ] Offline report queuing
 - [ ] Push notifications with Firebase Cloud Messaging
 - [ ] Voice-to-text report submission
 - [ ] GPS tracking for responders
 
-### ðŸš€ Phase 3: Advanced Features
+### 🚀 Phase 3: Advanced Features
 - [ ] AI-powered emergency classification
 - [ ] Predictive analytics for emergency patterns
 - [ ] Integration with existing government systems
 - [ ] Emergency simulation and training tools
 - [ ] Multi-language support (Filipino/English)
 
-### ðŸŒ Phase 4: Scale & Integration
+### 🌐 Phase 4: Scale & Integration
 - [ ] SMS fallback system for offline areas
 - [ ] Integration with national emergency systems
 - [ ] Community emergency preparedness features
@@ -953,7 +953,7 @@ src/
 
 ---
 
-## ðŸ“„ License & Credits
+## 📄 License & Credits
 
 ### License
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
@@ -974,10 +974,10 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-**ðŸ†˜ UERRA - Making Emergency Response Faster and More Effective**
+**🆘 UERRA - Making Emergency Response Faster and More Effective**
 
-Built with â¤ï¸ for the people of Unisan, Quezon Province
+Built with ❤️ for the people of Unisan, Quezon Province
 
-[Report Bug](https://github.com/qppd/UERRA/issues) â€¢ [Request Feature](https://github.com/qppd/UERRA/issues) â€¢ [Documentation](https://github.com/qppd/UERRA)
+[Report Bug](https://github.com/qppd/UERRA/issues) • [Request Feature](https://github.com/qppd/UERRA/issues) • [Documentation](https://github.com/qppd/UERRA)
 
 </div>
