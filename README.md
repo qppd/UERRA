@@ -42,11 +42,24 @@ A **real-time, cross-platform emergency reporting system** for Unisan citizens a
 - 🗺️ **Live Map Integration** with Mapbox for location services
 - 🔄 **Intelligent Auto-routing** (Fire→BFP, Medical→Hospital, Crime→PNP, etc.)
 - 📊 **Analytics Dashboard** with reports statistics and trends
-- 🔐 **Role-based Security** with Supabase Row-Level Security
+- 🔐 **Enhanced Authentication** with Email/Password, Google OAuth, and GitHub OAuth
 - 💬 **Real-time Updates** using Supabase realtime subscriptions
 - 📞 **Emergency Hotlines** quick access for all agencies
 - 💡 **Context-aware Tips** emergency guidelines by category
 - 📈 **Equipment Suggestions** for responders based on emergency type
+
+### 🎨 UI/UX Enhancements
+
+- **📱 Mobile-First Responsive Design** optimized for all screen sizes
+- **👁️ Password Visibility Toggles** with eye icons for better user experience
+- **⚡ Loading States & Progress Indicators** during authentication and data operations
+- **✅ Real-time Form Validation** with instant feedback for email and password requirements
+- **🎯 Smart OAuth Integration** with environment-aware redirect handling
+- **🛡️ Enhanced Error Handling** with user-friendly error messages and recovery options
+- **🔄 Auto Profile Creation** seamless onboarding for new users
+- **📧 Email Verification Flow** with clear instructions and status updates
+- **🖼️ Modern Authentication UI** with dual-panel layout and branded styling
+- **⚠️ Offline Detection** with network status indicators
 
 ---
 
@@ -79,6 +92,18 @@ npm run dev
 - [x] Supabase account created
 - [x] Project environment variables configured
 - [x] Database schema executed
+- [x] OAuth providers configured (optional)
+
+### 🔐 Authentication Ready Features
+
+Once setup is complete, users can immediately access:
+
+- ✅ **Email/Password Registration** with validation and verification
+- ✅ **Google OAuth Login** for quick social authentication
+- ✅ **GitHub OAuth Login** for developer-friendly access
+- ✅ **Automatic Profile Creation** with citizen role assignment
+- ✅ **Role-based Dashboard Access** based on user permissions
+- ✅ **Responsive Mobile Experience** optimized for emergency scenarios
 
 ---
 
@@ -216,7 +241,20 @@ USING (auth.uid()::text = (storage.foldername(name))[1]);
 </details>
 
 <details>
-<summary><strong>🔑 OAuth Configuration</strong></summary>
+<summary><strong>🔑 Authentication & OAuth Configuration</strong></summary>
+
+UERRA supports multiple authentication methods with enhanced security and user experience features.
+
+### 🔐 Authentication Features
+
+- **📧 Email/Password Authentication** with validation and security checks
+- **🔗 Google OAuth Integration** for quick social login
+- **🐙 GitHub OAuth Integration** for developer-friendly authentication
+- **✅ Email Verification** for account security
+- **👁️ Password Visibility Toggle** for better user experience
+- **🔄 Loading States** with progress indicators
+- **🛡️ Auto Profile Creation** with role-based access control
+- **📱 Responsive Design** optimized for all devices
 
 ### Google OAuth Setup
 
@@ -234,13 +272,13 @@ https://yourdomain.vercel.app
 
 #### Configure Authorized Redirect URIs:
 ```
-http://localhost:5173/auth/callback
-http://localhost:5174/auth/callback
-https://yourdomain.vercel.app/auth/callback
+http://localhost:5173
+http://localhost:5174
+https://yourdomain.vercel.app
 https://YOUR_SUPABASE_URL.supabase.co/auth/v1/callback
 ```
 
-#### Step 2: Supabase Configuration
+#### Step 2: Supabase Google Configuration
 1. Go to **Authentication** → **Providers** → **Google**
 2. Enable the provider: Toggle **ON**
 3. Enter **Client ID** and **Client Secret** from Google Console
@@ -250,14 +288,56 @@ https://YOUR_SUPABASE_URL.supabase.co/auth/v1/callback
    http://localhost:5173/**,https://yourdomain.vercel.app/**
    ```
 
-#### Step 3: Environment Variables
+### GitHub OAuth Setup
+
+#### Step 1: GitHub Developer Settings
+1. Go to [GitHub Settings](https://github.com/settings/developers)
+2. Click **"New OAuth App"**
+3. Configure:
+   - **Application name**: `UERRA Emergency App`
+   - **Homepage URL**: `https://yourdomain.vercel.app`
+   - **Authorization callback URL**: `https://YOUR_SUPABASE_URL.supabase.co/auth/v1/callback`
+
+#### Step 2: Supabase GitHub Configuration
+1. Go to **Authentication** → **Providers** → **GitHub**
+2. Enable the provider: Toggle **ON**
+3. Enter **Client ID** and **Client Secret** from GitHub OAuth App
+4. Save configuration
+
+### Environment Variables
 Add to your `.env` file:
 
 ```bash
+# Supabase Configuration (Required)
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key_here
+
+# Maps Configuration (Optional)
 VITE_MAPBOX_TOKEN=pk.your_mapbox_token_here
 ```
+
+### Authentication Flow Implementation
+
+#### Email/Password Registration
+- ✅ Email format validation
+- ✅ Password strength requirements (8+ characters)
+- ✅ Password confirmation matching
+- ✅ Terms agreement checkbox
+- ✅ Email verification process
+- ✅ Automatic citizen role assignment
+
+#### OAuth Login Process
+- ✅ Secure redirect handling for production/development
+- ✅ Error handling with user-friendly messages
+- ✅ Loading states during authentication
+- ✅ Automatic profile creation on first login
+- ✅ Clean URL management after OAuth callback
+
+#### Security Features
+- ✅ Row-Level Security (RLS) policies
+- ✅ JWT token management via Supabase Auth
+- ✅ Secure session handling
+- ✅ Protected route access based on user roles
 
 </details>
 
@@ -309,9 +389,26 @@ VITE_DEBUG_MODE=true
 ### 🆘 Emergency Reporting Made Simple
 
 #### Getting Started
-1. **Create Account**: Register with email/password or Google OAuth
-2. **Profile Setup**: Automatic citizen role assignment on first login
-3. **Dashboard Access**: Navigate your personalized citizen dashboard
+1. **Create Account**: Register with email/password, Google OAuth, or GitHub OAuth
+2. **Email Verification**: Check your email and verify your account for security
+3. **Profile Setup**: Automatic citizen role assignment and profile creation on first login
+4. **Dashboard Access**: Navigate your personalized citizen dashboard with modern UI
+
+#### 🔐 Authentication Options
+
+##### Email/Password Registration
+- **Enhanced Form Validation**: Real-time email format and password strength checking
+- **Password Visibility Toggle**: Eye icons to show/hide password for better UX
+- **Confirmation Matching**: Ensures password confirmation matches original
+- **Terms Agreement**: Required checkbox for terms and conditions acceptance
+- **Loading States**: Visual progress indicators during account creation
+- **Success Feedback**: Clear confirmation messages with email verification instructions
+
+##### Social Login Options
+- **🔗 Google OAuth**: One-click sign-in with your Google account
+- **🐙 GitHub OAuth**: Developer-friendly authentication for GitHub users
+- **Smart Redirect Handling**: Seamless flow between development and production environments
+- **Auto Profile Creation**: Automatic citizen profile setup on first social login
 
 #### How to Report an Emergency
 
@@ -519,40 +616,66 @@ uniapp/
 │   │   ├── CitizenDashboard.jsx # Citizen reporting interface
 │   │   ├── DashboardHome.jsx   # Overview dashboard
 │   │   ├── EnhancedReportsPage.jsx # Advanced report management
+│   │   ├── EnhancedUsersManagement.jsx # User management interface
 │   │   ├── MapWidget.jsx       # Interactive map component
 │   │   ├── ReportFormDialog.jsx # Emergency report form
-│   │   └── ...               # Additional components
+│   │   ├── EmergencyTips.jsx   # Emergency guidelines
+│   │   ├── EmergencyHotlinesPage.jsx # Quick contact interface
+│   │   ├── LogoutDebugPanel.jsx # Authentication debugging
+│   │   ├── OfflineHint.jsx     # Network status indicator
+│   │   └── ...               # Additional UI components
 │   ├── services/            # Business logic
 │   │   └── CitizenReportService.js # Report submission logic
 │   ├── utils/               # Utility functions
 │   │   ├── authUtils.js     # Authentication helpers
-│   │   └── logoutUtils.js   # Logout handling
-│   ├── App.jsx              # Main application component
-│   ├── DashboardLayout.jsx  # Layout wrapper
-│   ├── Login.jsx            # Authentication form
-│   ├── Register.jsx         # User registration
-│   └── supabaseClient.js    # Supabase configuration
+│   │   └── logoutUtils.js   # Enhanced logout handling
+│   ├── App.jsx              # Main application with role-based routing
+│   ├── DashboardLayout.jsx  # Responsive layout wrapper
+│   ├── Login.jsx            # Enhanced authentication form with OAuth
+│   ├── Register.jsx         # User registration with validation
+│   ├── useAuthSession.js    # Authentication state management
+│   ├── useUserProfile.js    # Profile management hooks
+│   ├── supabaseClient.js    # Supabase configuration
+│   ├── UerraAuth.css        # Authentication-specific styling
+│   ├── ResponsiveGlobal.css # Mobile-first responsive styles
+│   └── DashboardLayout.css  # Dashboard-specific styling
 ├── public/                  # Static assets
 ├── database-schema.sql      # Complete database setup
 ├── storage-policies.sql     # Storage security policies
+├── fix-*.sql               # Database migration scripts
 └── package.json            # Dependencies and scripts
 ```
 
-### 🔄 Data Flow Architecture
+### 🔄 Enhanced Authentication Architecture
 
 ```mermaid
 graph TD
-    A[Citizen Report] --> B[Supabase Database]
-    B --> C[Real-time Subscription]
-    C --> D[Agency Dashboard]
-    B --> E[Auto-routing Engine]
-    E --> F[Appropriate Agency]
-    F --> G[Equipment Suggestions]
-    F --> H[Status Updates]
-    H --> I[Citizen Notifications]
+    A[User Login Attempt] --> B{Authentication Method}
+    B -->|Email/Password| C[Supabase Auth]
+    B -->|Google OAuth| D[Google Provider]
+    B -->|GitHub OAuth| E[GitHub Provider]
+    
+    C --> F[Email Verification Check]
+    D --> G[OAuth Callback Handler]
+    E --> G
+    
+    F --> H{Profile Exists?}
+    G --> H
+    
+    H -->|No| I[Auto Create Citizen Profile]
+    H -->|Yes| J[Load User Profile]
+    
+    I --> K[Role-based Dashboard]
+    J --> K
+    
+    K --> L{User Role}
+    L -->|Citizen| M[Citizen Dashboard]
+    L -->|Agency| N[Agency Dashboard]
+    L -->|Admin| O[Admin Dashboard]
+    L -->|SuperAdmin| P[Super Admin Panel]
 ```
 
-### 🔐 Security Implementation
+### 🔐 Enhanced Security Implementation
 
 #### Row Level Security (RLS)
 - **Users**: Can only view/edit their own profile
@@ -560,11 +683,21 @@ graph TD
 - **Agencies**: Read-only access for all authenticated users
 - **Categories**: Read-only access for all authenticated users
 
-#### Authentication Flow
-1. **Login Methods**: Email/password + Google OAuth
-2. **Session Management**: Supabase handles JWT tokens
-3. **Role-based Access**: Dashboard content varies by user role
-4. **Profile Creation**: Automatic citizen profile on first login
+#### Authentication Flow Features
+1. **Multiple Login Methods**: Email/password + Google OAuth + GitHub OAuth
+2. **Smart Session Management**: Supabase JWT tokens with automatic refresh
+3. **Enhanced Role-based Access**: Dynamic dashboard content based on user role
+4. **Auto Profile Creation**: Intelligent citizen profile setup on first login
+5. **Email Verification**: Security-first account verification process
+6. **OAuth Callback Handling**: Robust redirect management for production/development
+7. **Loading States**: User-friendly progress indicators throughout auth flow
+8. **Error Handling**: Comprehensive error messages and recovery options
+
+#### Security Enhancements
+- **Environment-aware Redirects**: Dynamic OAuth redirect URLs for different environments
+- **CSRF Protection**: Built-in Supabase security features
+- **Token Management**: Secure JWT handling with automatic cleanup
+- **Logout Security**: Enhanced logout with session cleanup and debug tools
 
 ### 📱 Responsive Design Strategy
 
@@ -645,7 +778,7 @@ npm run dev -- --port 3000
 <details>
 <summary><strong>🔐 Authentication Issues</strong></summary>
 
-### Common Login Problems
+### Common Authentication Problems
 
 #### Problem: "Invalid credentials" error
 **Solution:**
@@ -657,21 +790,45 @@ npm run dev -- --port 3000
 #### Problem: Google OAuth not working
 **Solution:**
 1. Check Google Cloud Console OAuth configuration
-2. Verify authorized redirect URIs include your domain
-3. Ensure Supabase Google provider is enabled
-4. Check client ID/secret in Supabase settings
+2. Verify authorized redirect URIs include your domain (without `/auth/callback`)
+3. Ensure Supabase Google provider is enabled with correct Client ID/Secret
+4. Check Site URL and Redirect URLs in Supabase Auth settings
+5. Verify environment-specific redirect handling in OAuth flow
 
-#### Problem: User profile not created after login
+#### Problem: GitHub OAuth not working
 **Solution:**
-1. Check if RLS policies allow profile creation
-2. Use LogoutDebugPanel to examine auth state
-3. Manually trigger profile creation via dashboard
-4. Verify database triggers are working
+1. Check GitHub OAuth App configuration in Developer Settings
+2. Verify Authorization callback URL: `https://YOUR_SUPABASE_URL.supabase.co/auth/v1/callback`
+3. Ensure Supabase GitHub provider is enabled with correct credentials
+4. Check for CORS issues in browser developer tools
 
-### Debug Tools
-- **LogoutDebugPanel**: Access via debug mode for auth state inspection
-- **Browser Console**: Check for authentication errors
-- **Supabase Dashboard**: Monitor auth logs and user sessions
+#### Problem: User profile not created after OAuth login
+**Solution:**
+1. Check if RLS policies allow profile creation for authenticated users
+2. Use LogoutDebugPanel to examine auth state and user information
+3. Verify `upsertUserProfile` function is working correctly
+4. Check browser console for profile creation errors
+5. Manually trigger profile creation via "Create Profile" button
+
+#### Problem: Email verification not working
+**Solution:**
+1. Check Supabase email settings and templates
+2. Verify redirect URL matches your application domain
+3. Check spam folder for verification emails
+4. Ensure email provider (SMTP) is properly configured in Supabase
+
+#### Problem: OAuth callback loop or redirect issues
+**Solution:**
+1. Clear browser cache and localStorage
+2. Check OAuth redirect URL configuration for development vs production
+3. Verify clean URL management after OAuth callback
+4. Use LogoutDebugPanel to clear authentication state
+
+### Authentication Debug Tools
+- **LogoutDebugPanel**: Access authentication state inspection (development only)
+- **Browser Console**: Check for OAuth callback and authentication errors
+- **Supabase Dashboard**: Monitor auth logs, user sessions, and OAuth provider logs
+- **Network Tab**: Inspect API calls during authentication flow
 
 </details>
 
