@@ -84,6 +84,38 @@ const UNISAN_BOUNDARY_GEOJSON = {
   ]
 };
 
+// Barangay location points for labels (approximate centers of each barangay)
+const UNISAN_BARANGAYS_GEOJSON = {
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "properties": { "name": "Almacen" }, "geometry": { "type": "Point", "coordinates": [121.995, 13.870] } },
+    { "type": "Feature", "properties": { "name": "Balagtas" }, "geometry": { "type": "Point", "coordinates": [122.047, 13.850] } },
+    { "type": "Feature", "properties": { "name": "Balanacan" }, "geometry": { "type": "Point", "coordinates": [121.995, 13.850] } },
+    { "type": "Feature", "properties": { "name": "Bonifacio" }, "geometry": { "type": "Point", "coordinates": [122.030, 13.880] } },
+    { "type": "Feature", "properties": { "name": "Bulo Ibaba" }, "geometry": { "type": "Point", "coordinates": [121.975, 13.868] } },
+    { "type": "Feature", "properties": { "name": "Bulo Ilaya" }, "geometry": { "type": "Point", "coordinates": [121.955, 13.878] } },
+    { "type": "Feature", "properties": { "name": "Burgos" }, "geometry": { "type": "Point", "coordinates": [121.955, 13.890] } },
+    { "type": "Feature", "properties": { "name": "Cabulihan Ibaba" }, "geometry": { "type": "Point", "coordinates": [122.022, 13.815] } },
+    { "type": "Feature", "properties": { "name": "Cabulihan Ilaya" }, "geometry": { "type": "Point", "coordinates": [122.015, 13.835] } },
+    { "type": "Feature", "properties": { "name": "Caigdal" }, "geometry": { "type": "Point", "coordinates": [122.030, 13.840] } },
+    { "type": "Feature", "properties": { "name": "F. de Jesus (Poblacion)" }, "geometry": { "type": "Point", "coordinates": [121.977, 13.838] } },
+    { "type": "Feature", "properties": { "name": "General Luna" }, "geometry": { "type": "Point", "coordinates": [122.015, 13.847] } },
+    { "type": "Feature", "properties": { "name": "Kalilayan Ibaba" }, "geometry": { "type": "Point", "coordinates": [121.965, 13.850] } },
+    { "type": "Feature", "properties": { "name": "Kalilayan Ilaya" }, "geometry": { "type": "Point", "coordinates": [121.952, 13.857] } },
+    { "type": "Feature", "properties": { "name": "Mabini" }, "geometry": { "type": "Point", "coordinates": [122.035, 13.860] } },
+    { "type": "Feature", "properties": { "name": "Mairok Ibaba" }, "geometry": { "type": "Point", "coordinates": [121.970, 13.895] } },
+    { "type": "Feature", "properties": { "name": "Mairok Ilaya" }, "geometry": { "type": "Point", "coordinates": [121.965, 13.905] } },
+    { "type": "Feature", "properties": { "name": "Malvar" }, "geometry": { "type": "Point", "coordinates": [121.982, 13.825] } },
+    { "type": "Feature", "properties": { "name": "Maputat" }, "geometry": { "type": "Point", "coordinates": [122.000, 13.815] } },
+    { "type": "Feature", "properties": { "name": "Muliguin" }, "geometry": { "type": "Point", "coordinates": [121.985, 13.840] } },
+    { "type": "Feature", "properties": { "name": "Pagaguasan" }, "geometry": { "type": "Point", "coordinates": [121.970, 13.860] } },
+    { "type": "Feature", "properties": { "name": "Panaon Ibaba" }, "geometry": { "type": "Point", "coordinates": [121.985, 13.875] } },
+    { "type": "Feature", "properties": { "name": "Panaon Ilaya" }, "geometry": { "type": "Point", "coordinates": [121.975, 13.885] } },
+    { "type": "Feature", "properties": { "name": "Plaridel" }, "geometry": { "type": "Point", "coordinates": [122.015, 13.870] } },
+    { "type": "Feature", "properties": { "name": "Poctol" }, "geometry": { "type": "Point", "coordinates": [122.000, 13.885] } }
+  ]
+};
+
 // Custom marker component
 const StatusMarker = ({ status, onClick }) => {
   const color = STATUS_COLORS[status] || STATUS_COLORS.cancelled;
@@ -272,10 +304,10 @@ const MapWidget = () => {
             initialViewState={{ 
               longitude: MAP_CENTER[0], 
               latitude: MAP_CENTER[1], 
-              zoom: 13
+              zoom: 14
             }}
             style={{ width: '100%', height: '100%' }}
-            mapStyle="mapbox://styles/mapbox/dark-v11"
+            mapStyle="mapbox://styles/mapbox/streets-v12"
             mapboxAccessToken={MAPBOX_TOKEN}
             getCursor={() => 'grab'}
             touchAction="pan-x pan-y"
@@ -298,8 +330,32 @@ const MapWidget = () => {
             }}
             onLoad={(e) => {
               console.log('Map loaded successfully');
+              const map = e.target;
+              
               // Ensure map resizes properly on load
-              setTimeout(() => e.target.resize(), 100);
+              setTimeout(() => map.resize(), 100);
+              
+              // Show administrative boundaries and place names
+              map.on('styledata', () => {
+                // Ensure place labels are visible at appropriate zoom levels
+                if (map.getLayer('place-city-sm')) {
+                  map.setLayoutProperty('place-city-sm', 'visibility', 'visible');
+                }
+                if (map.getLayer('place-town')) {
+                  map.setLayoutProperty('place-town', 'visibility', 'visible');
+                }
+                if (map.getLayer('place-village')) {
+                  map.setLayoutProperty('place-village', 'visibility', 'visible');
+                }
+                
+                // Make admin boundaries more visible
+                if (map.getLayer('admin-1-boundary')) {
+                  map.setPaintProperty('admin-1-boundary', 'line-opacity', 0.8);
+                }
+                if (map.getLayer('admin-0-boundary')) {
+                  map.setPaintProperty('admin-0-boundary', 'line-opacity', 0.8);
+                }
+              });
             }}
           >
             {/* Unisan Municipality Boundary */}
@@ -349,6 +405,37 @@ const MapWidget = () => {
                   'text-halo-color': '#ffffff',
                   'text-halo-width': 2,
                   'text-opacity': 0.8
+                }}
+              />
+            </Source>
+
+            {/* Barangay Labels */}
+            <Source id="unisan-barangays" type="geojson" data={UNISAN_BARANGAYS_GEOJSON}>
+              <Layer
+                id="barangay-labels"
+                type="symbol"
+                layout={{
+                  'text-field': ['get', 'name'],
+                  'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+                  'text-size': {
+                    'base': 1.2,
+                    'stops': [[12, 10], [14, 12], [16, 14]]
+                  },
+                  'text-transform': 'none',
+                  'text-letter-spacing': 0.05,
+                  'text-offset': [0, 0.5],
+                  'text-anchor': 'top',
+                  'text-max-width': 8,
+                  'text-line-height': 1.2
+                }}
+                paint={{
+                  'text-color': '#333333',
+                  'text-halo-color': '#ffffff',
+                  'text-halo-width': 1.5,
+                  'text-opacity': {
+                    'base': 1,
+                    'stops': [[12, 0], [13, 0.6], [14, 1]]
+                  }
                 }}
               />
             </Source>
