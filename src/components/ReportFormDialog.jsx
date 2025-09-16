@@ -20,6 +20,7 @@ import {
   Divider
 } from '@mui/material';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CloseIcon from '@mui/icons-material/Close';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -44,6 +45,8 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
   const [locationLoading, setLocationLoading] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [roleChecked, setRoleChecked] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [cameraStream, setCameraStream] = useState(null);
 
   // Check user role when dialog opens
   useEffect(() => {
@@ -58,6 +61,13 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
       resetForm();
     }
   }, [open, roleChecked]);
+
+  // Clean up camera stream when dialog closes
+  useEffect(() => {
+    if (!open) {
+      stopCamera();
+    }
+  }, [open]);
 
   const checkUserRole = async () => {
     try {
@@ -109,6 +119,7 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
     setPhotoFile(null);
     setPhotoPreview('');
     setError('');
+    stopCamera(); // Stop camera when resetting form
   };
 
   const handleInputChange = (field, value) => {
@@ -180,6 +191,52 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
       reader.onload = (e) => setPhotoPreview(e.target.result);
       reader.readAsDataURL(file);
     }
+  };
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'environment' }, // Use back camera if available
+        audio: false 
+      });
+      setCameraStream(stream);
+      setShowCamera(true);
+      setError('');
+    } catch (error) {
+      setError('Camera access denied or not available. Please use upload option.');
+      console.error('Camera error:', error);
+    }
+  };
+
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+    setShowCamera(false);
+  };
+
+  const capturePhoto = () => {
+    const video = document.getElementById('camera-video');
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    canvas.toBlob((blob) => {
+      if (blob) {
+        const file = new File([blob], `emergency_photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
+        setPhotoFile(file);
+        
+        const reader = new FileReader();
+        reader.onload = (e) => setPhotoPreview(e.target.result);
+        reader.readAsDataURL(file);
+        
+        stopCamera();
+      }
+    }, 'image/jpeg', 0.8);
   };
 
   const uploadPhoto = async () => {
@@ -410,31 +467,93 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
             <Typography variant="subtitle2" fontWeight={600} mb={1}>
               Photo (Optional)
             </Typography>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-              <Button
-                variant="outlined"
-                component="label"
-                startIcon={<PhotoCameraIcon />}
-              >
-                Choose Photo
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={handlePhotoChange}
-                />
-              </Button>
-              
-              {photoPreview && (
+            
+            {!showCamera && !photoPreview && (
+              <Box sx={{ display: 'flex', gap: 2, mb: 2, flexWrap: 'wrap' }}>
+                <Button
+                  variant="outlined"
+                  startIcon={<PhotoCameraIcon />}
+                  onClick={startCamera}
+                  sx={{ minWidth: 140 }}
+                >
+                  Take Photo
+                </Button>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  startIcon={<UploadFileIcon />}
+                  sx={{ minWidth: 140 }}
+                >
+                  Upload Photo
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handlePhotoChange}
+                  />
+                </Button>
+              </Box>
+            )}
+
+            {/* Camera View */}
+            {showCamera && (
+              <Box sx={{ mb: 2 }}>
+                <Box sx={{ 
+                  position: 'relative', 
+                  border: '2px solid #ddd', 
+                  borderRadius: 2,
+                  overflow: 'hidden',
+                  maxWidth: 400,
+                  mx: 'auto'
+                }}>
+                  <video
+                    id="camera-video"
+                    autoPlay
+                    playsInline
+                    muted
+                    ref={(video) => {
+                      if (video && cameraStream) {
+                        video.srcObject = cameraStream;
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      display: 'block'
+                    }}
+                  />
+                </Box>
+                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 2 }}>
+                  <Button
+                    variant="contained"
+                    onClick={capturePhoto}
+                    startIcon={<PhotoCameraIcon />}
+                  >
+                    Capture
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={stopCamera}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </Box>
+            )}
+
+            {/* Photo Preview */}
+            {photoPreview && !showCamera && (
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
                 <Box sx={{ position: 'relative' }}>
                   <img
                     src={photoPreview}
                     alt="Preview"
                     style={{
-                      width: 60,
-                      height: 60,
+                      width: 80,
+                      height: 80,
                       objectFit: 'cover',
-                      borderRadius: 8
+                      borderRadius: 8,
+                      border: '2px solid #ddd'
                     }}
                   />
                   <IconButton
@@ -455,8 +574,33 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
                     <CloseIcon fontSize="small" />
                   </IconButton>
                 </Box>
-              )}
-            </Box>
+                <Box sx={{ display: 'flex', gap: 1, flexDirection: 'column' }}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<PhotoCameraIcon />}
+                    onClick={startCamera}
+                  >
+                    Take Another
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    component="label"
+                    startIcon={<UploadFileIcon />}
+                  >
+                    Upload Different
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handlePhotoChange}
+                    />
+                  </Button>
+                </Box>
+              </Box>
+            )}
+            
             <Typography variant="caption" color="text.secondary">
               Photos help responders understand the situation better (Max 5MB)
             </Typography>
