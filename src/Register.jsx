@@ -87,7 +87,7 @@ const Register = ({ onRegister, footer }) => {
             </p>
             <button 
               className="auth-btn-primary auth-btn-login"
-              onClick={() => window.location.href = '/login'}
+              onClick={() => window.location.href = '/'}
               style={{ maxWidth: '200px' }}
             >
               Sign In
