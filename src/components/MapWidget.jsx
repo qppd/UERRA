@@ -49,6 +49,41 @@ const SAMPLE_PINS = [
   { id: 'sample-7', longitude: 121.980, latitude: 13.845, status: 'in_progress', category: 'Medical', description: 'Ambulance dispatch' }
 ];
 
+// Unisan Municipality Boundary GeoJSON Data (based on actual barangay boundaries)
+const UNISAN_BOUNDARY_GEOJSON = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Unisan Municipality",
+        "province": "Quezon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          // Northern boundary (Mairok Ilaya, Bonifacio area)
+          [121.938, 13.923], [121.955, 13.922], [121.971, 13.920], [121.985, 13.918],
+          [122.000, 13.915], [122.015, 13.912], [122.030, 13.908], [122.043, 13.903],
+          
+          // Eastern boundary (Balagtas, Mabini area)
+          [122.051, 13.896], [122.052, 13.885], [122.051, 13.875], [122.048, 13.865],
+          [122.045, 13.855], [122.042, 13.845], [122.038, 13.835], [122.034, 13.825],
+          
+          // Southern boundary (Caigdal, Cabulihan area)
+          [122.030, 13.815], [122.025, 13.810], [122.020, 13.807], [122.010, 13.805],
+          [122.000, 13.805], [121.990, 13.807], [121.980, 13.810], [121.970, 13.815],
+          
+          // Western boundary (Malvar, Kalilayan area)
+          [121.960, 13.820], [121.952, 13.825], [121.945, 13.832], [121.940, 13.840],
+          [121.938, 13.850], [121.937, 13.860], [121.936, 13.870], [121.937, 13.880],
+          [121.938, 13.890], [121.939, 13.900], [121.940, 13.910], [121.938, 13.923]
+        ]]
+      }
+    }
+  ]
+};
+
 // Custom marker component
 const StatusMarker = ({ status, onClick }) => {
   const color = STATUS_COLORS[status] || STATUS_COLORS.cancelled;
@@ -267,6 +302,57 @@ const MapWidget = () => {
               setTimeout(() => e.target.resize(), 100);
             }}
           >
+            {/* Unisan Municipality Boundary */}
+            <Source id="unisan-boundary" type="geojson" data={UNISAN_BOUNDARY_GEOJSON}>
+              <Layer
+                id="unisan-boundary-fill"
+                type="fill"
+                paint={{
+                  'fill-color': '#2196f3',
+                  'fill-opacity': 0.15
+                }}
+              />
+              <Layer
+                id="unisan-boundary-glow"
+                type="line"
+                paint={{
+                  'line-color': '#64b5f6',
+                  'line-width': 8,
+                  'line-opacity': 0.3,
+                  'line-blur': 2
+                }}
+              />
+              <Layer
+                id="unisan-boundary-line"
+                type="line"
+                paint={{
+                  'line-color': '#1976d2',
+                  'line-width': 4,
+                  'line-opacity': 0.9,
+                  'line-dasharray': [3, 3]
+                }}
+              />
+              <Layer
+                id="unisan-boundary-label"
+                type="symbol"
+                layout={{
+                  'text-field': 'UNISAN MUNICIPALITY',
+                  'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                  'text-size': 16,
+                  'text-transform': 'uppercase',
+                  'text-letter-spacing': 0.1,
+                  'text-offset': [0, 0],
+                  'text-anchor': 'center'
+                }}
+                paint={{
+                  'text-color': '#1976d2',
+                  'text-halo-color': '#ffffff',
+                  'text-halo-width': 2,
+                  'text-opacity': 0.8
+                }}
+              />
+            </Source>
+
             {/* Render all pins */}
             {allPins.map(pin => (
               <Marker
