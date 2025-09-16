@@ -2,6 +2,8 @@
 
 
 import React, { useEffect, useState, useRef } from 'react';
+import { loadUnisanBarangays } from '../assets/geojson';
+
 // ErrorBoundary for catching map errors
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -56,73 +58,6 @@ const SAMPLE_PINS = [
   { id: 'sample-7', longitude: 121.980, latitude: 13.845, status: 'in_progress', category: 'Medical', description: 'Ambulance dispatch' }
 ];
 
-// Unisan Municipality Boundary GeoJSON Data (based on actual barangay boundaries)
-const UNISAN_BOUNDARY_GEOJSON = {
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Unisan Municipality",
-        "province": "Quezon"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          // Northern boundary (Mairok Ilaya, Bonifacio area)
-          [121.938, 13.923], [121.955, 13.922], [121.971, 13.920], [121.985, 13.918],
-          [122.000, 13.915], [122.015, 13.912], [122.030, 13.908], [122.043, 13.903],
-          
-          // Eastern boundary (Balagtas, Mabini area)
-          [122.051, 13.896], [122.052, 13.885], [122.051, 13.875], [122.048, 13.865],
-          [122.045, 13.855], [122.042, 13.845], [122.038, 13.835], [122.034, 13.825],
-          
-          // Southern boundary (Caigdal, Cabulihan area)
-          [122.030, 13.815], [122.025, 13.810], [122.020, 13.807], [122.010, 13.805],
-          [122.000, 13.805], [121.990, 13.807], [121.980, 13.810], [121.970, 13.815],
-          
-          // Western boundary (Malvar, Kalilayan area)
-          [121.960, 13.820], [121.952, 13.825], [121.945, 13.832], [121.940, 13.840],
-          [121.938, 13.850], [121.937, 13.860], [121.936, 13.870], [121.937, 13.880],
-          [121.938, 13.890], [121.939, 13.900], [121.940, 13.910], [121.938, 13.923]
-        ]]
-      }
-    }
-  ]
-};
-
-// Barangay location points for labels (approximate centers of each barangay)
-const UNISAN_BARANGAYS_GEOJSON = {
-  "type": "FeatureCollection",
-  "features": [
-    { "type": "Feature", "properties": { "name": "Almacen" }, "geometry": { "type": "Point", "coordinates": [121.995, 13.870] } },
-    { "type": "Feature", "properties": { "name": "Balagtas" }, "geometry": { "type": "Point", "coordinates": [122.047, 13.850] } },
-    { "type": "Feature", "properties": { "name": "Balanacan" }, "geometry": { "type": "Point", "coordinates": [121.995, 13.850] } },
-    { "type": "Feature", "properties": { "name": "Bonifacio" }, "geometry": { "type": "Point", "coordinates": [122.030, 13.880] } },
-    { "type": "Feature", "properties": { "name": "Bulo Ibaba" }, "geometry": { "type": "Point", "coordinates": [121.975, 13.868] } },
-    { "type": "Feature", "properties": { "name": "Bulo Ilaya" }, "geometry": { "type": "Point", "coordinates": [121.955, 13.878] } },
-    { "type": "Feature", "properties": { "name": "Burgos" }, "geometry": { "type": "Point", "coordinates": [121.955, 13.890] } },
-    { "type": "Feature", "properties": { "name": "Cabulihan Ibaba" }, "geometry": { "type": "Point", "coordinates": [122.022, 13.815] } },
-    { "type": "Feature", "properties": { "name": "Cabulihan Ilaya" }, "geometry": { "type": "Point", "coordinates": [122.015, 13.835] } },
-    { "type": "Feature", "properties": { "name": "Caigdal" }, "geometry": { "type": "Point", "coordinates": [122.030, 13.840] } },
-    { "type": "Feature", "properties": { "name": "F. de Jesus (Poblacion)" }, "geometry": { "type": "Point", "coordinates": [121.977, 13.838] } },
-    { "type": "Feature", "properties": { "name": "General Luna" }, "geometry": { "type": "Point", "coordinates": [122.015, 13.847] } },
-    { "type": "Feature", "properties": { "name": "Kalilayan Ibaba" }, "geometry": { "type": "Point", "coordinates": [121.965, 13.850] } },
-    { "type": "Feature", "properties": { "name": "Kalilayan Ilaya" }, "geometry": { "type": "Point", "coordinates": [121.952, 13.857] } },
-    { "type": "Feature", "properties": { "name": "Mabini" }, "geometry": { "type": "Point", "coordinates": [122.035, 13.860] } },
-    { "type": "Feature", "properties": { "name": "Mairok Ibaba" }, "geometry": { "type": "Point", "coordinates": [121.970, 13.895] } },
-    { "type": "Feature", "properties": { "name": "Mairok Ilaya" }, "geometry": { "type": "Point", "coordinates": [121.965, 13.905] } },
-    { "type": "Feature", "properties": { "name": "Malvar" }, "geometry": { "type": "Point", "coordinates": [121.982, 13.825] } },
-    { "type": "Feature", "properties": { "name": "Maputat" }, "geometry": { "type": "Point", "coordinates": [122.000, 13.815] } },
-    { "type": "Feature", "properties": { "name": "Muliguin" }, "geometry": { "type": "Point", "coordinates": [121.985, 13.840] } },
-    { "type": "Feature", "properties": { "name": "Pagaguasan" }, "geometry": { "type": "Point", "coordinates": [121.970, 13.860] } },
-    { "type": "Feature", "properties": { "name": "Panaon Ibaba" }, "geometry": { "type": "Point", "coordinates": [121.985, 13.875] } },
-    { "type": "Feature", "properties": { "name": "Panaon Ilaya" }, "geometry": { "type": "Point", "coordinates": [121.975, 13.885] } },
-    { "type": "Feature", "properties": { "name": "Plaridel" }, "geometry": { "type": "Point", "coordinates": [122.015, 13.870] } },
-    { "type": "Feature", "properties": { "name": "Poctol" }, "geometry": { "type": "Point", "coordinates": [122.000, 13.885] } }
-  ]
-};
-
 // Custom marker component
 const StatusMarker = ({ status, onClick }) => {
   const color = STATUS_COLORS[status] || STATUS_COLORS.cancelled;
@@ -171,6 +106,8 @@ const MapWidget = () => {
   const [pastReports, setPastReports] = useState([]);
   const [popupInfo, setPopupInfo] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [geojsonData, setGeojsonData] = useState(null);
+  const [isLoadingGeoJSON, setIsLoadingGeoJSON] = useState(true);
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -192,6 +129,22 @@ const MapWidget = () => {
       setPastReports(pastData || []);
     };
     fetchReports();
+  }, []);
+
+  // Load GeoJSON data
+  useEffect(() => {
+    const loadGeoJSONData = async () => {
+      try {
+        setIsLoadingGeoJSON(true);
+        const data = await loadUnisanBarangays();
+        setGeojsonData(data);
+      } catch (error) {
+        console.error('Failed to load GeoJSON data:', error);
+      } finally {
+        setIsLoadingGeoJSON(false);
+      }
+    };
+    loadGeoJSONData();
   }, []);
 
   // Handle window resize for map responsiveness
@@ -411,106 +364,54 @@ const MapWidget = () => {
               });
             }}
           >
-            {/* Unisan Municipality Boundary */}
-            <Source id="unisan-boundary" type="geojson" data={UNISAN_BOUNDARY_GEOJSON}>
-              <Layer
-                id="unisan-boundary-fill"
-                type="fill"
-                paint={{
-                  'fill-color': '#2196f3',
-                  'fill-opacity': 0.15
-                }}
-              />
-              <Layer
-                id="unisan-boundary-glow"
-                type="line"
-                paint={{
-                  'line-color': '#64b5f6',
-                  'line-width': 8,
-                  'line-opacity': 0.3,
-                  'line-blur': 2
-                }}
-              />
-              <Layer
-                id="unisan-boundary-line"
-                type="line"
-                paint={{
-                  'line-color': '#1976d2',
-                  'line-width': 4,
-                  'line-opacity': 0.9,
-                  'line-dasharray': [3, 3]
-                }}
-              />
-              <Layer
-                id="unisan-boundary-label"
-                type="symbol"
-                layout={{
-                  'text-field': 'UNISAN MUNICIPALITY',
-                  'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                  'text-size': 16,
-                  'text-transform': 'uppercase',
-                  'text-letter-spacing': 0.1,
-                  'text-offset': [0, 0],
-                  'text-anchor': 'center'
-                }}
-                paint={{
-                  'text-color': '#1976d2',
-                  'text-halo-color': '#ffffff',
-                  'text-halo-width': 2,
-                  'text-opacity': 0.8
-                }}
-              />
-            </Source>
-
-            {/* Barangay Labels */}
-            <Source id="unisan-barangays" type="geojson" data={UNISAN_BARANGAYS_GEOJSON}>
-              {/* Barangay Pin Markers Layer */}
-              <Layer
-                id="barangay-pins"
-                type="circle"
-                paint={{
-                  'circle-radius': {
-                    'base': 1.2,
-                    'stops': [[12, 4], [14, 6], [16, 8]]
-                  },
-                  'circle-color': '#dc2626',
-                  'circle-stroke-color': '#ffffff',
-                  'circle-stroke-width': 2,
-                  'circle-opacity': {
-                    'base': 1,
-                    'stops': [[11, 0], [12, 0.8], [16, 1]]
-                  }
-                }}
-              />
-              
-              <Layer
-                id="barangay-labels"
-                type="symbol"
-                layout={{
-                  'text-field': ['get', 'name'],
-                  'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-                  'text-size': {
-                    'base': 1.2,
-                    'stops': [[12, 10], [14, 12], [16, 14]]
-                  },
-                  'text-transform': 'none',
-                  'text-letter-spacing': 0.05,
-                  'text-offset': [0, 1.2],
-                  'text-anchor': 'top',
-                  'text-max-width': 8,
-                  'text-line-height': 1.2
-                }}
-                paint={{
-                  'text-color': '#333333',
-                  'text-halo-color': '#ffffff',
-                  'text-halo-width': 1.5,
-                  'text-opacity': {
-                    'base': 1,
-                    'stops': [[12, 0], [13, 0.6], [14, 1]]
-                  }
-                }}
-              />
-            </Source>
+            {/* Unisan Barangay Boundaries - Only render if GeoJSON data is loaded */}
+            {geojsonData && !isLoadingGeoJSON && (
+              <>
+                <Source id="unisan-barangays" type="geojson" data={geojsonData}>
+                  {/* Barangay Boundary Fill */}
+                  <Layer
+                    id="barangay-fill"
+                    type="fill"
+                    paint={{
+                      'fill-color': '#e3f2fd',
+                      'fill-opacity': 0.3
+                    }}
+                  />
+                  {/* Barangay Boundary Lines */}
+                  <Layer
+                    id="barangay-boundaries"
+                    type="line"
+                    paint={{
+                      'line-color': '#1976d2',
+                      'line-width': 2,
+                      'line-opacity': 0.7
+                    }}
+                  />
+                  {/* Barangay Labels */}
+                  <Layer
+                    id="barangay-labels"
+                    type="symbol"
+                    layout={{
+                      'text-field': ['get', 'adm4_en'],
+                      'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+                      'text-size': {
+                        'base': 1,
+                        'stops': [[10, 10], [14, 12], [16, 14]]
+                      },
+                      'text-anchor': 'center',
+                      'text-justify': 'center',
+                      'symbol-placement': 'point'
+                    }}
+                    paint={{
+                      'text-color': '#1565c0',
+                      'text-halo-color': '#ffffff',
+                      'text-halo-width': 1,
+                      'text-opacity': 0.9
+                    }}
+                  />
+                </Source>
+              </>
+            )}
 
             {/* Render all pins */}
             {allPins.map(pin => (
