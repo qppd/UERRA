@@ -1,9 +1,9 @@
-﻿[![UERRA Logo](public/vite.svg)](https://github.com/qppd/UERRA)
+[![UERRA Logo](public/vite.svg)](https://github.com/qppd/UERRA)
 
 # UERRA - Unisan Emergency Reporting and Response App
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![React](https://img.shields.io/badge/react-18.0+-61dafb.svg)
+![React](https://img.shields.io/badge/react-19.0+-61dafb.svg)
 ![Supabase](https://img.shields.io/badge/supabase-latest-3ecf8e.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
@@ -11,48 +11,48 @@ A **real-time, cross-platform emergency reporting system** for Unisan citizens a
 
 ---
 
-## ðŸ“‘ Table of Contents
+## 📚 Table of Contents
 
-- [ðŸŽ¯ Overview & Features](#-overview--features)
-- [âš¡ Quick Start Guide](#-quick-start-guide)
-- [ðŸ”§ Complete Setup Guide](#-complete-setup-guide)
-- [ðŸ“± User Guides](#-user-guides)
-- [ðŸ› ï¸ Development & Technical](#ï¸-development--technical)
-- [â— Troubleshooting](#-troubleshooting)
-- [ðŸš€ Deployment & Production](#-deployment--production)
-- [ðŸ“ˆ Features by Role](#-features-by-role)
-- [ðŸ¤ Contributing & Support](#-contributing--support)
+- [🎯 Overview & Features](#-overview--features)
+- [⚡ Quick Start Guide](#-quick-start-guide)
+- [🔧 Complete Setup Guide](#-complete-setup-guide)
+- [📱 User Guides](#-user-guides)
+- [🛠️ Development & Technical](#️-development--technical)
+- [❗ Troubleshooting](#-troubleshooting)
+- [🚀 Deployment & Production](#-deployment--production)
+- [📈 Features by Role](#-features-by-role)
+- [🤝 Contributing & Support](#-contributing--support)
 
 ---
 
-## ðŸŽ¯ Overview & Features
+## 🎯 Overview & Features
 
-### ðŸ‘¥ User Roles
+### 👥 User Roles
 
 | Role | Capabilities | Dashboard Features |
 |------|-------------|-------------------|
-| **ðŸ§ Citizens** | Submit reports, track status, emergency tips | Report emergency, view my reports, emergency hotlines |
-| **ðŸ¢ Agencies** | Manage assigned reports, equipment suggestions | Live map, report management, status updates |
-| **ðŸ›ï¸ Municipal Admin** | Oversee all reports, manage categories | Analytics, agency management, report oversight |
-| **âš¡ Super Admin** | Full system access, user management | Complete system control, advanced analytics |
+| **🧍 Citizens** | Submit reports, track status, emergency tips | Report emergency, view my reports, emergency hotlines |
+| **🏢 Agencies** | Manage assigned reports, equipment suggestions | Live map, report management, status updates |
+| **🏛️ Municipal Admin** | Oversee all reports, manage categories | Analytics, agency management, report oversight |
+| **⚡ Super Admin** | Full system access, user management | Complete system control, advanced analytics |
 
-### âœ¨ Core Features
+### ✨ Core Features
 
-- ðŸ“± **Real-time Emergency Reporting** with photo upload and GPS location
-- ðŸ—ºï¸ **Live Map Integration** with Mapbox for location services
-- ðŸ”” **Intelligent Auto-routing** (Fireâ†’BFP, Medicalâ†’Hospital, Crimeâ†’PNP, etc.)
-- ðŸ“Š **Analytics Dashboard** with reports statistics and trends
-- ðŸ” **Role-based Security** with Supabase Row-Level Security
-- ðŸ’¬ **Real-time Updates** using Supabase realtime subscriptions
-- ðŸ“ž **Emergency Hotlines** quick access for all agencies
-- ðŸ’¡ **Context-aware Tips** emergency guidelines by category
-- ðŸ“ˆ **Equipment Suggestions** for responders based on emergency type
+- 📱 **Real-time Emergency Reporting** with photo upload and GPS location
+- 🗺️ **Live Map Integration** with Mapbox for location services
+- 🔄 **Intelligent Auto-routing** (Fire→BFP, Medical→Hospital, Crime→PNP, etc.)
+- 📊 **Analytics Dashboard** with reports statistics and trends
+- 🔐 **Role-based Security** with Supabase Row-Level Security
+- 💬 **Real-time Updates** using Supabase realtime subscriptions
+- 📞 **Emergency Hotlines** quick access for all agencies
+- 💡 **Context-aware Tips** emergency guidelines by category
+- 📈 **Equipment Suggestions** for responders based on emergency type
 
 ---
 
-## âš¡ Quick Start Guide
+## ⚡ Quick Start Guide
 
-### ðŸš€ Get Running in 5 Minutes
+### 🚀 Get Running in 5 Minutes
 
 ```bash
 # 1. Clone and install
@@ -71,9 +71,9 @@ cp .env.example .env
 npm run dev
 ```
 
-**ðŸŽ‰ That's it!** Open http://localhost:5173 and start reporting emergencies.
+**🎉 That's it!** Open http://localhost:5173 and start reporting emergencies.
 
-### ðŸ“‹ Prerequisites Checklist
+### 📋 Prerequisites Checklist
 
 - [x] Node.js 18+ installed
 - [x] Supabase account created
@@ -82,10 +82,10 @@ npm run dev
 
 ---
 
-## ðŸ”§ Complete Setup Guide
+## 🔧 Complete Setup Guide
 
 <details>
-<summary><strong>ðŸ“¦ Installation & Dependencies</strong></summary>
+<summary><strong>📦 Installation & Dependencies</strong></summary>
 
 ### Prerequisites
 - **Node.js** (v18+ recommended) - [Download here](https://nodejs.org/)
@@ -107,10 +107,22 @@ npm install
 npm run dev
 ```
 
+### Tech Stack Overview
+
+| Component | Technology | Version | Purpose |
+|-----------|------------|---------|---------|
+| **Frontend** | React | 19.1.0+ | User interface |
+| **Build Tool** | Vite | 7.0.4+ | Development server & bundling |
+| **UI Library** | Material-UI | 7.3.1+ | Component library |
+| **Backend** | Supabase | 2.53.0+ | Database, auth, realtime |
+| **Maps** | Mapbox GL | 3.14.0+ | Interactive maps |
+| **Charts** | Recharts | 3.1.2+ | Data visualization |
+| **Code Quality** | ESLint | 9.30.1+ | Linting and code standards |
+
 </details>
 
 <details>
-<summary><strong>ðŸ—„ï¸ Database Configuration</strong></summary>
+<summary><strong>🗄️ Database Configuration</strong></summary>
 
 ### Step 1: Create Supabase Project
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
@@ -140,17 +152,28 @@ WHERE table_schema = 'public' AND table_name = 'users'
 ORDER BY ordinal_position;
 ```
 
-### Expected Tables:
-- **users**: User profiles with roles and agency assignments
-- **agencies**: Emergency response agencies (PNP, BFP, Hospital, etc.)
-- **categories**: Emergency types with tips and equipment suggestions  
-- **reports**: Citizen-submitted emergency reports with location and media
-- **report_updates**: Status tracking and communication timeline
+### Database Schema Overview
+
+| Table | Purpose | Key Columns |
+|-------|---------|-------------|
+| **users** | User profiles with roles | id, email, role, agency_id |
+| **agencies** | Emergency response agencies | id, name, type, contact, location |
+| **categories** | Emergency types | id, name, assigned_agencies, emergency_tips |
+| **reports** | Citizen emergency reports | id, user_id, category_id, location, status |
+| **report_updates** | Status tracking timeline | id, report_id, status, notes, created_at |
+
+### Default Emergency Categories
+
+1. **Fire Emergency** → Bureau of Fire Protection (BFP)
+2. **Medical Emergency** → Hospital/Rural Health Unit (RHU)
+3. **Crime/Security** → Philippine National Police (PNP)
+4. **Natural Disaster** → Municipal Disaster Risk Reduction Management Office (MDRMMO)
+5. **Road Accident** → PNP + Hospital
 
 </details>
 
 <details>
-<summary><strong>ðŸ—ƒï¸ Storage Setup</strong></summary>
+<summary><strong>🗃️ Storage Setup</strong></summary>
 
 ### Configure Supabase Storage for Photo Uploads
 
@@ -159,7 +182,7 @@ ORDER BY ordinal_position;
 2. Click **"Create bucket"**
 3. Configure:
    - **Name**: `photos`
-   - **Public bucket**: âœ… Enable
+   - **Public bucket**: ✅ Enable
    - **File size limit**: 5MB
    - **Allowed MIME types**: `image/*`
 
@@ -188,18 +211,18 @@ USING (auth.uid()::text = (storage.foldername(name))[1]);
 #### Step 3: Test Photo Upload
 1. Register/login to your app
 2. Submit a test emergency report with photo
-3. Check Storage â†’ photos bucket for uploaded file
+3. Check Storage → photos bucket for uploaded file
 
 </details>
 
 <details>
-<summary><strong>ðŸ”‘ OAuth Configuration</strong></summary>
+<summary><strong>🔑 OAuth Configuration</strong></summary>
 
 ### Google OAuth Setup
 
 #### Step 1: Google Cloud Console
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Navigate to **APIs & Services** â†’ **Credentials**
+2. Navigate to **APIs & Services** → **Credentials**
 3. Create **OAuth 2.0 Client ID** (if none exists)
 
 #### Configure Authorized Origins:
@@ -218,7 +241,7 @@ https://YOUR_SUPABASE_URL.supabase.co/auth/v1/callback
 ```
 
 #### Step 2: Supabase Configuration
-1. Go to **Authentication** â†’ **Providers** â†’ **Google**
+1. Go to **Authentication** → **Providers** → **Google**
 2. Enable the provider: Toggle **ON**
 3. Enter **Client ID** and **Client Secret** from Google Console
 4. Configure **Site URL**: `https://yourdomain.vercel.app`
@@ -239,7 +262,7 @@ VITE_MAPBOX_TOKEN=pk.your_mapbox_token_here
 </details>
 
 <details>
-<summary><strong>ðŸŒ Environment Configuration</strong></summary>
+<summary><strong>🌍 Environment Configuration</strong></summary>
 
 ### Create Environment File
 
@@ -266,24 +289,24 @@ VITE_DEBUG_MODE=true
 ### Get Your Supabase Credentials:
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
 2. Select your project
-3. Go to **Settings** â†’ **API**
+3. Go to **Settings** → **API**
 4. Copy **Project URL** and **anon/public key**
 
 ### Get Mapbox Token (Optional):
 1. Create account at [Mapbox](https://www.mapbox.com/)
-2. Go to **Account** â†’ **Access Tokens**
+2. Go to **Account** → **Access Tokens**
 3. Copy default public token or create new one
 
 </details>
 
 ---
 
-## ðŸ“± User Guides
+## 📱 User Guides
 
 <details>
-<summary><strong>ðŸ§ Citizen User Guide</strong></summary>
+<summary><strong>🧍 Citizen User Guide</strong></summary>
 
-### ðŸ†˜ Emergency Reporting Made Simple
+### 🆘 Emergency Reporting Made Simple
 
 #### Getting Started
 1. **Create Account**: Register with email/password or Google OAuth
@@ -292,692 +315,746 @@ VITE_DEBUG_MODE=true
 
 #### How to Report an Emergency
 
-##### ðŸš¨ When to Use UERRA
+##### 🚨 When to Use UERRA
 - **Fire emergencies** (house fires, forest fires)
 - **Medical emergencies** (accidents, health crises)  
 - **Crime incidents** (theft, violence, suspicious activity)
 - **Natural disasters** (floods, landslides, severe weather)
 - **Road accidents** (vehicle crashes, blocked roads)
 
-##### ðŸ“ Step-by-Step Reporting
-1. **Click "Report Emergency"** on your dashboard
-2. **Select Emergency Type**: Choose from available categories
-3. **Emergency Tips Display**: Read safety guidelines that appear
-4. **Describe the Emergency**:
-   - Add brief title (optional)
-   - Provide detailed description
-   - Select priority level (Low, Medium, High, Critical)
-5. **Add Location**:
-   - Click "Use Current Location" for GPS detection
-   - Or manually enter address
-6. **Upload Photo** (optional but helpful):
-   - Take photo of emergency scene
-   - Max file size: 5MB
-   - Supported: JPG, PNG, WebP
-7. **Submit Report**: Review and submit
+##### 📝 Step-by-Step Reporting Process
 
-#### ðŸ“‹ Track Your Reports (My Reports)
-- **All Reports**: Complete history of submissions
-- **Active Reports**: Currently being handled
-- **Resolved Reports**: Completed cases
-- **Report Details**: Click any report to see:
-  - Status timeline and updates
-  - Responder notes and communication
-  - Photo evidence
-  - Emergency tips specific to your report type
+1. **Access Report Form**
+   - Click **"Report Emergency"** button on dashboard
+   - Or use the **"+"** floating action button
 
-#### ðŸ’¡ Emergency Tips
-Access category-specific safety guidelines:
-- **Fire Safety**: Stay low, avoid elevators, call for help
-- **Medical Emergencies**: First aid basics, when to move victim
-- **Crime Safety**: Personal safety, evidence preservation
-- **Natural Disasters**: Preparation and response guidelines
-- **Road Accidents**: Scene safety, first aid priorities
+2. **Select Emergency Category**
+   - Choose from predefined categories
+   - Each category auto-routes to appropriate agencies
 
-#### ðŸ“ž Emergency Hotlines
-Quick access to all emergency contacts:
-- **PNP (Police)**: Crime, security incidents
-- **BFP (Fire)**: Fire emergencies, rescue operations  
-- **Hospital**: Medical emergencies, ambulance
-- **MDRMMO**: Disaster management, evacuation
-- **RHU**: Health services, medical consultation
+3. **Provide Details**
+   - **Title**: Brief description (e.g., "House Fire on Main Street")
+   - **Description**: Detailed explanation of the situation
+   - **Location**: GPS auto-detected (can be manually adjusted)
+   - **Photo/Video**: Optional visual evidence
 
-</details>
+4. **Submit Report**
+   - Review all information
+   - Click **"Submit Emergency Report"**
+   - Receive confirmation with report ID
 
-<details>
-<summary><strong>ðŸ¢ Agency User Guide</strong></summary>
+5. **Track Progress**
+   - Monitor status updates in real-time
+   - Receive notifications when agencies respond
+   - View response timeline in "My Reports"
 
-### Agency Dashboard Overview
-- **Statistics Cards**: Total assigned, pending, in progress, resolved reports
-- **Live Map View**: Geographic distribution of reports with pins
-- **Reports Table**: Detailed list of assigned reports with status management
-- **Equipment Suggestions**: Context-aware equipment recommendations
+#### Emergency Tips Integration
 
-### Report Management Workflow
-1. **New Report Notification**: Receive alerts for new assignments
-2. **Accept Report**: Acknowledge and begin response
-3. **Update Status**: Progress through stages (Pending â†’ In Progress â†’ Resolved)
-4. **Add Notes**: Communicate updates to citizens and other responders
-5. **Equipment Checklist**: Review suggested equipment for response
+Each category provides **context-aware safety tips**:
 
-### Status Management
-- **Pending**: Newly assigned, awaiting response
-- **In Progress**: Actively being handled
-- **Resolved**: Successfully completed
-- **Cancelled**: No longer applicable
+| Category | Sample Tips |
+|----------|-------------|
+| **Fire** | Stay low to avoid smoke, Use stairs never elevators |
+| **Medical** | Apply pressure to bleeding, Keep patient calm |
+| **Crime** | Do not confront suspects, Move to safe location |
+| **Disaster** | Move to higher ground, Stock emergency supplies |
+| **Accident** | Turn on hazard lights, Check for injuries |
+
+#### Dashboard Features for Citizens
+
+- **📊 Report Status Dashboard**: Track all your reports
+- **📍 Location Services**: GPS-enabled emergency reporting
+- **📞 Emergency Hotlines**: Quick access to all agency numbers
+- **💡 Safety Tips**: Category-specific emergency guidance
+- **📱 Mobile Optimized**: Works seamlessly on all devices
 
 </details>
 
 <details>
-<summary><strong>ðŸ›ï¸ Admin User Guide</strong></summary>
+<summary><strong>🏢 Agency User Guide</strong></summary>
 
-### Municipal Admin Capabilities
-- **Reports Overview**: Monitor all emergency reports across agencies
-- **Agency Management**: Create, edit, and manage response agencies
-- **Category Management**: Configure emergency types, tips, and equipment
-- **Analytics Dashboard**: View response metrics and trends
-- **User Oversight**: Basic user management capabilities
+### 🚨 Emergency Response Dashboard
 
-### System Administration Tasks
-1. **Monitor Response Times**: Track agency performance
-2. **Manage Resources**: Update equipment lists and emergency tips
-3. **Generate Reports**: Export data for municipal planning
-4. **Coordinate Agencies**: Ensure proper report distribution
+#### Getting Started
+1. **Account Assignment**: Admin assigns you to an agency
+2. **Role Configuration**: Your account linked to specific agency (PNP, BFP, Hospital, etc.)
+3. **Dashboard Access**: Access agency-specific emergency dashboard
+
+#### Agency Dashboard Overview
+
+##### 🗺️ Live Map View
+- **Real-time Report Pins**: All emergency reports displayed on map
+- **Color-coded Categories**: Fire (red), Medical (green), Crime (blue), etc.
+- **Location Details**: Exact GPS coordinates and addresses
+- **Cluster View**: Multiple reports in same area grouped together
+
+##### 📋 Report Management Table
+- **Filter by Status**: Pending, Acknowledged, In Progress, Resolved
+- **Priority Levels**: Low, Medium, High, Critical
+- **Assigned Reports**: Only your agency's relevant emergencies
+- **Bulk Actions**: Update multiple reports simultaneously
+
+##### 🔧 Equipment Suggestions
+Intelligent recommendations based on emergency type:
+
+| Emergency Type | Suggested Equipment |
+|----------------|-------------------|
+| **Fire** | Fire extinguisher, Hose, Ladder, Water tank, Protective gear |
+| **Medical** | First aid kit, Stretcher, Oxygen tank, Defibrillator, Ambulance |
+| **Crime** | Patrol vehicle, Communication radio, Investigation kit |
+| **Disaster** | Rescue boat, Life vests, Emergency supplies, Communication equipment |
+| **Accident** | Traffic cones, First aid kit, Tow truck, Ambulance |
+
+#### Agency Workflow
+
+1. **Receive Alert**: New reports automatically appear on dashboard
+2. **Assess Priority**: Review details, location, and severity
+3. **Acknowledge Report**: Change status from "Pending" to "Acknowledged"
+4. **Equipment Checklist**: Review suggested equipment list
+5. **Update Status**: Mark as "In Progress" when responding
+6. **Add Notes**: Provide updates for citizen and other agencies
+7. **Mark Resolved**: Close report when emergency is handled
+
+#### Multi-Agency Coordination
+- **Shared Reports**: Some emergencies (road accidents) involve multiple agencies
+- **Update Visibility**: All assigned agencies see status changes
+- **Communication Log**: Track all updates and notes
+- **Handoff Capability**: Transfer primary responsibility between agencies
+
+</details>
+
+<details>
+<summary><strong>🏛️ Admin User Guide</strong></summary>
+
+### 🛠️ Municipal Administration Dashboard
+
+#### Getting Started
+1. **Super Admin Assignment**: Super admin grants you admin privileges
+2. **Municipal Access**: Overview of all emergency operations
+3. **Management Capabilities**: User, agency, and category management
+
+#### Admin Dashboard Features
+
+##### 📊 Analytics & Reporting
+- **Real-time Statistics**: Total reports, response times, resolution rates
+- **Trend Analysis**: Weekly/monthly patterns and emergency frequency
+- **Category Breakdown**: Which emergency types are most common
+- **Agency Performance**: Response times and resolution efficiency
+- **Geographic Analysis**: Which barangays have most emergencies
+
+##### 👥 User Management
+- **Role Assignment**: Assign users to agencies or admin roles
+- **Account Oversight**: View all user profiles and activity
+- **Permission Control**: Grant/revoke access to different features
+- **Agency Affiliation**: Link agency personnel to their departments
+
+##### 🏢 Agency Management
+- **Agency Registration**: Add new emergency response agencies
+- **Contact Information**: Maintain phone numbers and addresses
+- **Coverage Areas**: Define service territories
+- **Capability Matrix**: What emergencies each agency handles
+- **Performance Metrics**: Track agency response statistics
+
+##### 📂 Category Management
+- **Emergency Types**: Create/modify emergency categories
+- **Auto-routing Rules**: Define which agencies respond to what
+- **Emergency Tips**: Update safety guidelines for citizens
+- **Equipment Lists**: Maintain suggested equipment per category
+- **Priority Settings**: Configure automatic priority assignment
+
+#### Advanced Features
+
+##### 📈 Data Export & Reports
+- Export emergency data to CSV/Excel
+- Generate performance reports for agencies
+- Create statistical summaries for municipal planning
+- Backup report data for records
+
+##### ⚙️ System Configuration
+- Customize app branding and colors
+- Configure notification settings
+- Manage system-wide announcements
+- Update emergency hotline numbers
+
+</details>
+
+<details>
+<summary><strong>⚡ Super Admin Guide</strong></summary>
+
+### 🔧 System Administration
+
+#### Full System Access
+- **Complete Database Control**: Direct access to all tables and data
+- **User Role Management**: Assign any role to any user
+- **System Configuration**: Modify core system settings
+- **Advanced Analytics**: Deep insights into system performance
+
+#### Key Responsibilities
+1. **Initial System Setup**: Configure agencies, categories, and initial users
+2. **Role Management**: Assign municipal admins and agency personnel
+3. **System Monitoring**: Ensure optimal performance and uptime
+4. **Data Backup**: Regular backup and disaster recovery procedures
+5. **Security Oversight**: Monitor access patterns and security issues
+
+#### Advanced Debugging Tools
+- **User Session Debugging**: LogoutDebugPanel for authentication issues
+- **Database Query Tools**: Direct SQL access for troubleshooting
+- **Performance Monitoring**: Real-time system performance metrics
+- **Error Logging**: Comprehensive error tracking and resolution
 
 </details>
 
 ---
 
-## ðŸ› ï¸ Development & Technical
+## 🛠️ Development & Technical
 
-<details>
-<summary><strong>ðŸ—ï¸ Architecture & Tech Stack</strong></summary>
+### 📁 Project Structure
 
-### Frontend Architecture
-- **Framework**: React 18+ with Vite build tool
-- **UI Library**: Material-UI (MUI) for consistent design
-- **State Management**: React hooks + Supabase realtime
-- **Routing**: React Router for navigation
-- **Maps**: Mapbox GL JS for location services
-- **Forms**: React Hook Form with validation
-
-### Backend Architecture  
-- **Database**: PostgreSQL with PostGIS for location data
-- **Backend-as-a-Service**: Supabase for auth, API, realtime, storage
-- **Authentication**: Supabase Auth with email/password + Google OAuth
-- **File Storage**: Supabase Storage for photo uploads
-- **Security**: Row-Level Security (RLS) policies
-
-### Database Schema
-
-```sql
--- Core tables structure
-users: id, email, name, role, agency_id, phone, address, is_active
-agencies: id, name, type, location, contact, is_active  
-categories: id, name, color, assigned_agencies, emergency_tips, suggested_equipment
-reports: id, user_id, category_id, title, description, location, address, status, priority, photo_url
-report_updates: id, report_id, status, notes, created_at, user_id
+```
+uniapp/
+├── src/
+│   ├── components/           # React components
+│   │   ├── AdminPanel.jsx     # Super admin controls
+│   │   ├── AgencyDashboard.jsx # Agency emergency dashboard
+│   │   ├── CitizenDashboard.jsx # Citizen reporting interface
+│   │   ├── DashboardHome.jsx   # Overview dashboard
+│   │   ├── EnhancedReportsPage.jsx # Advanced report management
+│   │   ├── MapWidget.jsx       # Interactive map component
+│   │   ├── ReportFormDialog.jsx # Emergency report form
+│   │   └── ...               # Additional components
+│   ├── services/            # Business logic
+│   │   └── CitizenReportService.js # Report submission logic
+│   ├── utils/               # Utility functions
+│   │   ├── authUtils.js     # Authentication helpers
+│   │   └── logoutUtils.js   # Logout handling
+│   ├── App.jsx              # Main application component
+│   ├── DashboardLayout.jsx  # Layout wrapper
+│   ├── Login.jsx            # Authentication form
+│   ├── Register.jsx         # User registration
+│   └── supabaseClient.js    # Supabase configuration
+├── public/                  # Static assets
+├── database-schema.sql      # Complete database setup
+├── storage-policies.sql     # Storage security policies
+└── package.json            # Dependencies and scripts
 ```
 
-### Auto-Routing Engine
-Smart report distribution based on emergency category:
-- **Fire Emergency** â†’ BFP (Bureau of Fire Protection)
-- **Medical Emergency** â†’ Hospital + RHU (Rural Health Unit)
-- **Crime/Security** â†’ PNP (Philippine National Police)
-- **Natural Disaster** â†’ MDRMMO (Municipal Disaster Risk Reduction Management Office)
-- **Road Accident** â†’ PNP + Hospital (dual assignment)
+### 🔄 Data Flow Architecture
 
-</details>
-
-<details>
-<summary><strong>ðŸ“± Responsive Design Implementation</strong></summary>
-
-### Mobile-First Approach
-- **Breakpoints**: xs (0px), sm (600px), md (960px), lg (1280px), xl (1920px)
-- **Grid System**: Material-UI responsive grid throughout
-- **Touch Optimization**: Large touch targets, swipe gestures
-- **Performance**: Optimized images, lazy loading, efficient re-renders
-
-### Component Responsiveness
-- **Dashboard Layout**: Collapsible sidebar, responsive drawer
-- **Data Tables**: Horizontal scroll on mobile, priority column hiding
-- **Forms**: Stacked inputs on mobile, side-by-side on desktop  
-- **Maps**: Full-width on mobile, proportional on desktop
-- **Cards**: Single column mobile, multi-column desktop
-
-### Browser Support
-- **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
-- **Mobile Browsers**: iOS Safari 14+, Chrome Mobile 90+
-- **Features**: Progressive Web App (PWA) ready
-
-</details>
-
-<details>
-<summary><strong>ðŸ” Security Features</strong></summary>
-
-### Authentication & Authorization
-- **Multi-factor Options**: Email/password, Google OAuth
-- **Session Management**: Secure JWT tokens with refresh
-- **Role-based Access**: Granular permissions per user role
-- **Password Security**: Supabase handles hashing and validation
-
-### Database Security
-- **Row-Level Security**: Users only see data they're authorized for
-- **API Security**: All requests authenticated through Supabase
-- **SQL Injection Prevention**: Parameterized queries only
-- **Data Encryption**: At rest and in transit
-
-### Application Security
-- **Input Validation**: All forms validated client and server-side
-- **File Upload Security**: Type restrictions, size limits, virus scanning
-- **XSS Prevention**: React's built-in protections + content sanitization
-- **HTTPS Enforcement**: SSL/TLS required for all communications
-
-</details>
-
----
-
-## â— Troubleshooting
-
-<details>
-<summary><strong>ðŸš¨ Common Issues & Quick Fixes</strong></summary>
-
-### "Create Profile" Button Not Working
-**Symptoms**: Clicking create profile shows loading but doesn't proceed
-
-**Solution**:
-```sql
--- Fix missing columns in users table
-ALTER TABLE public.users 
-ADD COLUMN IF NOT EXISTS phone TEXT,
-ADD COLUMN IF NOT EXISTS address TEXT,
-ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
-
--- Update existing users
-UPDATE public.users SET is_active = true WHERE is_active IS NULL;
+```mermaid
+graph TD
+    A[Citizen Report] --> B[Supabase Database]
+    B --> C[Real-time Subscription]
+    C --> D[Agency Dashboard]
+    B --> E[Auto-routing Engine]
+    E --> F[Appropriate Agency]
+    F --> G[Equipment Suggestions]
+    F --> H[Status Updates]
+    H --> I[Citizen Notifications]
 ```
 
-### App Not Loading / Blank Screen
-**Check**:
-1. Environment variables in `.env` file
-2. Supabase project status (not paused)
-3. Browser console for JavaScript errors
-4. Network tab for failed API requests
+### 🔐 Security Implementation
 
-**Fix**:
+#### Row Level Security (RLS)
+- **Users**: Can only view/edit their own profile
+- **Reports**: Citizens see only their reports, agencies see assigned reports
+- **Agencies**: Read-only access for all authenticated users
+- **Categories**: Read-only access for all authenticated users
+
+#### Authentication Flow
+1. **Login Methods**: Email/password + Google OAuth
+2. **Session Management**: Supabase handles JWT tokens
+3. **Role-based Access**: Dashboard content varies by user role
+4. **Profile Creation**: Automatic citizen profile on first login
+
+### 📱 Responsive Design Strategy
+
+| Screen Size | Layout | Features |
+|-------------|--------|----------|
+| **Mobile (< 768px)** | Single column, touch-optimized | Essential features, simplified navigation |
+| **Tablet (768-1024px)** | Two-column, gesture-friendly | Full feature set, optimized spacing |
+| **Desktop (> 1024px)** | Multi-column, sidebar navigation | Complete dashboard, advanced analytics |
+
+### 🔄 Real-time Features
+
+#### Supabase Realtime Integration
+- **Report Updates**: Live status changes across all dashboards
+- **New Report Alerts**: Instant notifications to relevant agencies
+- **Multi-user Collaboration**: Multiple agencies can update same report
+- **Connection Resilience**: Automatic reconnection on network issues
+
+### 📊 Analytics & Monitoring
+
+#### Built-in Analytics
+- **Report Statistics**: Count by category, status, time period
+- **Response Metrics**: Average response time per agency
+- **Geographic Distribution**: Reports by location/barangay
+- **Trend Analysis**: Weekly/monthly patterns
+
+#### Chart Components
+- **ReportsGraph**: Time-series trend visualization
+- **CategoryPie**: Emergency type distribution
+- **StatsCards**: Key performance indicators
+- **MapWithOverlayStats**: Geographic data visualization
+
+### 🎨 UI/UX Design System
+
+#### Material-UI Integration
+- **Consistent Theming**: Light/dark mode support
+- **Responsive Components**: Mobile-first design approach
+- **Accessibility**: WCAG 2.1 AA compliance
+- **Color Coding**: Intuitive emergency category colors
+
+#### Emergency Category Colors
+- 🔴 **Fire**: `#ff4757` (Red)
+- 🟢 **Medical**: `#2ed573` (Green)
+- 🔵 **Crime**: `#3742fa` (Blue)
+- 🟡 **Disaster**: `#ffa502` (Orange)
+- 🟠 **Accident**: `#ff6b6b` (Light Red)
+
+### 🧪 Development Scripts
+
 ```bash
-# Clear cache and restart
-rm -rf node_modules package-lock.json
-npm install
+# Development server with hot reload
 npm run dev
-```
 
-### "Cannot read properties of undefined"
-**Cause**: Usually missing data from database or failed API calls
-
-**Debug Steps**:
-1. Open browser Developer Tools (F12)
-2. Check Console tab for specific error
-3. Check Network tab for failed requests
-4. Verify Supabase project is active
-
-</details>
-
-<details>
-<summary><strong>ðŸ—„ï¸ Database Issues</strong></summary>
-
-### Column Does Not Exist Errors
-
-#### Categories Table Missing Color Column
-```sql
--- Add color column to categories table
-DO $$ 
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM information_schema.columns 
-        WHERE table_name = 'categories' AND column_name = 'color'
-    ) THEN
-        ALTER TABLE public.categories ADD COLUMN color TEXT DEFAULT '#007bff';
-        
-        -- Update with appropriate colors
-        UPDATE public.categories SET color = CASE 
-            WHEN name = 'Fire Emergency' THEN '#ff4757'
-            WHEN name = 'Medical Emergency' THEN '#2ed573'
-            WHEN name = 'Crime/Security' THEN '#3742fa'
-            WHEN name = 'Natural Disaster' THEN '#ffa502'
-            WHEN name = 'Road Accident' THEN '#ff6b6b'
-            ELSE '#007bff'
-        END;
-    END IF;
-END $$;
-```
-
-#### Users Table Missing Columns
-```sql
--- Add missing columns to users table
-ALTER TABLE public.users 
-ADD COLUMN IF NOT EXISTS phone TEXT,
-ADD COLUMN IF NOT EXISTS address TEXT,
-ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
-
--- Set default values for existing users
-UPDATE public.users 
-SET is_active = true 
-WHERE is_active IS NULL;
-```
-
-### Verify Database Structure
-```sql
--- Check all tables exist
-SELECT table_name FROM information_schema.tables 
-WHERE table_schema = 'public' ORDER BY table_name;
-
--- Check users table structure
-SELECT column_name, data_type, is_nullable, column_default 
-FROM information_schema.columns 
-WHERE table_schema = 'public' AND table_name = 'users'
-ORDER BY ordinal_position;
-```
-
-### Reset Database (Nuclear Option)
-```sql
--- âš ï¸ WARNING: This deletes ALL data
-DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
--- Then re-run database-schema.sql
-```
-
-</details>
-
-<details>
-<summary><strong>ðŸ”‘ Authentication Issues</strong></summary>
-
-### OAuth 500 "unexpected_failure" Error
-
-**Root Cause**: Misconfigured redirect URLs between Google Cloud Console and Supabase
-
-#### Fix in Google Cloud Console:
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. **APIs & Services** â†’ **Credentials** â†’ **OAuth 2.0 Client ID**
-3. **Authorized JavaScript origins**:
-   ```
-   http://localhost:5173
-   https://yourdomain.vercel.app
-   ```
-4. **Authorized redirect URIs**:
-   ```
-   http://localhost:5173/auth/callback
-   https://yourdomain.vercel.app/auth/callback
-   https://YOUR_SUPABASE_URL.supabase.co/auth/v1/callback
-   ```
-
-#### Fix in Supabase Dashboard:
-1. **Authentication** â†’ **Providers** â†’ **Google**
-2. **Site URL**: `https://yourdomain.vercel.app` (single URL only)
-3. **Redirect URLs**: `http://localhost:5173/**,https://yourdomain.vercel.app/**`
-
-### Email Verification Not Working
-
-#### Enable Email Confirmations:
-1. **Supabase Dashboard** â†’ **Authentication** â†’ **Settings**
-2. **User Management**:
-   - âœ… Enable email confirmations: **ON**
-   - âœ… Enable email change confirmations: **ON**
-
-#### Configure Site URL:
-- Development: `http://localhost:5173`
-- Production: `https://yourdomain.vercel.app`
-
-#### Custom Email Templates:
-1. **Authentication** â†’ **Email Templates**
-2. Customize **Confirm signup** template with your branding
-
-### Logout 403 Forbidden Error
-
-**Symptoms**: Users can't log out, 403 error in network tab
-
-**Solution**: Enhanced logout with fallback mechanisms
-```javascript
-// Multiple logout strategies implemented in utils/logoutUtils.js
-// Tries local logout first, then global, with complete cleanup
-```
-
-</details>
-
-<details>
-<summary><strong>ðŸŽ¨ UI/UX Issues</strong></summary>
-
-### Sidebar Not Closing on Mobile
-
-**Fix Applied**: Enhanced mobile sidebar behavior
-- Automatic close after navigation on mobile
-- Backdrop click to close
-- Window resize handling
-- Proper variant switching (temporary/permanent)
-
-### Responsive Design Issues
-
-**Components Fixed**:
-- **DashboardLayout**: Responsive width calculations, overflow control
-- **Tables**: Horizontal scroll on mobile, responsive columns
-- **Forms**: Stacked inputs on mobile, side-by-side on desktop
-- **Cards**: Single column mobile, multi-column desktop
-
-### Performance Issues
-
-**Optimizations**:
-- Lazy loading of components
-- Efficient re-renders with React.memo
-- Optimized database queries
-- Image compression for uploads
-
-</details>
-
----
-
-## ðŸš€ Deployment & Production
-
-<details>
-<summary><strong>ðŸŒ Vercel Deployment</strong></summary>
-
-### Automated Deployment
-1. **Connect Repository**: Link your GitHub repo to Vercel
-2. **Environment Variables**: Add in Vercel dashboard:
-   ```
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your_anon_key
-   VITE_MAPBOX_TOKEN=pk.your_mapbox_token
-   ```
-3. **Deploy**: Automatic deployment on git push to main branch
-
-### Manual Deployment
-```bash
-# Build for production
+# Production build
 npm run build
 
-# Deploy to Vercel
-npx vercel --prod
+# Preview production build locally
+npm run preview
+
+# Run ESLint code analysis
+npm run lint
+
+# Start development with specific port
+npm run dev -- --port 3000
 ```
 
-### Post-Deployment Checklist
-- [ ] Environment variables configured
-- [ ] OAuth redirect URLs updated with production domain
-- [ ] Supabase Site URL updated to production domain
-- [ ] SSL certificate active (HTTPS)
-- [ ] Custom domain configured (optional)
+### 🔧 Configuration Files
+
+| File | Purpose | Key Settings |
+|------|---------|--------------|
+| `vite.config.js` | Build configuration | React plugin, dev server settings |
+| `eslint.config.js` | Code quality rules | React hooks, code standards |
+| `package.json` | Dependencies | React 19, Supabase, Material-UI |
+
+---
+
+## ❗ Troubleshooting
+
+<details>
+<summary><strong>🔐 Authentication Issues</strong></summary>
+
+### Common Login Problems
+
+#### Problem: "Invalid credentials" error
+**Solution:**
+1. Verify Supabase project URL and anon key in `.env`
+2. Check if user exists in Supabase Auth dashboard
+3. Try password reset flow
+4. Verify email confirmation (if enabled)
+
+#### Problem: Google OAuth not working
+**Solution:**
+1. Check Google Cloud Console OAuth configuration
+2. Verify authorized redirect URIs include your domain
+3. Ensure Supabase Google provider is enabled
+4. Check client ID/secret in Supabase settings
+
+#### Problem: User profile not created after login
+**Solution:**
+1. Check if RLS policies allow profile creation
+2. Use LogoutDebugPanel to examine auth state
+3. Manually trigger profile creation via dashboard
+4. Verify database triggers are working
+
+### Debug Tools
+- **LogoutDebugPanel**: Access via debug mode for auth state inspection
+- **Browser Console**: Check for authentication errors
+- **Supabase Dashboard**: Monitor auth logs and user sessions
 
 </details>
 
 <details>
-<summary><strong>âš™ï¸ Production Configuration</strong></summary>
+<summary><strong>🗄️ Database Issues</strong></summary>
 
-### Supabase Production Settings
-1. **Disable Email Confirmations** (if desired for faster testing)
-2. **Configure Rate Limiting** for API endpoints
-3. **Set up Database Backups**
-4. **Monitor Usage**: Check quotas and upgrade plan if needed
+### Common Database Problems
+
+#### Problem: Tables not found/Permission denied
+**Solution:**
+1. Verify `database-schema.sql` was executed completely
+2. Check RLS policies are properly configured
+3. Ensure user has appropriate role assignments
+4. Verify Supabase connection in network tab
+
+#### Problem: Photo uploads failing
+**Solution:**
+1. Check if `photos` storage bucket exists
+2. Verify storage policies allow uploads
+3. Check file size limits (5MB default)
+4. Ensure file type is supported (images only)
+
+#### Problem: Reports not appearing for agencies
+**Solution:**
+1. Verify user has agency role and agency_id assigned
+2. Check if categories are properly linked to agencies
+3. Verify RLS policies allow agency users to see reports
+4. Check auto-routing configuration
+
+### Database Maintenance
+```sql
+-- Check database health
+SELECT schemaname, tablename, attname, n_distinct, correlation 
+FROM pg_stats WHERE schemaname = 'public';
+
+-- Monitor report counts by status
+SELECT status, COUNT(*) FROM reports GROUP BY status;
+
+-- Check user role distribution
+SELECT role, COUNT(*) FROM users GROUP BY role;
+```
+
+</details>
+
+<details>
+<summary><strong>🗺️ Map & Location Issues</strong></summary>
+
+### Map Integration Problems
+
+#### Problem: Map not loading
+**Solution:**
+1. Check if Mapbox token is valid and added to `.env`
+2. Verify network connectivity to Mapbox services
+3. Check browser console for API errors
+4. Ensure token has appropriate permissions
+
+#### Problem: GPS location not working
+**Solution:**
+1. Check if browser location permissions are granted
+2. Verify HTTPS is used (required for geolocation)
+3. Test on different devices/browsers
+4. Implement fallback to manual location entry
+
+#### Problem: Incorrect location pins
+**Solution:**
+1. Verify coordinate format (latitude, longitude)
+2. Check PostGIS extension is installed
+3. Validate location data in database
+4. Test coordinate conversion functions
+
+### Location Debugging
+```javascript
+// Test geolocation in browser console
+navigator.geolocation.getCurrentPosition(
+  position => console.log('Location:', position.coords),
+  error => console.error('Location error:', error)
+);
+```
+
+</details>
+
+<details>
+<summary><strong>📱 Performance & UI Issues</strong></summary>
 
 ### Performance Optimization
-- **Image Optimization**: Compress uploaded photos
-- **CDN**: Leverage Vercel's edge network
-- **Caching**: Implement service worker for offline functionality
-- **Monitoring**: Set up error tracking (Sentry, LogRocket)
 
-### Security Hardening
-- **Content Security Policy**: Implement CSP headers
-- **CORS Configuration**: Restrict to production domains only
-- **Rate Limiting**: Implement per-user rate limits
-- **Audit Logs**: Enable comprehensive logging
+#### Problem: Slow dashboard loading
+**Solution:**
+1. Optimize image compression for photos
+2. Implement pagination for large report lists
+3. Use React.memo for expensive components
+4. Add loading skeletons for better UX
 
-</details>
+#### Problem: Mobile responsiveness issues
+**Solution:**
+1. Test on actual mobile devices
+2. Use Chrome DevTools device simulation
+3. Check Material-UI breakpoint configurations
+4. Verify touch targets meet accessibility standards
 
----
+#### Problem: Real-time updates not working
+**Solution:**
+1. Check Supabase realtime configuration
+2. Verify network connectivity and WebSocket support
+3. Monitor browser console for connection errors
+4. Test connection resilience with network interruptions
 
-## ðŸ“ˆ Features by Role
+### Performance Monitoring
+```javascript
+// Monitor component render times
+console.time('ComponentRender');
+// ... component logic ...
+console.timeEnd('ComponentRender');
 
-<details>
-<summary><strong>ðŸ§ Citizen Features (Complete âœ…)</strong></summary>
-
-### Dashboard Features
-- [x] Emergency action buttons (Report Emergency, Emergency Hotlines)
-- [x] Recent reports overview with status indicators  
-- [x] Emergency tips from all categories
-- [x] Location access notifications
-- [x] Real-time data fetching from Supabase
-
-### Emergency Report Submission
-- [x] Category selection with visual color indicators
-- [x] Real-time emergency tips display based on selected category
-- [x] Title and detailed description fields
-- [x] Priority level selection (Low, Medium, High, Critical)
-- [x] Location services with current location detection
-- [x] Photo upload capability (max 5MB)
-- [x] Address entry with geocoding support
-- [x] Form validation and error handling
-
-### My Reports Page
-- [x] Tabbed view: All, Active, Resolved, Cancelled
-- [x] Comprehensive report listing with status indicators
-- [x] Detailed report information in modal dialogs
-- [x] Status timeline with updates from responders
-- [x] Photo evidence viewing
-- [x] Emergency tips specific to each report type
-
-### Emergency Features
-- [x] Emergency Tips: Category-specific safety guidelines
-- [x] Emergency Hotlines: Quick access to all emergency contacts
-- [x] Real-time Status Tracking: Live updates on report progress
-
-</details>
-
-<details>
-<summary><strong>ðŸ¢ Agency Features (Complete âœ…)</strong></summary>
-
-### Agency Dashboard
-- [x] Statistics cards (Total Assigned, Pending, In Progress, Resolved)
-- [x] Assigned reports table with detailed information
-- [x] Map widget showing report locations with pins
-- [x] Equipment suggestions based on report categories
-
-### Report Management
-- [x] Accept pending reports assigned to agency
-- [x] Update report status with detailed notes
-- [x] View comprehensive report information and timeline
-- [x] Equipment checklist suggestions per emergency type
-- [x] Real-time notifications for new assignments
-
-### Enhanced Reports View
-- [x] Advanced filtering and sorting capabilities
-- [x] Status-based tabs for better organization
-- [x] Bulk operations for multiple reports
-- [x] Export functionality for record keeping
-
-</details>
-
-<details>
-<summary><strong>ðŸ›ï¸ Municipal Admin Features (Complete âœ…)</strong></summary>
-
-### Administrative Dashboard
-- [x] System-wide analytics and overview charts
-- [x] Cross-agency report monitoring
-- [x] Response time analytics
-- [x] Trend analysis and reporting
-
-### Management Capabilities
-- [x] **Agency Management**: Create, edit, delete emergency response agencies
-- [x] **Category Management**: Manage emergency types, tips, and equipment lists
-- [x] **Reports Oversight**: View and manage all reports across agencies
-- [x] **Assignment Control**: Assign/reassign reports to appropriate agencies
-
-### Analytics & Reporting
-- [x] Advanced reports table with filtering and search
-- [x] Export capabilities for municipal planning
-- [x] Statistical analysis of emergency patterns
-- [x] Response time tracking and optimization
-
-</details>
-
-<details>
-<summary><strong>âš¡ Super Admin Features (Complete âœ…)</strong></summary>
-
-### Enhanced User Management
-- [x] Advanced user table with role-based filtering
-- [x] Create, edit, delete users with full profile information
-- [x] User status management (activate/deactivate)
-- [x] Role assignment and agency linking
-- [x] Comprehensive search and filter capabilities
-
-### System Administration
-- [x] Complete database access and management
-- [x] System logs and audit trails
-- [x] Advanced analytics with drill-down capabilities
-- [x] Backup and restore functionality
-- [x] Security monitoring and user activity tracking
-
-### Development Tools
-- [x] Debug panels for troubleshooting
-- [x] System health monitoring
-- [x] Performance metrics and optimization tools
-- [x] Database query optimization
-
-</details>
-
----
-
-## ðŸ¤ Contributing & Support
-
-<details>
-<summary><strong>ðŸ’» Development Guidelines</strong></summary>
-
-### Code Standards
-- **ESLint**: Follow configured linting rules
-- **Prettier**: Consistent code formatting
-- **Commit Messages**: Use conventional commits format
-- **Testing**: Write tests for new features
-- **Documentation**: Update README for new features
-
-### Development Workflow
-1. **Fork**: Fork the repository
-2. **Branch**: Create feature branch (`git checkout -b feature/amazing-feature`)
-3. **Develop**: Make your changes
-4. **Test**: Ensure all tests pass
-5. **Commit**: Commit changes (`git commit -m 'Add amazing feature'`)
-6. **Push**: Push to branch (`git push origin feature/amazing-feature`)
-7. **PR**: Open a Pull Request
-
-### Project Structure
+// Monitor database query performance
+const { data, error, count } = await supabase
+  .from('reports')
+  .select('*', { count: 'exact' })
+  .limit(10);
+console.log('Query time:', performance.now());
 ```
-src/
-â”œâ”€â”€ components/          # Reusable UI components
-â”œâ”€â”€ services/           # Business logic and API calls
-â”œâ”€â”€ utils/              # Utility functions
-â”œâ”€â”€ assets/             # Images, icons, static files
-â””â”€â”€ App.jsx            # Main application component
+
+</details>
+
+---
+
+## 🚀 Deployment & Production
+
+<details>
+<summary><strong>🌐 Vercel Deployment</strong></summary>
+
+### Automated Deployment Setup
+
+#### Step 1: Prepare for Production
+```bash
+# Test production build locally
+npm run build
+npm run preview
+
+# Verify all features work in production mode
+# Check for console errors and warnings
+```
+
+#### Step 2: Vercel Configuration
+
+Create `vercel.json` in project root:
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "env": {
+    "VITE_SUPABASE_URL": "@supabase_url",
+    "VITE_SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "VITE_MAPBOX_TOKEN": "@mapbox_token"
+  }
+}
+```
+
+#### Step 3: Deploy to Vercel
+1. Connect GitHub repository to Vercel
+2. Configure environment variables in Vercel dashboard
+3. Set custom domain (optional)
+4. Deploy and test production environment
+
+#### Step 4: Post-Deployment Configuration
+1. Update Supabase site URL to production domain
+2. Update Google OAuth redirect URIs
+3. Test all features in production
+4. Monitor for any deployment-specific issues
+
+### Environment Variables for Production
+```bash
+# Production Supabase Configuration
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_production_anon_key
+VITE_MAPBOX_TOKEN=pk.your_production_mapbox_token
+VITE_APP_ENV=production
 ```
 
 </details>
 
 <details>
-<summary><strong>ðŸ› Bug Reports & Feature Requests</strong></summary>
+<summary><strong>📊 Production Monitoring</strong></summary>
 
-### Reporting Bugs
-1. **Check Existing Issues**: Search for similar problems
-2. **Create Issue**: Use the bug report template
-3. **Provide Details**:
-   - Steps to reproduce
-   - Expected vs actual behavior
-   - Browser/device information
-   - Screenshots if applicable
+### Key Metrics to Monitor
 
-### Feature Requests
-1. **Check Roadmap**: Review planned features
-2. **Create Issue**: Use feature request template
-3. **Provide Context**:
-   - Use case description
-   - Expected behavior
-   - Alternative solutions considered
+#### Performance Metrics
+- **Page Load Time**: Target < 3 seconds
+- **First Contentful Paint**: Target < 1.5 seconds
+- **Database Query Time**: Target < 500ms
+- **Real-time Update Latency**: Target < 1 second
 
-### Priority Levels
-- **Critical**: Security issues, data loss, app crashes
-- **High**: Major functionality broken
-- **Medium**: Minor functionality issues
-- **Low**: Enhancements, nice-to-have features
+#### Business Metrics
+- **Daily Active Users**: Track citizen and agency engagement
+- **Report Response Time**: Average time from report to agency acknowledgment
+- **Resolution Rate**: Percentage of reports marked as resolved
+- **System Uptime**: Target 99.9% availability
+
+#### Error Monitoring
+- **JavaScript Errors**: Monitor client-side errors
+- **API Failures**: Track Supabase operation failures
+- **Authentication Issues**: Monitor login/logout problems
+- **Database Errors**: Track query failures and timeouts
+
+### Production Health Checks
+```bash
+# API endpoint health check
+curl -f https://your-app.vercel.app/api/health
+
+# Database connectivity test
+# (implement health endpoint that tests Supabase connection)
+
+# Authentication flow test
+# (automated test for login/logout cycle)
+```
 
 </details>
 
 <details>
-<summary><strong>ðŸ“ž Support & Contact</strong></summary>
+<summary><strong>🔒 Security Best Practices</strong></summary>
 
-### Technical Support
-- **GitHub Issues**: For bugs and feature requests
-- **Documentation**: Check this README first
-- **Community**: Join our developer community
+### Production Security Checklist
 
-### Contact Information
-- **Project Lead**: [qppd@protonmail.com](mailto:qppd@protonmail.com)
-- **Unisan LGU**: [unisan.lgu@gmail.com](mailto:unisan.lgu@gmail.com)
-- **Repository**: [GitHub.com/qppd/UERRA](https://github.com/qppd/UERRA)
+#### Authentication Security
+- ✅ Use HTTPS for all communications
+- ✅ Implement proper session timeout
+- ✅ Enable email verification for new accounts
+- ✅ Use strong password requirements
+- ✅ Monitor for suspicious authentication patterns
 
-### Response Times
-- **Critical Issues**: Within 24 hours
-- **Bug Reports**: Within 48 hours
-- **Feature Requests**: Within 1 week
-- **General Questions**: Within 3 days
+#### Database Security
+- ✅ Row Level Security (RLS) enabled on all tables
+- ✅ Minimal API key permissions
+- ✅ Regular security audits of database policies
+- ✅ Backup and disaster recovery procedures
+- ✅ Monitor for unusual query patterns
+
+#### Application Security
+- ✅ Input validation on all forms
+- ✅ File upload restrictions (type, size)
+- ✅ CORS configuration for API endpoints
+- ✅ Content Security Policy (CSP) headers
+- ✅ Regular dependency security updates
+
+### Security Incident Response
+1. **Identify**: Monitor alerts and logs for security events
+2. **Contain**: Disable affected accounts or features
+3. **Investigate**: Analyze logs and determine impact
+4. **Remediate**: Fix vulnerabilities and restore service
+5. **Review**: Update security policies and procedures
 
 </details>
 
 ---
 
-## ðŸ›£ï¸ Roadmap & Future Features
+## 📈 Features by Role
 
-### ðŸ“± Phase 2: Mobile App
-- [ ] React Native mobile application
-- [ ] Offline report queuing
-- [ ] Push notifications with Firebase Cloud Messaging
-- [ ] Voice-to-text report submission
-- [ ] GPS tracking for responders
+### 🧍 Citizen Features
+- ✅ **Emergency Report Submission** with photo/video upload
+- ✅ **Real-time GPS Location** detection and manual override
+- ✅ **Report Status Tracking** with live updates
+- ✅ **Emergency Tips** based on selected category
+- ✅ **Emergency Hotlines** quick access directory
+- ✅ **Report History** view all submitted reports
+- ✅ **Google OAuth** and email/password authentication
+- ✅ **Mobile-responsive** design for on-the-go reporting
 
-### ðŸš€ Phase 3: Advanced Features
-- [ ] AI-powered emergency classification
-- [ ] Predictive analytics for emergency patterns
-- [ ] Integration with existing government systems
-- [ ] Emergency simulation and training tools
-- [ ] Multi-language support (Filipino/English)
+### 🏢 Agency Features
+- ✅ **Live Map Dashboard** with emergency report pins
+- ✅ **Report Management** table with filtering and sorting
+- ✅ **Status Update System** for tracking emergency response
+- ✅ **Equipment Suggestions** based on emergency type
+- ✅ **Multi-agency Coordination** for complex emergencies
+- ✅ **Priority Management** with automatic priority assignment
+- ✅ **Communication Log** for updates and notes
+- ✅ **Real-time Notifications** for new assignments
 
-### ðŸŒ Phase 4: Scale & Integration
-- [ ] SMS fallback system for offline areas
-- [ ] Integration with national emergency systems
-- [ ] Community emergency preparedness features
-- [ ] Advanced analytics and reporting dashboard
-- [ ] Real-time responder GPS tracking
+### 🏛️ Municipal Admin Features
+- ✅ **System Analytics** dashboard with key metrics
+- ✅ **User Management** with role assignment capabilities
+- ✅ **Agency Management** for adding/editing response agencies
+- ✅ **Category Management** for emergency types and routing
+- ✅ **Performance Monitoring** for agency response times
+- ✅ **Data Export** capabilities for reporting
+- ✅ **System Configuration** for customization
+- ✅ **Comprehensive Reporting** for municipal planning
+
+### ⚡ Super Admin Features
+- ✅ **Complete System Access** with database-level control
+- ✅ **Advanced User Management** across all roles
+- ✅ **System Monitoring Tools** for performance optimization
+- ✅ **Debug Utilities** for troubleshooting issues
+- ✅ **Security Oversight** with audit capabilities
+- ✅ **System Configuration** at the deepest level
+- ✅ **Backup Management** and disaster recovery
+- ✅ **Integration Management** for third-party services
 
 ---
 
-## ðŸ“„ License & Credits
+## 🤝 Contributing & Support
 
-### License
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+### 🛠️ Contributing Guidelines
 
-### Built With
-- [React](https://reactjs.org/) - Frontend framework
-- [Supabase](https://supabase.com/) - Backend-as-a-Service
-- [Material-UI](https://mui.com/) - React component library
-- [Mapbox](https://www.mapbox.com/) - Maps and location services
-- [Vite](https://vitejs.dev/) - Build tool and development server
+#### Setting Up Development Environment
+1. Fork the repository on GitHub
+2. Clone your fork locally
+3. Install dependencies: `npm install`
+4. Set up environment variables
+5. Create feature branch: `git checkout -b feature/your-feature`
 
-### Acknowledgments
-- **Unisan Municipal Government** for project requirements and support
-- **Open Source Community** for the amazing tools and libraries
-- **Contributors** who help improve this emergency response system
+#### Code Standards
+- Follow ESLint configuration
+- Use meaningful commit messages
+- Write responsive, accessible code
+- Test on multiple devices and browsers
+- Document new features and APIs
+
+#### Pull Request Process
+1. Update documentation for any new features
+2. Ensure all tests pass and no ESLint errors
+3. Test mobile responsiveness thoroughly
+4. Submit PR with detailed description
+5. Wait for code review and feedback
+
+### 🆘 Getting Help
+
+#### Documentation Resources
+- **Setup Issues**: Check the Complete Setup Guide above
+- **Feature Questions**: Review User Guides for your role
+- **Technical Problems**: See Troubleshooting section
+- **API Documentation**: Supabase docs at [docs.supabase.com](https://docs.supabase.com)
+
+#### Community Support
+- **GitHub Issues**: Report bugs and request features
+- **Discussions**: Ask questions and share ideas
+- **Wiki**: Community-contributed guides and tips
+
+#### Technical Support Contacts
+- **System Administrator**: For production issues
+- **Development Team**: For feature requests and bugs
+- **Municipal IT**: For deployment and infrastructure
+
+### 📄 License & Legal
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+#### Third-party Licenses
+- **React**: MIT License
+- **Material-UI**: MIT License
+- **Supabase**: Apache 2.0 License
+- **Mapbox GL JS**: Custom License (requires API key)
 
 ---
 
-<div align="center">
+## 📞 Emergency Contacts
 
-**ðŸ†˜ UERRA - Making Emergency Response Faster and More Effective**
+### Default Agency Hotlines (Unisan)
+- **🚒 Fire Emergency**: Bureau of Fire Protection - `(042) 765-4321`
+- **🚑 Medical Emergency**: Unisan District Hospital - `(042) 111-2222`
+- **👮 Police Emergency**: Philippine National Police - `(042) 123-4567`
+- **🌊 Disaster Management**: MDRMMO - `(042) 333-4444`
+- **🏥 Health Services**: Rural Health Unit - `(042) 555-6666`
 
-Built with â¤ï¸ for the people of Unisan, Quezon Province
+### National Emergency Numbers
+- **🆘 National Emergency Hotline**: `911`
+- **🚒 Fire Department**: `116`
+- **👮 Police**: `117`
+- **🚑 Medical Emergency**: `143`
 
-[Report Bug](https://github.com/qppd/UERRA/issues) â€¢ [Request Feature](https://github.com/qppd/UERRA/issues) â€¢ [Documentation](https://github.com/qppd/UERRA)
+---
 
-</div>
+**Built with ❤️ for the safety and security of Unisan citizens**
+
+*Last updated: September 16, 2025*
+
+---
+
+### 🔄 Recent Updates
+
+- ✅ Fixed emoji encoding issues in documentation
+- ✅ Updated dependency versions to latest stable
+- ✅ Enhanced mobile responsiveness across all components
+- ✅ Improved database schema with better indexing
+- ✅ Added comprehensive error handling and debug tools
+- ✅ Expanded user guide documentation for all roles
