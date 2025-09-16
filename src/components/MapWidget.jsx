@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { loadUnisanBarangays } from '../assets/geojson';
+import { parseLocation } from '../utils/locationUtils';
 
 // ErrorBoundary for catching map errors
 class ErrorBoundary extends React.Component {
@@ -47,16 +48,86 @@ const STATUS_COLORS = {
   'cancelled': '#6b7280'       // Gray - Other
 };
 
-// Sample pins for demonstration
-const SAMPLE_PINS = [
-  { id: 'sample-1', longitude: 121.99, latitude: 13.86, status: 'pending', category: 'Fire', description: 'House fire on Main Street' },
-  { id: 'sample-2', longitude: 121.995, latitude: 13.865, status: 'acknowledged', category: 'Medical', description: 'Medical emergency at clinic' },
-  { id: 'sample-3', longitude: 121.985, latitude: 13.855, status: 'in_progress', category: 'Crime', description: 'Robbery report' },
-  { id: 'sample-4', longitude: 122.005, latitude: 13.870, status: 'resolved', category: 'Disaster', description: 'Flood monitoring' },
-  { id: 'sample-5', longitude: 121.975, latitude: 13.850, status: 'cancelled', category: 'Other', description: 'False alarm' },
-  { id: 'sample-6', longitude: 122.010, latitude: 13.875, status: 'pending', category: 'Fire', description: 'Brush fire near highway' },
-  { id: 'sample-7', longitude: 121.980, latitude: 13.845, status: 'in_progress', category: 'Medical', description: 'Ambulance dispatch' }
-];
+// Sample pins removed - now using real data from database
+
+// Function to decode PostGIS binary point data
+const decodePostGISPoint = (binaryData) => {
+  if (!binaryData) return null;
+  
+  try {
+    // Handle if it's already an object with coordinates
+    if (typeof binaryData === 'object' && binaryData.coordinates) {
+      return binaryData.coordinates;
+    }
+    
+    // If it's a string representation, try to parse it
+    if (typeof binaryData === 'string') {
+      // Check if it's the WKB hex format like the one you provided
+      if (binaryData.match(/^[0-9A-Fa-f]+$/)) {
+        // This is a hexadecimal WKB (Well-Known Binary)
+        // For the value you provided: 0101000020E6100000C70A2362EF6A5E400FC4680C29F52B40
+        
+        // Parse basic structure:
+        // First 8 chars (01010000): Geometry type and endianness
+        // Next 8 chars (20E61000): SRID (4326 in little endian)
+        // Next 16 chars: X coordinate in little endian double
+        // Next 16 chars: Y coordinate in little endian double
+        
+        if (binaryData.length >= 42) { // Minimum length for POINT with SRID
+          // Skip the first 18 characters (geometry type + SRID)
+          const coordsHex = binaryData.slice(18);
+          
+          if (coordsHex.length >= 32) { // 16 chars each for X and Y
+            const xHex = coordsHex.slice(0, 16);
+            const yHex = coordsHex.slice(16, 32);
+            
+            // Convert from little endian hex to float64
+            const x = hexToFloat64LE(xHex);
+            const y = hexToFloat64LE(yHex);
+            
+            if (!isNaN(x) && !isNaN(y)) {
+              return [x, y]; // [longitude, latitude]
+            }
+          }
+        }
+      }
+      
+      // Try parsing as POINT(x y) format
+      const pointMatch = binaryData.match(/POINT\(([^)]+)\)/);
+      if (pointMatch) {
+        const [x, y] = pointMatch[1].split(' ').map(Number);
+        if (!isNaN(x) && !isNaN(y)) {
+          return [x, y];
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error decoding PostGIS point:', error);
+  }
+  
+  return null;
+};
+
+// Helper function to convert little endian hex to float64
+const hexToFloat64LE = (hex) => {
+  // Reverse the byte order for little endian
+  const bytes = [];
+  for (let i = hex.length - 2; i >= 0; i -= 2) {
+    bytes.push(parseInt(hex.substr(i, 2), 16));
+  }
+  
+  // Create ArrayBuffer and DataView
+  const buffer = new ArrayBuffer(8);
+  const view = new DataView(buffer);
+  
+  // Set bytes
+  for (let i = 0; i < 8; i++) {
+    view.setUint8(i, bytes[i] || 0);
+  }
+  
+  // Read as float64
+  return view.getFloat64(0, false); // false = big endian (since we already reversed)
+};
 
 // Custom marker component
 const StatusMarker = ({ status, onClick }) => {
@@ -102,8 +173,8 @@ const StatusMarker = ({ status, onClick }) => {
 };
 
 const MapWidget = () => {
-  const [todayReports, setTodayReports] = useState([]);
-  const [pastReports, setPastReports] = useState([]);
+  const [allReports, setAllReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [popupInfo, setPopupInfo] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [geojsonData, setGeojsonData] = useState(null);
@@ -112,22 +183,80 @@ const MapWidget = () => {
 
   useEffect(() => {
     const fetchReports = async () => {
-      const today = new Date();
-      const todayISO = today.toISOString().slice(0, 10);
-      // Fetch today's reports
-      const { data: todayData } = await supabase
-        .from('reports')
-        .select('id, description, location, category_id, status, created_at')
-        .gte('created_at', todayISO);
-      setTodayReports(todayData || []);
+      try {
+        setLoading(true);
+        
+        // Fetch reports and try to get coordinates using PostGIS functions
+        const { data: reports, error } = await supabase
+          .rpc('get_reports_with_coordinates');
 
-      // Fetch past reports (before today)
-      const { data: pastData } = await supabase
-        .from('reports')
-        .select('id, location, created_at')
-        .lt('created_at', todayISO);
-      setPastReports(pastData || []);
+        if (error) {
+          console.error('Error fetching reports:', error);
+          // Fallback to direct table query if RPC function doesn't exist
+          const { data: fallbackReports, error: fallbackError } = await supabase
+            .from('reports')
+            .select(`
+              id, 
+              description, 
+              location,
+              status, 
+              created_at,
+              priority,
+              categories:category_id (
+                id,
+                name,
+                color
+              )
+            `)
+            .not('location', 'is', null)
+            .order('created_at', { ascending: false });
+          
+          if (fallbackError) {
+            console.error('Fallback query also failed:', fallbackError);
+            setAllReports([]);
+            return;
+          }
+          
+          console.log('Using fallback query, raw reports data:', fallbackReports);
+          
+          // Process fallback data with binary decoder
+          const reportsWithCoords = [];
+          for (const report of fallbackReports || []) {
+            try {
+              const coords = decodePostGISPoint(report.location);
+              if (coords) {
+                reportsWithCoords.push({
+                  id: report.id,
+                  description: report.description,
+                  status: report.status,
+                  created_at: report.created_at,
+                  priority: report.priority,
+                  longitude: coords[0],
+                  latitude: coords[1],
+                  category_name: report.categories?.name,
+                  category_color: report.categories?.color,
+                  category_id: report.categories?.id
+                });
+              }
+            } catch (coordErr) {
+              console.error('Error processing coordinates for report', report.id, coordErr);
+            }
+          }
+          
+          setAllReports(reportsWithCoords);
+          return;
+        }
+
+        console.log('RPC function returned:', reports);
+        setAllReports(reports || []);
+      } catch (error) {
+        console.error('Failed to fetch reports:', error);
+        setAllReports([]);
+      } finally {
+        setLoading(false);
+      }
     };
+    
     fetchReports();
   }, []);
 
@@ -161,39 +290,41 @@ const MapWidget = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Helper to parse location (lat, lng)
-  const getLatLng = (loc) => {
-    if (!loc) return null;
-    if (typeof loc === 'string') {
-      try {
-        const obj = JSON.parse(loc);
-        if (obj.lat && obj.lng) return [obj.lng, obj.lat]; // Mapbox uses [lng, lat]
-      } catch {
-        const [lat, lng] = loc.split(',').map(Number);
-        if (!isNaN(lat) && !isNaN(lng)) return [lng, lat];
-      }
-    } else if (typeof loc === 'object' && loc.lat && loc.lng) {
-      return [loc.lng, loc.lat];
-    }
-    return null;
-  };
-
-  // Combine real reports with sample pins for demonstration
-  const allPins = [
-    ...SAMPLE_PINS,
-    ...todayReports.map(r => {
-      const coords = getLatLng(r.location);
-      return coords ? {
-        id: r.id,
-        longitude: coords[0],
-        latitude: coords[1],
-        status: r.status,
-        category: r.category_id,
-        description: r.description,
+  // Convert reports to map pins
+  const mapPins = allReports.map(report => {
+    // Check if coordinates are already available as separate fields (from RPC function)
+    if (report.longitude !== undefined && report.latitude !== undefined) {
+      return {
+        id: report.id,
+        longitude: report.longitude,
+        latitude: report.latitude,
+        status: report.status,
+        category: report.category_name || 'Unknown',
+        description: report.description,
+        priority: report.priority,
+        created_at: report.created_at,
+        categoryColor: report.category_color,
         isReal: true
-      } : null;
-    }).filter(Boolean)
-  ];
+      };
+    }
+    
+    // Fallback to parsing location field (if using direct table query)
+    const coords = parseLocation(report.location);
+    if (!coords) return null;
+    
+    return {
+      id: report.id,
+      longitude: coords[0],
+      latitude: coords[1],
+      status: report.status,
+      category: report.categories?.name || 'Unknown',
+      description: report.description,
+      priority: report.priority,
+      created_at: report.created_at,
+      categoryColor: report.categories?.color,
+      isReal: true
+    };
+  }).filter(Boolean);
 
   // Toggle fullscreen mode
   const toggleFullscreen = () => {
@@ -225,6 +356,29 @@ const MapWidget = () => {
           }}
         >
           <Typography>Mapbox token not configured. Please add VITE_MAPBOX_TOKEN to your .env file.</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Box sx={{ width: '100%', height: '100%' }}>
+        <Typography variant="h6" fontWeight={600} mb={2} color="primary.main">
+          Live Incident Map
+        </Typography>
+        <Box 
+          sx={{ 
+            width: '100%', 
+            height: 'calc(100% - 60px)', 
+            borderRadius: 3,
+            bgcolor: 'grey.100',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Typography>Loading reports...</Typography>
         </Box>
       </Box>
     );
@@ -413,8 +567,8 @@ const MapWidget = () => {
               </>
             )}
 
-            {/* Render all pins */}
-            {allPins.map(pin => (
+            {/* Render all report pins */}
+            {mapPins.map(pin => (
               <Marker
                 key={pin.id}
                 longitude={pin.longitude}
@@ -459,37 +613,47 @@ const MapWidget = () => {
                   <Box sx={{ 
                     display: 'flex', 
                     alignItems: 'center', 
+                    justifyContent: 'space-between',
                     gap: 1 
                   }}>
-                    <Box 
-                      sx={{ 
-                        width: 8, 
-                        height: 8, 
-                        borderRadius: '50%', 
-                        backgroundColor: STATUS_COLORS[popupInfo.status] 
-                      }} 
-                    />
-                    <Typography 
-                      variant="caption" 
-                      sx={{ 
-                        textTransform: 'capitalize',
-                        fontWeight: 500
-                      }}
-                    >
-                      {popupInfo.status.replace('_', ' ')}
-                    </Typography>
-                    {!popupInfo.isReal && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box 
+                        sx={{ 
+                          width: 8, 
+                          height: 8, 
+                          borderRadius: '50%', 
+                          backgroundColor: STATUS_COLORS[popupInfo.status] 
+                        }} 
+                      />
                       <Typography 
                         variant="caption" 
                         sx={{ 
-                          color: 'text.secondary',
-                          fontStyle: 'italic'
+                          textTransform: 'capitalize',
+                          fontWeight: 500
                         }}
                       >
-                        (Sample)
+                        {popupInfo.status.replace('_', ' ')}
+                      </Typography>
+                    </Box>
+                    {popupInfo.priority && (
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          color: popupInfo.priority === 'critical' ? 'error.main' : 
+                                 popupInfo.priority === 'high' ? 'warning.main' : 'text.secondary',
+                          fontWeight: 500,
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        {popupInfo.priority}
                       </Typography>
                     )}
                   </Box>
+                  {popupInfo.created_at && (
+                    <Typography variant="caption" display="block" mt={0.5} color="text.secondary">
+                      {new Date(popupInfo.created_at).toLocaleString()}
+                    </Typography>
+                  )}
                 </Box>
               </Popup>
             )}
