@@ -21,7 +21,8 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, IconButton } from '@mui/material';
+import { Fullscreen, FullscreenExit } from '@mui/icons-material';
 import { supabase } from '../supabaseClient';
 import Map, { Marker, Popup, Source, Layer } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -169,6 +170,7 @@ const MapWidget = () => {
   const [todayReports, setTodayReports] = useState([]);
   const [pastReports, setPastReports] = useState([]);
   const [popupInfo, setPopupInfo] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -240,6 +242,17 @@ const MapWidget = () => {
     }).filter(Boolean)
   ];
 
+  // Toggle fullscreen mode
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+    // Trigger map resize after fullscreen toggle
+    setTimeout(() => {
+      if (mapRef.current) {
+        mapRef.current.resize();
+      }
+    }, 100);
+  };
+
   if (!MAPBOX_TOKEN || MAPBOX_TOKEN === 'undefined' || MAPBOX_TOKEN === 'no-token') {
     return (
       <Box sx={{ width: '100%', height: '100%' }}>
@@ -267,44 +280,77 @@ const MapWidget = () => {
   return (
     <ErrorBoundary>
       <Box sx={{ 
-        width: '100%', 
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        maxWidth: '100%',
-        overflow: 'hidden'
+        ...(isFullscreen ? {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: 9999,
+          backgroundColor: 'background.paper'
+        } : {
+          width: '100%', 
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          maxWidth: '100%',
+          overflow: 'hidden'
+        })
       }}
       className="full-width-map"
       >
-        <Typography 
-          variant="h6" 
-          fontWeight={600} 
-          mb={2} 
-          color="primary.main"
-          sx={{
-            fontSize: { xs: '1.1rem', sm: '1.25rem' }
-          }}
-        >
-          Live Incident Map
-        </Typography>
+        {!isFullscreen && (
+          <Typography 
+            variant="h6" 
+            fontWeight={600} 
+            mb={2} 
+            color="primary.main"
+            sx={{
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
+          >
+            Live Incident Map
+          </Typography>
+        )}
         
         <Box sx={{ 
           width: '100%', 
-          height: 'calc(100% - 60px)',
-          minHeight: { xs: '300px', sm: '350px', md: '400px' },
-          borderRadius: { xs: 2, sm: 3 },
+          height: isFullscreen ? '100vh' : 'calc(100% - 60px)',
+          minHeight: isFullscreen ? '100vh' : { xs: '300px', sm: '350px', md: '400px' },
+          borderRadius: isFullscreen ? 0 : { xs: 2, sm: 3 },
           overflow: 'hidden',
           position: 'relative',
           backgroundColor: '#1a1a1a',
-          boxShadow: theme => theme.palette.mode === 'dark' 
+          boxShadow: isFullscreen ? 'none' : (theme => theme.palette.mode === 'dark' 
             ? '0 8px 32px rgba(0,0,0,0.6)' 
-            : '0 8px 32px rgba(0,0,0,0.15)',
-          border: theme => theme.palette.mode === 'dark' 
+            : '0 8px 32px rgba(0,0,0,0.15)'),
+          border: isFullscreen ? 'none' : (theme => theme.palette.mode === 'dark' 
             ? '1px solid rgba(255,255,255,0.1)' 
-            : '1px solid rgba(0,0,0,0.1)'
+            : '1px solid rgba(0,0,0,0.1)')
         }}
         className="map-container"
         >
+          {/* Fullscreen Toggle Button */}
+          <IconButton
+            onClick={toggleFullscreen}
+            sx={{
+              position: 'absolute',
+              top: 10,
+              right: 10,
+              zIndex: 1000,
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              color: 'text.primary',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 1)',
+              },
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+            }}
+            size="small"
+          >
+            {isFullscreen ? <FullscreenExit /> : <Fullscreen />}
+          </IconButton>
           <Map
             ref={mapRef}
             initialViewState={{ 
