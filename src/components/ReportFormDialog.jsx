@@ -145,14 +145,20 @@ const ReportFormDialog = ({ open, onClose, user, onReportSubmitted }) => {
       async (position) => {
         const { latitude, longitude } = position.coords;
         
-        try {
-          // Reverse geocoding to get address
-          const response = await fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}&limit=1`
-          );
-          const data = await response.json();
-          
-          const address = data.features?.[0]?.place_name || `${latitude}, ${longitude}`;
+try {
+          // Reverse geocoding to get address — use Mapbox token from env
+          const token = import.meta.env.VITE_MAPBOX_TOKEN;
+          const geocodeUrl = token
+            ? `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${token}&limit=1`
+            : null;
+          let address = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+          if (geocodeUrl) {
+            const response = await fetch(geocodeUrl);
+            const data = await response.json();
+            if (data.features?.[0]?.place_name) {
+              address = data.features[0].place_name;
+            }
+          }
           
           setFormData(prev => ({
             ...prev,

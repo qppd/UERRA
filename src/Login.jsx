@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from './supabaseClient';
 import './UerraAuth.css';
 import { CircularProgress } from '@mui/material';
@@ -6,6 +7,16 @@ import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } }
+};
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } }
+};
 
 const Login = ({ onLogin, onNavigateToRegister, footer }) => {
   const [email, setEmail] = useState('');
@@ -189,10 +200,20 @@ const Login = ({ onLogin, onNavigateToRegister, footer }) => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-main-card">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      className="auth-container"
+    >
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="visible"
+        className="auth-main-card"
+      >
         {/* Login Section */}
-        <div className="auth-login-section">
+        <motion.div variants={fadeUp} className="auth-login-section">
           <div className="auth-header">
             <div className="auth-logo">U</div>
             <h1 className="auth-title">Login</h1>
@@ -204,7 +225,7 @@ const Login = ({ onLogin, onNavigateToRegister, footer }) => {
               <input
                 type="email"
                 className="auth-input"
-                placeholder="Username"
+                placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
@@ -276,13 +297,13 @@ const Login = ({ onLogin, onNavigateToRegister, footer }) => {
             </button>
             
             <div className="auth-footer">
-              <a href="#forgot-password">Forgot password?</a>
+              <span style={{ color: '#999', fontSize: '13px' }}>Forgot password? — Coming soon</span>
             </div>
           </form>
-        </div>
+        </motion.div>
         
         {/* Sign Up Prompt Section */}
-        <div className="auth-signup-section">
+        <motion.div variants={fadeUp} className="auth-signup-section">
           <div className="auth-header">
             <div className="auth-logo">U</div>
             <h1 className="auth-title">Welcome to UERRA</h1>
@@ -305,9 +326,9 @@ const Login = ({ onLogin, onNavigateToRegister, footer }) => {
           </div>
           
           {footer && <div style={{ marginTop: '2rem', textAlign: 'center' }}>{footer}</div>}
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 

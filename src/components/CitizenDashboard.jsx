@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Box, Grid, Paper, Typography, Button, Card, CardContent, CardActions, Chip, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -7,6 +8,20 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { supabase } from '../supabaseClient';
 import ReportFormDialog from './ReportFormDialog';
 import EmergencyHotlines from './EmergencyHotlines';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.1, ease: [0.4, 0, 0.2, 1] }
+  })
+};
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } }
+};
 
 const CitizenDashboard = ({ user }) => {
   const [recentReports, setRecentReports] = useState([]);
@@ -78,6 +93,7 @@ const CitizenDashboard = ({ user }) => {
   return (
     <Box sx={{ width: '100%', maxWidth: '100%', overflow: 'hidden' }}>
       {/* Emergency Actions */}
+      <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
       <Paper elevation={2} sx={{ 
         p: { xs: 2, sm: 3, md: 4 }, 
         mb: { xs: 2, sm: 3 }, 
@@ -148,9 +164,11 @@ const CitizenDashboard = ({ user }) => {
         </Box>
       </Paper>
 
+      <motion.div variants={stagger} initial="hidden" animate="visible">
       <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ width: '100%', m: 0 }}>
         {/* Recent Reports */}
         <Grid item xs={12} lg={8}>
+          <motion.div variants={fadeUp} custom={1}>
           <Paper elevation={2} sx={{ 
             p: { xs: 2, sm: 3 }, 
             borderRadius: { xs: 2, md: 3 },
@@ -252,6 +270,7 @@ const CitizenDashboard = ({ user }) => {
 
         {/* Emergency Tips */}
         <Grid item xs={12} lg={4}>
+          <motion.div variants={fadeUp} custom={2}>
           <Paper elevation={2} sx={{ 
             p: { xs: 2, sm: 3 }, 
             borderRadius: { xs: 2, md: 3 },
@@ -293,11 +312,15 @@ const CitizenDashboard = ({ user }) => {
                 ))}
               </Box>
             )}
+          </motion.div>
           </Paper>
         </Grid>
       </Grid>
+      </motion.div>
+      </motion.div>
 
       {/* Location Access Notice */}
+      <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={3}>
       <Paper elevation={1} sx={{ 
         p: { xs: 1.5, sm: 2 }, 
         mt: { xs: 2, sm: 3 }, 
@@ -318,6 +341,7 @@ const CitizenDashboard = ({ user }) => {
           </Typography>
         </Box>
       </Paper>
+      </motion.div>
 
       {/* Dialogs */}
       <ReportFormDialog

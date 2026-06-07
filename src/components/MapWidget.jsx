@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState, useRef } from 'react';
 import { loadUnisanBarangays } from '../assets/geojson';
 import { parseLocation } from '../utils/locationUtils';
@@ -30,7 +27,8 @@ import { supabase } from '../supabaseClient';
 import Map, { Marker, Popup, Source, Layer } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1Ijoic2FqZWRobSIsImEiOiJjbWUwZTI2bmUwMzRmMmtzOTV3aHIzb3pwIn0.vmkwo0fWsqc9-rJhYRb_2g'; // Fallback to hardcoded token
+// Must be configured via VITE_MAPBOX_TOKEN in .env — no hardcoded fallback
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || '';
 const MAP_CENTER = [121.99, 13.86]; // [lng, lat] for Unisan municipality center
 
 // Unisan municipality bounds - restrict map movement to this area
@@ -498,162 +496,105 @@ const MapWidget = () => {
               // Show administrative boundaries and place names
               map.on('styledata', () => {
                 // Ensure place labels are visible at appropriate zoom levels
-                if (map.getLayer('place-city-sm')) {
-                  map.setLayoutProperty('place-city-sm', 'visibility', 'visible');
-                }
-                if (map.getLayer('place-town')) {
-                  map.setLayoutProperty('place-town', 'visibility', 'visible');
-                }
-                if (map.getLayer('place-village')) {
-                  map.setLayoutProperty('place-village', 'visibility', 'visible');
-                }
-                
-                // Make admin boundaries more visible
-                if (map.getLayer('admin-1-boundary')) {
-                  map.setPaintProperty('admin-1-boundary', 'line-opacity', 0.8);
-                }
-                if (map.getLayer('admin-0-boundary')) {
-                  map.setPaintProperty('admin-0-boundary', 'line-opacity', 0.8);
-                }
               });
             }}
           >
-            {/* Unisan Barangay Boundaries - Only render if GeoJSON data is loaded */}
-            {geojsonData && !isLoadingGeoJSON && (
-              <>
-                <Source id="unisan-barangays" type="geojson" data={geojsonData}>
-                  {/* Barangay Boundary Fill */}
-                  <Layer
-                    id="barangay-fill"
-                    type="fill"
-                    paint={{
-                      'fill-color': '#e3f2fd',
-                      'fill-opacity': 0.3
-                    }}
-                  />
-                  {/* Barangay Boundary Lines */}
-                  <Layer
-                    id="barangay-boundaries"
-                    type="line"
-                    paint={{
-                      'line-color': '#1976d2',
-                      'line-width': 2,
-                      'line-opacity': 0.7
-                    }}
-                  />
-                  {/* Barangay Labels */}
-                  <Layer
-                    id="barangay-labels"
-                    type="symbol"
-                    layout={{
-                      'text-field': ['get', 'adm4_en'],
-                      'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
-                      'text-size': {
-                        'base': 1,
-                        'stops': [[10, 10], [14, 12], [16, 14]]
-                      },
-                      'text-anchor': 'center',
-                      'text-justify': 'center',
-                      'symbol-placement': 'point'
-                    }}
-                    paint={{
-                      'text-color': '#1565c0',
-                      'text-halo-color': '#ffffff',
-                      'text-halo-width': 1,
-                      'text-opacity': 0.9
-                    }}
-                  />
-                </Source>
-              </>
+            {/* Add barangay boundaries from GeoJSON */}
+            {geojsonData && (
+              <Source id="barangays" type="geojson" data={geojsonData}>
+                <Layer
+                  id="barangay-fill"
+                  type="fill"
+                  paint={{
+                    'fill-color': ['case',
+                      ['==', ['get', 'color'], '#FF6B6B'], '#FF6B6B',
+                      ['==', ['get', 'color'], '#4ECDC4'], '#4ECDC4',
+                      ['==', ['get', 'color'], '#45B7D1'], '#45B7D1',
+                      ['==', ['get', 'color'], '#96CEB4'], '#96CEB4',
+                      ['==', ['get', 'color'], '#FFEAA7'], '#FFEAA7',
+                      ['==', ['get', 'color'], '#DDA0DD'], '#DDA0DD',
+                      ['==', ['get', 'color'], '#98D8C8'], '#98D8C8',
+                      '#a8d8ea'
+                    ],
+                    'fill-opacity': 0.15
+                  }}
+                />
+                <Layer
+                  id="barangay-borders"
+                  type="line"
+                  paint={{
+                    'line-color': '#4a5568',
+                    'line-width': 1.5,
+                    'line-opacity': 0.5
+                  }}
+                />
+                <Layer
+                  id="barangay-labels"
+                  type="symbol"
+                  minzoom={11}
+                  layout={{
+                    'text-field': ['get', 'name'],
+                    'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+                    'text-size': 11,
+                    'text-offset': [0, 0.5],
+                    'text-anchor': 'center'
+                  }}
+                  paint={{
+                    'text-color': '#4a5568',
+                    'text-halo-color': '#ffffff',
+                    'text-halo-width': 1.5,
+                    'text-opacity': 0.7
+                  }}
+                />
+              </Source>
             )}
-
-            {/* Render all report pins */}
+            
             {mapPins.map(pin => (
               <Marker
                 key={pin.id}
                 longitude={pin.longitude}
                 latitude={pin.latitude}
                 anchor="center"
+                onClick={e => {
+                  e.originalEvent.stopPropagation();
+                  setPopupInfo(pin);
+                }}
               >
-                <StatusMarker 
+                <StatusMarker
                   status={pin.status}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPopupInfo(pin);
-                  }}
+                  onClick={() => setPopupInfo(pin)}
                 />
               </Marker>
             ))}
-            
-            {/* Popup for selected report */}
+
             {popupInfo && (
               <Popup
-                longitude={popupInfo.longitude}
-                latitude={popupInfo.latitude}
-                anchor="top"
+                anchor="bottom"
+                longitude={Number(popupInfo.longitude)}
+                latitude={Number(popupInfo.latitude)}
                 onClose={() => setPopupInfo(null)}
-                closeButton={true}
                 closeOnClick={false}
-                style={{
-                  zIndex: 1000
-                }}
+                style={{ zIndex: 1001 }}
               >
-                <Box sx={{ 
-                  p: 1.5, 
-                  minWidth: '200px',
-                  backgroundColor: 'background.paper',
-                  color: 'text.primary'
-                }}>
-                  <Typography variant="subtitle2" fontWeight={600} mb={0.5}>
+                <Box sx={{ px: 1, py: 0.5 }}>
+                  <Typography variant="subtitle2" fontWeight={600}>
                     {popupInfo.category}
                   </Typography>
-                  <Typography variant="body2" mb={1}>
-                    {popupInfo.description}
+                  <Typography variant="caption" display="block">
+                    {popupInfo.description?.substring(0, 100)}
+                    {popupInfo.description?.length > 100 ? '...' : ''}
                   </Typography>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'space-between',
-                    gap: 1 
-                  }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Box 
-                        sx={{ 
-                          width: 8, 
-                          height: 8, 
-                          borderRadius: '50%', 
-                          backgroundColor: STATUS_COLORS[popupInfo.status] 
-                        }} 
-                      />
-                      <Typography 
-                        variant="caption" 
-                        sx={{ 
-                          textTransform: 'capitalize',
-                          fontWeight: 500
-                        }}
-                      >
-                        {popupInfo.status.replace('_', ' ')}
-                      </Typography>
-                    </Box>
-                    {popupInfo.priority && (
-                      <Typography 
-                        variant="caption" 
-                        sx={{ 
-                          color: popupInfo.priority === 'critical' ? 'error.main' : 
-                                 popupInfo.priority === 'high' ? 'warning.main' : 'text.secondary',
-                          fontWeight: 500,
-                          textTransform: 'uppercase'
-                        }}
-                      >
-                        {popupInfo.priority}
-                      </Typography>
-                    )}
-                  </Box>
-                  {popupInfo.created_at && (
-                    <Typography variant="caption" display="block" mt={0.5} color="text.secondary">
-                      {new Date(popupInfo.created_at).toLocaleString()}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                    <Box sx={{ 
+                      width: 8, 
+                      height: 8, 
+                      borderRadius: '50%', 
+                      bgcolor: STATUS_COLORS[popupInfo.status] || '#6b7280'
+                    }} />
+                    <Typography variant="caption" color="text.secondary">
+                      {popupInfo.status}
                     </Typography>
-                  )}
+                  </Box>
                 </Box>
               </Popup>
             )}

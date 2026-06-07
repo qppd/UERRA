@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from './supabaseClient';
 import { upsertUserProfile } from './useUserProfile';
 import './UerraAuth.css';
 import { CircularProgress } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } }
+};
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } }
+};
 
 const Register = ({ onRegister, footer }) => {
   const [email, setEmail] = useState('');
@@ -69,10 +80,20 @@ const Register = ({ onRegister, footer }) => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-main-card">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      className="auth-container"
+    >
+      <motion.div
+        variants={stagger}
+        initial="hidden"
+        animate="visible"
+        className="auth-main-card"
+      >
         {/* Welcome Section */}
-        <div className="auth-login-section">
+        <motion.div variants={fadeUp} className="auth-login-section">
           <div className="auth-header">
             <div className="auth-logo">U</div>
             <h1 className="auth-title">Welcome to UERRA</h1>
@@ -87,7 +108,7 @@ const Register = ({ onRegister, footer }) => {
             </p>
             <button 
               className="auth-btn-primary auth-btn-login"
-              onClick={() => window.location.href = '/'}
+              onClick={() => { window.location.href = '/'; }}
               style={{ maxWidth: '200px' }}
             >
               Sign In
@@ -95,10 +116,10 @@ const Register = ({ onRegister, footer }) => {
           </div>
           
           {footer && <div style={{ marginTop: '2rem', textAlign: 'center' }}>{footer}</div>}
-        </div>
+        </motion.div>
         
         {/* Sign Up Section */}
-        <div className="auth-signup-section">
+        <motion.div variants={fadeUp} className="auth-signup-section">
           <div className="auth-header">
             <div className="auth-logo">U</div>
             <h1 className="auth-title">Sign up</h1>
@@ -189,9 +210,9 @@ const Register = ({ onRegister, footer }) => {
               </label>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 

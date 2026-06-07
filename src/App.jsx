@@ -2,6 +2,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { Typography } from '@mui/material';
 import Login from './Login';
 import Register from './Register';
 import { useAuthSession, signOut } from './useAuthSession';
@@ -35,6 +36,7 @@ function App() {
   const [page, setPage] = useState('login');
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isCreatingProfile, setIsCreatingProfile] = useState(false);
+  const [createProfileError, setCreateProfileError] = useState('');
   const { user, loading } = useAuthSession();
   // Always call the hook, even if user is null
   const { profile, loading: profileLoading, error: profileError } = useUserProfile(user?.id);
@@ -86,7 +88,7 @@ function App() {
       }, 1000);
       
     } catch (error) {
-      alert(`Failed to create profile: ${error.message || 'Unknown error'}. Please try again or contact support.`);
+      setCreateProfileError(`Failed to create profile: ${error.message || 'Unknown error'}. Please try again or contact support.`);
       setIsCreatingProfile(false);
     }
   };
@@ -196,7 +198,10 @@ function App() {
       // Agency-specific pages
       if (currentPage === 'agency_dashboard') pageContent = <AgencyDashboard user={user} />;
       else if (currentPage === 'reports') pageContent = <EnhancedReportsPage user={user} />;
-      else if (currentPage === 'equipment') pageContent = <div style={{padding:'2rem'}}>Equipment Guide coming soon...</div>;
+      else if (currentPage === 'equipment') pageContent = <div style={{padding: '3rem', textAlign: 'center', color: '#64748b' }}>
+                <Typography variant="h5" gutterBottom>Equipment Guide</Typography>
+                <Typography variant="body1">Equipment management and reference guide is coming soon.</Typography>
+              </div>;
       else pageContent = <AgencyDashboard user={user} />; // Default to agency dashboard
     } else if (profile?.role === 'admin') {
       // Municipal Admin pages

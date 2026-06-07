@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Box, 
   Grid, 
@@ -37,6 +38,21 @@ import {
 } from '@mui/icons-material';
 import { supabase } from '../supabaseClient';
 import MapWidget from './MapWidget';
+
+// Animation variants
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.1, ease: 'easeOut' }
+  })
+};
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } }
+};
 
 const statusColors = {
   pending: 'warning',
@@ -212,6 +228,7 @@ function AgencyDashboard({ user }) {
   return (
     <Box sx={{ p: { xs: 1, sm: 2 }, maxWidth: 1400, mx: 'auto' }}>
       {/* Header */}
+      <motion.div variants={fadeUp} initial="hidden" animate="visible">
       <Box mb={3}>
         <Typography variant="h4" fontWeight={700} color="primary.main">
           Agency Dashboard
@@ -220,10 +237,13 @@ function AgencyDashboard({ user }) {
           {userProfile?.agencies?.name || 'Loading...'}
         </Typography>
       </Box>
+      </motion.div>
 
       {/* Stats Cards */}
+      <motion.div variants={stagger} initial="hidden" animate="visible">
       <Grid container spacing={2} mb={3}>
         <Grid item xs={12} sm={6} md={3}>
+          <motion.div variants={fadeUp}>
           <Card>
             <CardContent>
               <Box display="flex" alignItems="center" gap={2}>
@@ -241,9 +261,11 @@ function AgencyDashboard({ user }) {
               </Box>
             </CardContent>
           </Card>
+          </motion.div>
         </Grid>
         
         <Grid item xs={12} sm={6} md={3}>
+          <motion.div variants={fadeUp}>
           <Card>
             <CardContent>
               <Box display="flex" alignItems="center" gap={2}>
@@ -261,9 +283,11 @@ function AgencyDashboard({ user }) {
               </Box>
             </CardContent>
           </Card>
+          </motion.div>
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
+          <motion.div variants={fadeUp}>
           <Card>
             <CardContent>
               <Box display="flex" alignItems="center" gap={2}>
@@ -281,9 +305,11 @@ function AgencyDashboard({ user }) {
               </Box>
             </CardContent>
           </Card>
+          </motion.div>
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
+          <motion.div variants={fadeUp}>
           <Card>
             <CardContent>
               <Box display="flex" alignItems="center" gap={2}>
@@ -301,8 +327,10 @@ function AgencyDashboard({ user }) {
               </Box>
             </CardContent>
           </Card>
+          </motion.div>
         </Grid>
       </Grid>
+      </motion.div>
 
       {/* Main Content */}
       <Grid container spacing={3}>
